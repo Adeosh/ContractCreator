@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/ContractCreator.Application/ContractCreator.Application.csproj" />
+    <Project Path="src/ContractCreator.Domain/ContractCreator.Domain.csproj" />
+    <Project Path="src/ContractCreator.Infrastructure/ContractCreator.Infrastructure.csproj" />
+    <Project Path="src/ContractCreator.Shared/ContractCreator.Shared.csproj" />
+    <Project Path="src/ContractCreator.UI/ContractCreator.UI.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ContractCreator.Tests.Integration/ContractCreator.Tests.Integration.csproj" />
+    <Project Path="tests/ContractCreator.Tests.Unit/ContractCreator.Tests.Unit.csproj" />
+  </Folder>
+</Solution>
