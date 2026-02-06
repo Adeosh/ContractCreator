@@ -1,0 +1,37 @@
+﻿// Системные
+global using System;
+global using System.IO;
+global using System.Collections.Generic;
+global using System.Collections.ObjectModel;
+global using System.Linq;
+global using System.Reactive;
+global using System.Threading.Tasks;
+
+// Библиотеки
+global using ReactiveUI;
+global using ReactiveUI.Fody.Helpers;
+global using Serilog;
+
+// Мои библиотеки
+global using ContractCreator.Application;
+global using ContractCreator.Infrastructure;
+global using ContractCreator.Application.Interfaces;
+global using ContractCreator.Domain.Enums;
+
+// Общие DTO и Exception
+global using ContractCreator.Shared.DTOs;
+global using ContractCreator.Shared.Common.Exceptions;
+global using ContractCreator.Shared.Common.Extensions;
+
+// Базовые ViewModels и Интерфейсы
+global using ContractCreator.UI.Services.Navigation;
+global using ContractCreator.UI.Services.Dialogs;
+global using ContractCreator.UI.Services.Settings;
+global using ContractCreator.UI.Views;
+global using ContractCreator.UI.ViewModels;
+global using ContractCreator.UI.ViewModels.Firms;
+global using ContractCreator.UI.ViewModels.Workers;
+global using ContractCreator.UI.Views.Firms;
+global using ContractCreator.UI.Views.Workers;
+global using ContractCreator.UI.ViewModels.Shared;
+global using ContractCreator.UI.Views.Shared;

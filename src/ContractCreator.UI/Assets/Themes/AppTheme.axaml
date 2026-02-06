@@ -1,0 +1,85 @@
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+	<Design.PreviewWith>
+		<Border Padding="20" Background="{DynamicResource RegionBrush}">
+			<StackPanel Spacing="10" Width="300">
+				<TextBlock Text="Палитра Actum" FontWeight="Bold" FontSize="18"/>
+
+				<Border Background="{DynamicResource RegionBrush}" Height="40" CornerRadius="5" BorderThickness="1" BorderBrush="Gray">
+					<TextBlock Text="RegionBrush (Фон окна)" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+				</Border>
+
+				<Border Background="{DynamicResource CardBrush}" Height="40" CornerRadius="5" BorderThickness="1" BorderBrush="Gray">
+					<TextBlock Text="CardBrush (Карточки)" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+				</Border>
+
+				<Border Background="{DynamicResource ActionBrush}" Height="40" CornerRadius="5">
+					<TextBlock Text="ActionBrush (Кнопки)" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+				</Border>
+
+				<Border Background="{DynamicResource ActionHoverBrush}" Height="40" CornerRadius="5">
+					<TextBlock Text="ActionHoverBrush" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+				</Border>
+
+				<Border Background="{DynamicResource ErrorBrush}" Height="40" CornerRadius="5">
+					<TextBlock Text="ErrorBrush" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+				</Border>
+
+				<Border Background="{DynamicResource WarningBrush}" Height="40" CornerRadius="5">
+					<TextBlock Text="WarningBrush" Foreground="Black" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+				</Border>
+
+				<Border Background="{DynamicResource CardBrush}" Padding="10" CornerRadius="5">
+					<StackPanel>
+						<TextBlock Text="Primary Text" Foreground="{DynamicResource PrimaryTextBrush}"/>
+						<TextBlock Text="Secondary Text" Foreground="{DynamicResource SecondaryTextBrush}"/>
+					</StackPanel>
+				</Border>
+
+			</StackPanel>
+		</Border>
+	</Design.PreviewWith>
+
+	<Color x:Key="ErrorColor">#ef233c</Color>
+	<SolidColorBrush x:Key="ErrorBrush" Color="{StaticResource ErrorColor}"/>
+	<Color x:Key="WarningColor">#ffe169</Color>
+	<SolidColorBrush x:Key="WarningBrush" Color="{StaticResource WarningColor}"/>
+	<Color x:Key="ActionColor">#018d82</Color>
+	<SolidColorBrush x:Key="ActionBrush" Color="{StaticResource ActionColor}"/>
+	<SolidColorBrush x:Key="ActionHoverBrush" Color="#026d65"/>
+
+	<ResourceDictionary.ThemeDictionaries>
+		<ResourceDictionary x:Key="Light">
+			<Color x:Key="RegionColor">#edf2f4</Color> <SolidColorBrush x:Key="RegionBrush" Color="{StaticResource RegionColor}"/>
+
+			<Color x:Key="CardColor">#FFFFFF</Color>
+			<SolidColorBrush x:Key="CardBrush" Color="{StaticResource CardColor}"/>
+
+			<Color x:Key="PrimaryTextColor">#001f54</Color>
+			<SolidColorBrush x:Key="PrimaryTextBrush" Color="{StaticResource PrimaryTextColor}"/>
+
+			<Color x:Key="WindowBorderColor">#034078</Color>
+			<SolidColorBrush x:Key="WindowBorderBrush" Color="{StaticResource WindowBorderColor}"/>
+
+			<Color x:Key="BorderColor">#1282a2</Color>
+			<SolidColorBrush x:Key="BorderBrush" Color="{StaticResource BorderColor}"/>
+		</ResourceDictionary>
+
+		<ResourceDictionary x:Key="Dark">
+			<Color x:Key="RegionColor">#2b2d42</Color> <SolidColorBrush x:Key="RegionBrush" Color="{StaticResource RegionColor}"/>
+
+			<Color x:Key="CardColor">#3a3c55</Color>
+			<SolidColorBrush x:Key="CardBrush" Color="{StaticResource CardColor}"/>
+
+			<Color x:Key="PrimaryTextColor">#edf2f4</Color>
+			<SolidColorBrush x:Key="PrimaryTextBrush" Color="{StaticResource PrimaryTextColor}"/>
+
+			<Color x:Key="WindowBorderColor">#edf2f4</Color>
+			<SolidColorBrush x:Key="WindowBorderBrush" Color="{StaticResource WindowBorderColor}"/>
+
+			<Color x:Key="BorderColor">#8d99ae</Color>
+			<SolidColorBrush x:Key="BorderBrush" Color="{StaticResource BorderColor}" Opacity="0.5"/>
+		</ResourceDictionary>
+	</ResourceDictionary.ThemeDictionaries>
+</ResourceDictionary>

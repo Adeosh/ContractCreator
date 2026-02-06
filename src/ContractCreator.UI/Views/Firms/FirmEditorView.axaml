@@ -1,0 +1,69 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:ContractCreator.UI.ViewModels.Firms"
+             x:Class="ContractCreator.UI.Views.Firms.FirmEditorView"
+             x:DataType="vm:FirmEditorViewModel">
+
+    <Design.DataContext>
+        <vm:FirmListViewModel />
+    </Design.DataContext>
+
+    <ScrollViewer>
+        <StackPanel Margin="20" Spacing="15" MaxWidth="600">
+            <TextBlock Text="Карточка фирмы" FontSize="22" FontWeight="Bold" Margin="0,0,0,10"/>
+
+            <TextBlock Text="Полное наименование" FontWeight="Medium"/>
+            <TextBox Text="{Binding FullName}" Watermark="ООО 'Ромашка'" />
+
+            <TextBlock Text="Краткое наименование" FontWeight="Medium"/>
+            <TextBox Text="{Binding ShortName}" Watermark="Ромашка"/>
+
+            <Grid ColumnDefinitions="*, 15, *">
+                <StackPanel Grid.Column="0" Spacing="5">
+                    <TextBlock Text="ИНН" />
+                    <TextBox Text="{Binding Inn}" />
+                </StackPanel>
+                <StackPanel Grid.Column="2" Spacing="5">
+                    <TextBlock Text="КПП" />
+                    <TextBox Text="{Binding Kpp}" />
+                </StackPanel>
+            </Grid>
+
+            <Grid ColumnDefinitions="*, 15, *">
+                <StackPanel Grid.Column="0" Spacing="5">
+                    <TextBlock Text="ОГРН" />
+                    <TextBox Text="{Binding Ogrn}" />
+                </StackPanel>
+                <StackPanel Grid.Column="2" Spacing="5">
+                    <TextBlock Text="Телефон" />
+                    <TextBox Text="{Binding Phone}" />
+                </StackPanel>
+            </Grid>
+            
+            <TextBlock Text="Email" />
+            <TextBox Text="{Binding Email}" />
+
+            <Grid ColumnDefinitions="*, 15, *">
+                <StackPanel Grid.Column="0" Spacing="5">
+                    <TextBlock Text="Правовая форма" />
+                    <ComboBox ItemsSource="{Binding LegalForms}" 
+                              SelectedItem="{Binding SelectedLegalForm}" 
+                              HorizontalAlignment="Stretch"/>
+                </StackPanel>
+                <StackPanel Grid.Column="2" Spacing="5">
+                    <TextBlock Text="Система налогообложения" />
+                    <ComboBox ItemsSource="{Binding TaxationTypes}" 
+                              SelectedItem="{Binding SelectedTaxationType}" 
+                              HorizontalAlignment="Stretch"/>
+                </StackPanel>
+            </Grid>
+
+            <StackPanel Orientation="Horizontal" Spacing="20" HorizontalAlignment="Right" Margin="0,20,0,0">
+                <Button Command="{Binding CancelCommand}" Content="Отмена"/>
+                <Button Command="{Binding SaveCommand}" Content="Сохранить" Classes="accent" FontWeight="Bold" Padding="20,10"/>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

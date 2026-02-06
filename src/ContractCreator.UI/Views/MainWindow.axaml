@@ -1,20 +1,68 @@
-<Window xmlns="https://github.com/avaloniaui"
+﻿<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:ContractCreator.UI.ViewModels"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        xmlns:models="using:ContractCreator.UI.Models"
         x:Class="ContractCreator.UI.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="ContractCreator.UI">
+        Title="Актум"
+        
+        Width="1920" Height="1080"
+        MinWidth="1024" MinHeight="768"
+        WindowStartupLocation="CenterScreen"
+        
+        SystemDecorations="Full"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaTitleBarHeightHint="-1"
+        
+        Background="Transparent">
 
-    <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainWindowViewModel/>
-    </Design.DataContext>
+    <Border BorderThickness="1" 
+            BorderBrush="{DynamicResource WindowBorderBrush}"
+            CornerRadius="10"
+            Background="{DynamicResource RegionBrush}" 
+            ClipToBounds="True"
+            Margin="5"
+            BoxShadow="0 0 10 0 #40000000">
+        
+        <Grid RowDefinitions="Auto, *">
+            
+            <Grid Grid.Row="0" 
+                  ColumnDefinitions="1*, Auto, 1*" 
+                  Height="45" 
+                  Background="Transparent"
+                  PointerPressed="OnTitleBarPointerPressed">
+                
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="20,0,0,0" Spacing="10" HorizontalAlignment="Left">
+                    <TextBlock Text="📄 Актум" 
+                               FontWeight="Bold" 
+                               FontSize="18" 
+                               VerticalAlignment="Center"
+                               Foreground="{DynamicResource ActionBrush}"
+                               IsHitTestVisible="False"/>
+                </StackPanel>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Menu Grid.Column="1" 
+                      ItemsSource="{Binding MenuItems}" 
+                      VerticalAlignment="Top"> </Menu>
+                
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="0,0,10,0" HorizontalAlignment="Right">
+                    
+                    <ToggleSwitch IsChecked="{Binding IsDarkTheme}" 
+                                  OnContent="🌙" OffContent="☀️"
+                                  Margin="0,0,15,0"/>
+
+                    <Button Classes="windowBtn" Click="Minimize_Click" Content="—"/>
+                    <Button Classes="windowBtn" Click="Maximize_Click" Content="☐"/>
+                    <Button Classes="windowBtn closeBtn" Click="Close_Click" Content="✕"/>
+                </StackPanel>
+            </Grid>
+
+            <Grid Grid.Row="1" Background="{DynamicResource RegionBrush}">
+                <ContentControl Content="{Binding CurrentPage}" Margin="20"/>
+            </Grid>
+
+        </Grid>
+    </Border>
 
 </Window>

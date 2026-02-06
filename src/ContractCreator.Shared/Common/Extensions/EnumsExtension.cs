@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Reflection;
 
-namespace ContractCreator.Shared.Helpers.Extensions
+namespace ContractCreator.Shared.Common.Extensions
 {
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
     public abstract class CustomAttribute : Attribute

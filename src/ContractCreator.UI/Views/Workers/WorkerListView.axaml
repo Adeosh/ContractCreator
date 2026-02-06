@@ -1,0 +1,96 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:vm="using:ContractCreator.UI.ViewModels.Workers"
+			 xmlns:dto="using:ContractCreator.Shared.DTOs"
+			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 x:Class="ContractCreator.UI.Views.Workers.WorkerListView"
+			 x:DataType="vm:WorkerListViewModel"
+			 x:Name="Root">
+
+	<Grid RowDefinitions="Auto, *">
+
+		<Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,20">
+
+			<StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="20" VerticalAlignment="Center">
+				<TextBlock Text="Сотрудники"
+						   FontSize="24"
+						   FontWeight="SemiBold"
+						   VerticalAlignment="Center"/>
+
+				<TextBox Watermark="Поиск..."
+						 Width="200"
+						 VerticalAlignment="Center"
+						 Classes="clearButton"/>
+			</StackPanel>
+
+			<Button Grid.Column="1"
+					Command="{Binding CreateCommand}"
+					Classes="accent"
+					Padding="15,8"
+					CornerRadius="6">
+				<StackPanel Orientation="Horizontal" Spacing="8">
+					<TextBlock Text="+" FontWeight="Bold"/>
+					<TextBlock Text="Добавить сотрудника"/>
+				</StackPanel>
+			</Button>
+		</Grid>
+
+		<DataGrid Grid.Row="1"
+				  ItemsSource="{Binding Workers}"
+				  SelectedItem="{Binding SelectedWorker}"
+				  AutoGenerateColumns="False"
+				  IsReadOnly="True"
+				  GridLinesVisibility="Horizontal"
+				  Background="Transparent"
+				  BorderThickness="1"
+				  BorderBrush="#E0E0E0">
+
+			<DataGrid.Columns>
+				<DataGridTextColumn Header="Фамилия" Binding="{Binding LastName}" Width="*" />
+				<DataGridTextColumn Header="Имя" Binding="{Binding FirstName}" Width="*" />
+				<DataGridTextColumn Header="Отчество" Binding="{Binding MiddleName}" Width="*" />
+
+				<DataGridTextColumn Header="Должность" Binding="{Binding Position}" Width="1.5*" FontWeight="Medium"/>
+				<DataGridTextColumn Header="Телефон" Binding="{Binding Phone}" Width="Auto" />
+
+				<DataGridTemplateColumn Header="Действия" Width="Auto">
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate DataType="dto:WorkerDto">
+							<StackPanel Orientation="Horizontal" Spacing="5" HorizontalAlignment="Center">
+
+								<Button Command="{Binding $parent[UserControl].((vm:WorkerListViewModel)DataContext).EditCommand}"
+										CommandParameter="{Binding}"
+										ToolTip.Tip="Редактировать"
+										Background="Transparent"
+										Padding="5">
+									<TextBlock Text="✏️" Foreground="Orange"/>
+								</Button>
+
+								<Button Command="{Binding $parent[UserControl].((vm:WorkerListViewModel)DataContext).DeleteCommand}"
+										CommandParameter="{Binding}"
+										ToolTip.Tip="Удалить"
+										Background="Transparent"
+										Padding="5">
+									<TextBlock Text="❌" Foreground="Red"/>
+								</Button>
+
+							</StackPanel>
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+				</DataGridTemplateColumn>
+
+			</DataGrid.Columns>
+		</DataGrid>
+
+		<TextBlock Grid.Row="1"
+				   Text="Список сотрудников пуст. Нажмите 'Добавить'."
+				   IsVisible="{Binding !Workers.Count}"
+				   HorizontalAlignment="Center"
+				   VerticalAlignment="Center"
+				   Foreground="Gray"/>
+
+	</Grid>
+
+</UserControl>

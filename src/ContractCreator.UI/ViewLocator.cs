@@ -1,7 +1,5 @@
-using System;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using ContractCreator.UI.ViewModels;
 
 namespace ContractCreator.UI;
 
@@ -18,11 +16,9 @@ public class ViewLocator : IDataTemplate
 
         if (type != null)
         {
-            var control = (Control)Activator.CreateInstance(type)!;
-            control.DataContext = data;
-            return control;
+            return (Control)Activator.CreateInstance(type)!;
         }
-        
+
         return new TextBlock { Text = "Not Found: " + name };
     }
 
