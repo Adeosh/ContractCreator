@@ -20,15 +20,15 @@ namespace ContractCreator.UI.Services.Dialogs
                 switch (type)
                 {
                     case UserMessageType.Info:
-                        viewModel.HeaderColor = "#2196F3";
+                        viewModel.HeaderColor = "#62bed9";
                         viewModel.Icon = "ℹ️";
                         break;
                     case UserMessageType.Warning:
-                        viewModel.HeaderColor = "#FF9800";
+                        viewModel.HeaderColor = "#ffe169";
                         viewModel.Icon = "⚠️";
                         break;
                     case UserMessageType.Error:
-                        viewModel.HeaderColor = "#F44336";
+                        viewModel.HeaderColor = "#ef233c";
                         viewModel.Icon = "⛔";
                         break;
                 }

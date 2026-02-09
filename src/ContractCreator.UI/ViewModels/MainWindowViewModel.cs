@@ -80,6 +80,10 @@ public class MainWindowViewModel : ViewModelBase
     private void SetupMain()
     {
         this.WhenAnyValue(x => x.IsDarkTheme)
-            .Subscribe(val => _settingsService.IsDarkTheme = val);
+                .Skip(1)
+                .Subscribe(isDark =>
+                {
+                    _settingsService.IsDarkTheme = isDark;
+                });
     }
 }

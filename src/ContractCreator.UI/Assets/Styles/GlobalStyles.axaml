@@ -13,17 +13,18 @@
 	</Style>
 
 	<Style Selector="Button.windowBtn:pointerover /template/ ContentPresenter">
-		<Setter Property="Background" Value="#1282a2"/> <Setter Property="Foreground" Value="White"/>
+		<Setter Property="Background" Value="{DynamicResource BorderBrush}"/> 
+        <Setter Property="Foreground" Value="{DynamicResource CardBrush}"/>
 	</Style>
 
 	<Style Selector="Button.closeBtn:pointerover /template/ ContentPresenter">
-		<Setter Property="Background" Value="#ef233c"/>
-		<Setter Property="Foreground" Value="White"/>
+		<Setter Property="Background" Value="{DynamicResource ErrorBrush}"/>
+		<Setter Property="Foreground" Value="{DynamicResource CardBrush}"/>
 	</Style>
 
 	<Style Selector="Button.accent">
 		<Setter Property="Background" Value="{DynamicResource ActionBrush}"/>
-		<Setter Property="Foreground" Value="White"/>
+		<Setter Property="Foreground" Value="{DynamicResource CardBrush}"/>
 		<Setter Property="BorderThickness" Value="0"/>
 		<Setter Property="Padding" Value="15,8"/>
 		<Setter Property="CornerRadius" Value="6"/>
@@ -31,16 +32,16 @@
 	</Style>
 	<Style Selector="Button.accent /template/ ContentPresenter">
 		<Setter Property="Background" Value="{DynamicResource ActionBrush}"/>
-		<Setter Property="Foreground" Value="White"/>
+		<Setter Property="Foreground" Value="{DynamicResource CardBrush}"/>
 	</Style>
 	<Style Selector="Button.accent:pointerover /template/ ContentPresenter">
 		<Setter Property="Background" Value="{DynamicResource ActionHoverBrush}"/>
-		<Setter Property="Foreground" Value="White"/>
+		<Setter Property="Foreground" Value="{DynamicResource CardBrush}"/>
 	</Style>
 	<Style Selector="Button.accent:pressed /template/ ContentPresenter">
 		<Setter Property="Background" Value="{DynamicResource ActionHoverBrush}"/>
 		<Setter Property="Opacity" Value="0.8"/>
-		<Setter Property="Foreground" Value="White"/>
+		<Setter Property="Foreground" Value="{DynamicResource CardBrush}"/>
 	</Style>
 
 	<Style Selector="Menu">
@@ -52,35 +53,31 @@
         <Setter Property="Header" Value="{Binding Header}"/>
         <Setter Property="ItemsSource" Value="{Binding Items}"/>
         <Setter Property="Command" Value="{Binding Command}"/>
-        <Setter Property="CommandParameter" Value="{Binding CommandParameter}"/>
-        
-        <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}"/>
-        
-        <Setter Property="Background" Value="{DynamicResource CardBrush}"/>
-        
+        <Setter Property="CommandParameter" Value="{Binding CommandParameter}"/>   
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}"/>       
+        <Setter Property="Background" Value="{DynamicResource ShadowBrush}"/>      
         <Setter Property="FontSize" Value="15"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
         <Setter Property="Padding" Value="15,0"/>
-        <Setter Property="VerticalAlignment" Value="Stretch"/>
-        
+        <Setter Property="VerticalAlignment" Value="Stretch"/>     
         <Setter Property="CornerRadius" Value="0,0,10,10"/> 
         <Setter Property="Margin" Value="0,0,5,0"/>
     </Style>
 
     <Style Selector="Menu > MenuItem:pointerover /template/ Border#PART_LayoutRoot">
-        <Setter Property="Background" Value="#1282a2"/> 
+        <Setter Property="Background" Value="{DynamicResource BorderBrush}"/> 
         <Setter Property="BorderBrush" Value="Transparent"/>
     </Style>
     
     <Style Selector="Menu > MenuItem:pointerover /template/ ContentPresenter#PART_HeaderPresenter">
-        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Foreground" Value="{DynamicResource CardBrush}"/>
     </Style>
     
     <Style Selector="Menu > MenuItem:pressed /template/ Border#PART_LayoutRoot">
-        <Setter Property="Background" Value="#1282a2"/>
+        <Setter Property="Background" Value="{DynamicResource BorderBrush}"/>
     </Style>
     <Style Selector="Menu > MenuItem:pressed /template/ ContentPresenter#PART_HeaderPresenter">
-        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Foreground" Value="{DynamicResource CardBrush}"/>
     </Style>
 
     <Style Selector="MenuItem > MenuItem">
@@ -104,10 +101,67 @@
     </Style>
 
     <Style Selector="MenuItem > MenuItem:pointerover /template/ Border#PART_LayoutRoot">
-        <Setter Property="Background" Value="{DynamicResource ActionBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource BorderBrush}"/>
     </Style>
     <Style Selector="MenuItem > MenuItem:pointerover /template/ ContentPresenter#PART_HeaderPresenter">
-        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Foreground" Value="{DynamicResource CardBrush}"/>
+    </Style>
+
+    <Style Selector="ToggleSwitch:checked /template/ Border#SwitchKnobBounds">
+        <Setter Property="Background" Value="{DynamicResource ActionBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ActionBrush}"/>
+    </Style>
+
+    <Style Selector="ToggleSwitch:checked:pointerover /template/ Border#SwitchKnobBounds">
+        <Setter Property="Background" Value="{DynamicResource ActionHoverBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ActionHoverBrush}"/>
+    </Style>
+
+    <Style Selector="ToggleSwitch:checked:pressed /template/ Border#SwitchKnobBounds">
+        <Setter Property="Background" Value="{DynamicResource ActionHoverBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ActionHoverBrush}"/>
+    </Style>
+
+    <Style Selector="ToggleSwitch:checked /template/ Ellipse#SwitchKnob">
+        <Setter Property="Fill" Value="{DynamicResource CardBrush}"/>
+    </Style>
+
+    <Style Selector="TextBox, MaskedTextBox, ComboBox, DatePicker">
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+        <Setter Property="CornerRadius" Value="4"/>
+        <Setter Property="MinHeight" Value="32"/>
+    </Style>
+
+    <Style Selector="TextBox:pointerover /template/ Border#PART_BorderElement,
+                     MaskedTextBox:pointerover /template/ Border#PART_BorderElement,
+                     ComboBox:pointerover /template/ Border#BorderElement,
+                     DatePicker:pointerover /template/ Border#BorderElement">
+        <Setter Property="BorderBrush" Value="{DynamicResource ActionBrush}"/>
+    </Style>
+
+    <Style Selector="TextBox:focus /template/ Border#PART_BorderElement,
+                     MaskedTextBox:focus /template/ Border#PART_BorderElement">
+        <Setter Property="BorderBrush" Value="{DynamicResource ActionBrush}"/>
+        <Setter Property="BorderThickness" Value="2"/>
+    </Style>
+
+
+    <Style Selector="ListBox">
+        <Setter Property="Background" Value="{DynamicResource CardBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="5"/>
+    </Style>
+
+
+    <Style Selector="TextBox.outline, MaskedTextBox.outline, ComboBox.outline">
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource CardBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+    </Style>
+    
+    <Style Selector="TextBox.outline:error /template/ Border#PART_BorderElement">
+        <Setter Property="BorderBrush" Value="{DynamicResource ErrorBrush}"/>
     </Style>
 
 </Styles>

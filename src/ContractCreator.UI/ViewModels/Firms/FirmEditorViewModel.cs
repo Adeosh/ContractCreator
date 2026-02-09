@@ -1,4 +1,5 @@
 ﻿using ContractCreator.Shared.DTOs.Data;
+using ContractCreator.UI.ViewModels.UserControls;
 
 namespace ContractCreator.UI.ViewModels.Firms
 {
@@ -8,6 +9,7 @@ namespace ContractCreator.UI.ViewModels.Firms
         private readonly IFirmService _firmService;
         private readonly INavigationService _navigation;
         private readonly ISettingsService _settingsService;
+        private readonly IGarService _garService;
 
         [Reactive] public int Id { get; set; }
         [Reactive] public string FullName { get; set; } = "";
@@ -17,7 +19,9 @@ namespace ContractCreator.UI.ViewModels.Firms
         [Reactive] public string Ogrn { get; set; } = "";
         [Reactive] public string Phone { get; set; } = "";
         [Reactive] public string Email { get; set; } = "";
-        [Reactive] public string LegalAddressString { get; set; } = "";
+
+        public AddressViewModel LegalAddressVM { get; }
+        public AddressViewModel ActualAddressVM { get; }
 
         public LegalFormType[] LegalForms => Enum.GetValues<LegalFormType>();
         [Reactive] public LegalFormType SelectedLegalForm { get; set; }
@@ -33,11 +37,16 @@ namespace ContractCreator.UI.ViewModels.Firms
         public FirmEditorViewModel(
             IFirmService firmService, 
             INavigationService navigation,
-            ISettingsService settingsService)
+            ISettingsService settingsService,
+            IGarService garService)
         {
             _firmService = firmService;
             _navigation = navigation;
             _settingsService = settingsService;
+            _garService = garService;
+
+            LegalAddressVM = new AddressViewModel(_garService);
+            ActualAddressVM = new AddressViewModel(_garService);
 
             SaveCommand = ReactiveCommand.CreateFromTask(SaveAsync);
             CancelCommand = ReactiveCommand.Create(() => _navigation.NavigateBack());
@@ -45,16 +54,10 @@ namespace ContractCreator.UI.ViewModels.Firms
 
         public async Task ApplyParameterAsync(object parameter)
         {
-            if (parameter is int id)
-            {
-                if (id != 0) 
-                    await LoadAsync(id);
-            }
-            else if (parameter is EditorParams param)
-            {
-                if (param.Mode == EditorMode.Edit)
-                    await LoadAsync(param.Id);
-            }
+            if (parameter is int id && id != 0)
+                await LoadAsync(id);
+            else if (parameter is EditorParams param && param.Mode == EditorMode.Edit)
+                await LoadAsync(param.Id);
         }
 
         public async Task LoadAsync(int firmId)
@@ -74,7 +77,8 @@ namespace ContractCreator.UI.ViewModels.Firms
                     Email = dto.Email;
                     SelectedLegalForm = (LegalFormType)dto.LegalFormType;
                     SelectedTaxationType = (TaxationSystemType)dto.TaxationType;
-                    LegalAddressString = dto.LegalAddress?.FullAddress ?? "";
+                    LegalAddressVM.SetAddressDto(dto.LegalAddress);
+                    ActualAddressVM.SetAddressDto(dto.ActualAddress);
                 }
             }
             catch (Exception ex)
@@ -101,24 +105,8 @@ namespace ContractCreator.UI.ViewModels.Firms
                     Email = Email,
                     LegalFormType = (byte)SelectedLegalForm,
                     TaxationType = (byte)SelectedTaxationType,
-                    LegalAddress = new AddressDto
-                    {
-                        FullAddress = "обл Ленинградская, г.о. Сосновоборский, г Сосновый Бор, ул Ленинградская",
-                        ObjectId = 753471,
-                        House = "10",
-                        Flat = "1",
-                        Building = "A",
-                        PostalIndex = "188540",
-                    },
-                    ActualAddress = new AddressDto
-                    {
-                        FullAddress = "обл Новосибирская, г.о. город Новосибирск, г Новосибирск, ул Прогулочная",
-                        ObjectId = 931166,
-                        House = "44",
-                        Flat = "100",
-                        Building = "3",
-                        PostalIndex = "630120",
-                    },
+                    LegalAddress = LegalAddressVM.GetAddressDto(),
+                    ActualAddress = ActualAddressVM.GetAddressDto(),
                     IsVATPayment = true,
                     CreatedDate = DateOnly.FromDateTime(DateTime.Now),
                     OkopfId = 1,

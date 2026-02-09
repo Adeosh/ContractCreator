@@ -1,6 +1,7 @@
 ﻿using ContractCreator.Domain.Interfaces;
 using ContractCreator.Infrastructure.Persistence;
 using ContractCreator.Infrastructure.Repositories;
+using ContractCreator.Infrastructure.Services.Gar;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +19,7 @@ namespace ContractCreator.Infrastructure
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped<IGarService, GarService>();
 
             return services;
         }

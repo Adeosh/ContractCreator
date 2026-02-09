@@ -30,6 +30,14 @@ namespace ContractCreator.Shared.Common.Extensions
             return map.TryGetValue(enumValue, out var desc) ? desc : enumValue.ToString();
         }
 
+        public static string GetDescription(this Enum enumValue)
+        {
+            Type type = enumValue.GetType();
+            Dictionary<object, string> map = _descriptionCache.GetOrAdd(type, t => InitializeDescriptionCache(t));
+
+            return map.TryGetValue(enumValue, out var desc) ? desc : enumValue.ToString();
+        }
+
         /// <summary> Получить значение кастомного атрибута-наследника CustomAttribute. </summary>
         public static string? GetCustomAttributeDescription<TAttr>(this Enum enumValue)
             where TAttr : CustomAttribute

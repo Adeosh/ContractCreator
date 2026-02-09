@@ -19,20 +19,6 @@ namespace ContractCreator.UI.ViewModels.Firms
         public ReactiveCommand<FirmDto, Unit> SetCurrentCommand { get; }
         #endregion
 
-        public FirmListViewModel()
-        {
-            // Проверяем, что мы в режиме дизайна, чтобы случайно не вызвать это в коде
-            if (Design.IsDesignMode)
-            {
-                // Накидываем фейковые данные, чтобы видеть их в превью
-                Firms = new ObservableCollection<FirmDto>
-                {
-                    new FirmDto { Id = 1, FullName = "ООО Ромашка", INN = "7700000000" },
-                    new FirmDto { Id = 2, FullName = "ЗАО Пример", INN = "5000555000" }
-                };
-            }
-        }
-
         public FirmListViewModel(
             IFirmService firmService,
             INavigationService navigation,

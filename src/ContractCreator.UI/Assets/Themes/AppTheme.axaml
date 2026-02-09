@@ -2,84 +2,145 @@
 					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
 	<Design.PreviewWith>
-		<Border Padding="20" Background="{DynamicResource RegionBrush}">
-			<StackPanel Spacing="10" Width="300">
-				<TextBlock Text="Палитра Actum" FontWeight="Bold" FontSize="18"/>
+		<Border Padding="0" Width="700" Height="500">
+			<Grid ColumnDefinitions="*,*">
 
-				<Border Background="{DynamicResource RegionBrush}" Height="40" CornerRadius="5" BorderThickness="1" BorderBrush="Gray">
-					<TextBlock Text="RegionBrush (Фон окна)" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-				</Border>
+				<ThemeVariantScope RequestedThemeVariant="Light" Grid.Column="0">
+					<Border Background="{DynamicResource RegionBrush}" Padding="20">
+						<StackPanel Spacing="10">
+							<TextBlock Text="LIGHT THEME" FontWeight="Bold" FontSize="18" Foreground="{DynamicResource PrimaryTextBrush}" HorizontalAlignment="Center"/>
 
-				<Border Background="{DynamicResource CardBrush}" Height="40" CornerRadius="5" BorderThickness="1" BorderBrush="Gray">
-					<TextBlock Text="CardBrush (Карточки)" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-				</Border>
+							<Separator Margin="0,10" Background="{DynamicResource BorderBrush}"/>
 
-				<Border Background="{DynamicResource ActionBrush}" Height="40" CornerRadius="5">
-					<TextBlock Text="ActionBrush (Кнопки)" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-				</Border>
+							<Border Background="{DynamicResource CardBrush}" Height="40" CornerRadius="5" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}">
+								<TextBlock Text="Card (Карточка)" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryTextBrush}"/>
+							</Border>
 
-				<Border Background="{DynamicResource ActionHoverBrush}" Height="40" CornerRadius="5">
-					<TextBlock Text="ActionHoverBrush" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-				</Border>
+							<StackPanel Orientation="Horizontal" Spacing="5" HorizontalAlignment="Center">
+								<Border Background="{DynamicResource ActionBrush}" Height="40" Width="80" CornerRadius="5">
+									<TextBlock Text="Action" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="10"/>
+								</Border>
+								<Border Background="{DynamicResource BorderBrush}" Height="40" Width="80" CornerRadius="5">
+									<TextBlock Text="Border" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="10"/>
+								</Border>
+							</StackPanel>
 
-				<Border Background="{DynamicResource ErrorBrush}" Height="40" CornerRadius="5">
-					<TextBlock Text="ErrorBrush" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-				</Border>
+							<Border Background="{DynamicResource CardBrush}" Padding="10" CornerRadius="5" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}">
+								<StackPanel>
+									<TextBlock Text="Primary Text" Foreground="{DynamicResource PrimaryTextBrush}" FontWeight="Bold"/>
+									<TextBlock Text="Secondary Text" Foreground="{DynamicResource SecondaryTextBrush}"/>
+									<TextBlock Text="Window Border" Foreground="{DynamicResource WindowBorderBrush}"/>
+								</StackPanel>
+							</Border>
+						
+							<StackPanel Orientation="Horizontal" Spacing="20">
+								<Border Background="{DynamicResource WarningBrush}" Height="20" Width="80" CornerRadius="5" />
+								<TextBlock Text="Warning Brush" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}"/>
+								<TextBlock Text="Royal Gold" FontSize="10" Foreground="{DynamicResource SecondaryTextBrush}"/>
+							</StackPanel>
 
-				<Border Background="{DynamicResource WarningBrush}" Height="40" CornerRadius="5">
-					<TextBlock Text="WarningBrush" Foreground="Black" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-				</Border>
+							<StackPanel Orientation="Horizontal" Spacing="20">
+								<Border Background="{DynamicResource ErrorBrush}" Height="20" Width="80" CornerRadius="5"/>
+								<TextBlock Text="Error Brush" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}"/>
+								<TextBlock Text="Strawberry Red" FontSize="10" Foreground="{DynamicResource SecondaryTextBrush}"/>
+							</StackPanel>
 
-				<Border Background="{DynamicResource CardBrush}" Padding="10" CornerRadius="5">
-					<StackPanel>
-						<TextBlock Text="Primary Text" Foreground="{DynamicResource PrimaryTextBrush}"/>
-						<TextBlock Text="Secondary Text" Foreground="{DynamicResource SecondaryTextBrush}"/>
-					</StackPanel>
-				</Border>
+						</StackPanel>
+					</Border>
+				</ThemeVariantScope>
 
-			</StackPanel>
+				<ThemeVariantScope RequestedThemeVariant="Dark" Grid.Column="1">
+					<Border Background="{DynamicResource RegionBrush}" Padding="20">
+						<StackPanel Spacing="10">
+							<TextBlock Text="DARK THEME" FontWeight="Bold" FontSize="18" Foreground="{DynamicResource PrimaryTextBrush}" HorizontalAlignment="Center"/>
+
+							<Separator Margin="0,10" Background="{DynamicResource BorderBrush}"/>
+
+							<Border Background="{DynamicResource CardBrush}" Height="40" CornerRadius="5" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}">
+								<TextBlock Text="Card (Карточка)" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryTextBrush}"/>
+							</Border>
+
+							<StackPanel Orientation="Horizontal" Spacing="5" HorizontalAlignment="Center">
+								<Border Background="{DynamicResource ActionBrush}" Height="40" Width="80" CornerRadius="5">
+									<TextBlock Text="Action" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="10"/>
+								</Border>
+								<Border Background="{DynamicResource BorderBrush}" Height="40" Width="80" CornerRadius="5">
+									<TextBlock Text="Border" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="10"/>
+								</Border>
+							</StackPanel>
+
+							<Border Background="{DynamicResource CardBrush}" Padding="10" CornerRadius="5" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}">
+								<StackPanel>
+									<TextBlock Text="Primary Text" Foreground="{DynamicResource PrimaryTextBrush}" FontWeight="Bold"/>
+									<TextBlock Text="Secondary Text" Foreground="{DynamicResource SecondaryTextBrush}"/>
+									<TextBlock Text="Window Border" Foreground="{DynamicResource WindowBorderBrush}"/>
+								</StackPanel>
+							</Border>
+						</StackPanel>
+					</Border>
+				</ThemeVariantScope>
+
+			</Grid>
 		</Border>
 	</Design.PreviewWith>
 
 	<Color x:Key="ErrorColor">#ef233c</Color>
 	<SolidColorBrush x:Key="ErrorBrush" Color="{StaticResource ErrorColor}"/>
+
 	<Color x:Key="WarningColor">#ffe169</Color>
 	<SolidColorBrush x:Key="WarningBrush" Color="{StaticResource WarningColor}"/>
-	<Color x:Key="ActionColor">#018d82</Color>
+
+	<Color x:Key="ActionColor">#5cb9a6</Color>
 	<SolidColorBrush x:Key="ActionBrush" Color="{StaticResource ActionColor}"/>
-	<SolidColorBrush x:Key="ActionHoverBrush" Color="#026d65"/>
+
+	<Color x:Key="ActionHoverColor">#60d9c3</Color>
+	<SolidColorBrush x:Key="ActionHoverBrush" Color="{StaticResource ActionHoverColor}"/>
+
+	<Color x:Key="ShadowColor">#8d99ae</Color>
+	<SolidColorBrush x:Key="ShadowBrush" Color="{StaticResource ShadowColor}" Opacity="0.2"/>
 
 	<ResourceDictionary.ThemeDictionaries>
-		<ResourceDictionary x:Key="Light">
-			<Color x:Key="RegionColor">#edf2f4</Color> <SolidColorBrush x:Key="RegionBrush" Color="{StaticResource RegionColor}"/>
 
-			<Color x:Key="CardColor">#FFFFFF</Color>
+		<ResourceDictionary x:Key="Light">
+			<Color x:Key="RegionColor">#edf2f4</Color>
+			<SolidColorBrush x:Key="RegionBrush" Color="{StaticResource RegionColor}"/>
+
+			<Color x:Key="CardColor">#edf2f4</Color>
 			<SolidColorBrush x:Key="CardBrush" Color="{StaticResource CardColor}"/>
 
-			<Color x:Key="PrimaryTextColor">#001f54</Color>
+			<Color x:Key="PrimaryTextColor">#1282a2</Color>
 			<SolidColorBrush x:Key="PrimaryTextBrush" Color="{StaticResource PrimaryTextColor}"/>
 
-			<Color x:Key="WindowBorderColor">#034078</Color>
+			<Color x:Key="SecondaryTextColor">#8d99ae</Color>
+			<SolidColorBrush x:Key="SecondaryTextBrush" Color="{StaticResource SecondaryTextColor}"/>
+
+			<Color x:Key="WindowBorderColor">#8d99ae</Color>
 			<SolidColorBrush x:Key="WindowBorderBrush" Color="{StaticResource WindowBorderColor}"/>
 
 			<Color x:Key="BorderColor">#1282a2</Color>
 			<SolidColorBrush x:Key="BorderBrush" Color="{StaticResource BorderColor}"/>
 		</ResourceDictionary>
 
-		<ResourceDictionary x:Key="Dark">
-			<Color x:Key="RegionColor">#2b2d42</Color> <SolidColorBrush x:Key="RegionBrush" Color="{StaticResource RegionColor}"/>
 
-			<Color x:Key="CardColor">#3a3c55</Color>
+		<ResourceDictionary x:Key="Dark">
+			<Color x:Key="RegionColor">#2b2d42</Color>
+			<SolidColorBrush x:Key="RegionBrush" Color="{StaticResource RegionColor}"/>
+
+			<Color x:Key="CardColor">#34364f</Color>
 			<SolidColorBrush x:Key="CardBrush" Color="{StaticResource CardColor}"/>
 
 			<Color x:Key="PrimaryTextColor">#edf2f4</Color>
 			<SolidColorBrush x:Key="PrimaryTextBrush" Color="{StaticResource PrimaryTextColor}"/>
 
 			<Color x:Key="WindowBorderColor">#edf2f4</Color>
-			<SolidColorBrush x:Key="WindowBorderBrush" Color="{StaticResource WindowBorderColor}"/>
+			<SolidColorBrush x:Key="WindowBorderBrush" Color="{StaticResource WindowBorderColor}" Opacity="0.9"/>
 
-			<Color x:Key="BorderColor">#8d99ae</Color>
-			<SolidColorBrush x:Key="BorderBrush" Color="{StaticResource BorderColor}" Opacity="0.5"/>
+			<Color x:Key="SecondaryTextColor">#8d99ae</Color>
+			<SolidColorBrush x:Key="SecondaryTextBrush" Color="{StaticResource SecondaryTextColor}"/>
+
+			<Color x:Key="BorderColor">#60d9c3</Color>
+			<SolidColorBrush x:Key="BorderBrush" Color="{StaticResource BorderColor}"/>
 		</ResourceDictionary>
+
 	</ResourceDictionary.ThemeDictionaries>
 </ResourceDictionary>

@@ -15,6 +15,7 @@ global using Serilog;
 // Мои библиотеки
 global using ContractCreator.Application;
 global using ContractCreator.Infrastructure;
+global using ContractCreator.Infrastructure.Services.Gar;
 global using ContractCreator.Application.Interfaces;
 global using ContractCreator.Domain.Enums;
 

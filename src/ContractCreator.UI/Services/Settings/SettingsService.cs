@@ -7,6 +7,7 @@ namespace ContractCreator.UI.Services.Settings
     public class SettingsService : ISettingsService
     {
         private const string FileName = "user_settings.json";
+        private readonly JsonSerializerOptions _jsonOptions = new() { WriteIndented = true };
         private AppSettings _settings;
 
         public int? CurrentFirmId
@@ -21,20 +22,18 @@ namespace ContractCreator.UI.Services.Settings
 
         public bool IsDarkTheme
         {
-            get => AvaloniaApp.Current!.RequestedThemeVariant == ThemeVariant.Dark;
+            get => _settings.IsDarkTheme;
             set
             {
-                if (AvaloniaApp.Current != null)
+                if (_settings.IsDarkTheme != value)
                 {
-                    var newTheme = value ? ThemeVariant.Dark : ThemeVariant.Light;
+                    _settings.IsDarkTheme = value;
 
-                    if (AvaloniaApp.Current.RequestedThemeVariant != newTheme)
-                    {
-                        AvaloniaApp.Current.RequestedThemeVariant = newTheme;
+                    // Сначала меняем визуал
+                    ApplyTheme(value);
 
-                        _settings.IsDarkTheme = value;
-                        Save();
-                    }
+                    // Потом сохраняем
+                    Save();
                 }
             }
         }
@@ -42,40 +41,64 @@ namespace ContractCreator.UI.Services.Settings
         public SettingsService()
         {
             Load();
-
-            if (AvaloniaApp.Current != null)
-            {
-                AvaloniaApp.Current.RequestedThemeVariant = _settings!.IsDarkTheme 
-                    ? ThemeVariant.Dark 
-                    : ThemeVariant.Light;
-            }
+            ApplyTheme(_settings.IsDarkTheme);
         }
 
         private void Load()
         {
+            _settings = new AppSettings();
+
             if (File.Exists(FileName))
             {
                 try
                 {
                     var json = File.ReadAllText(FileName);
-                    _settings = JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
-                    return;
+                    var loaded = JsonSerializer.Deserialize<AppSettings>(json);
+
+                    if (loaded != null)
+                        _settings = loaded;
                 }
-                catch { /* игнор ошибок чтения */ }
+                catch (Exception ex)
+                {
+                    Log.Error(ex, "Ошибка при загрузке настроек из файла {FileName}. " +
+                        "Будут использованы настройки по умолчанию.", FileName);
+                }
             }
-            _settings = new AppSettings();
         }
 
         public void Save()
         {
-            var json = JsonSerializer.Serialize(_settings);
-            File.WriteAllText(FileName, json);
+            try
+            {
+                var json = JsonSerializer.Serialize(_settings, _jsonOptions);
+                File.WriteAllText(FileName, json);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Не удалось сохранить настройки в {FileName}", FileName);
+            }
+        }
+
+        private void ApplyTheme(bool isDark)
+        {
+            if (AvaloniaApp.Current != null)
+            {
+                var newTheme = isDark ? ThemeVariant.Dark : ThemeVariant.Light;
+
+                if (AvaloniaApp.Current.RequestedThemeVariant != newTheme)
+                {
+                    Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                        AvaloniaApp.Current.RequestedThemeVariant = newTheme;
+                    });
+                }
+            }
         }
 
         private class AppSettings
         {
             public int? CurrentFirmId { get; set; }
-            public bool IsDarkTheme { get; set; }
+            public bool IsDarkTheme { get; set; } = false;
         }
     }
 }
