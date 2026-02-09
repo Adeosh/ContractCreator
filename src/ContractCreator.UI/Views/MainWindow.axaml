@@ -1,7 +1,6 @@
 ﻿<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:ContractCreator.UI.ViewModels"
-        xmlns:models="using:ContractCreator.UI.Models"
         x:Class="ContractCreator.UI.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Title="Актум"

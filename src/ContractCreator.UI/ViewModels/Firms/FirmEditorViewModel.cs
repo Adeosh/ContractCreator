@@ -48,19 +48,19 @@ namespace ContractCreator.UI.ViewModels.Firms
             LegalAddressVM = new AddressViewModel(_garService);
             ActualAddressVM = new AddressViewModel(_garService);
 
-            SaveCommand = ReactiveCommand.CreateFromTask(SaveAsync);
+            SaveCommand = ReactiveCommand.CreateFromTask(SaveFirmAsync);
             CancelCommand = ReactiveCommand.Create(() => _navigation.NavigateBack());
         }
 
         public async Task ApplyParameterAsync(object parameter)
         {
             if (parameter is int id && id != 0)
-                await LoadAsync(id);
+                await LoadFirmAsync(id);
             else if (parameter is EditorParams param && param.Mode == EditorMode.Edit)
-                await LoadAsync(param.Id);
+                await LoadFirmAsync(param.Id);
         }
 
-        public async Task LoadAsync(int firmId)
+        public async Task LoadFirmAsync(int firmId)
         {
             try
             {
@@ -89,7 +89,7 @@ namespace ContractCreator.UI.ViewModels.Firms
             }
         }
 
-        private async Task SaveAsync()
+        private async Task SaveFirmAsync()
         {
             try
             {

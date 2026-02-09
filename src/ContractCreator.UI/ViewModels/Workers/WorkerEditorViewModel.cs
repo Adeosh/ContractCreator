@@ -29,7 +29,7 @@
             _workerService = workerService;
             _navigation = navigation;
 
-            SaveCommand = ReactiveCommand.CreateFromTask(SaveAsync);
+            SaveCommand = ReactiveCommand.CreateFromTask(SaveWorkerAsync);
             CancelCommand = ReactiveCommand.Create(() => _navigation.NavigateBack());
         }
 
@@ -38,13 +38,9 @@
             if (parameter is EditorParams param)
             {
                 if (param.Mode == EditorMode.Create)
-                {
                     FirmId = param.ParentId;
-                }
                 else if (param.Mode == EditorMode.Edit)
-                {
                     await LoadWorkerAsync(param.Id);
-                }
             }
         }
 
@@ -77,7 +73,7 @@
             }
         }
 
-        private async Task SaveAsync()
+        private async Task SaveWorkerAsync()
         {
             try
             {

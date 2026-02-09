@@ -12,6 +12,12 @@ namespace ContractCreator.Application.Services
 
         public ContactService(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
 
+        public async Task<IEnumerable<ContactDto>> GetAllContactsAsync()
+        {
+            var contacts = await _unitOfWork.Repository<Contact>().ListAllAsync();
+            return contacts.Adapt<IEnumerable<ContactDto>>();
+        }
+
         public async Task<IEnumerable<ContactDto>> GetContactsByCounterpartyIdAsync(int counterpartyId)
         {
             var contacts = await _unitOfWork.Repository<Contact>()
