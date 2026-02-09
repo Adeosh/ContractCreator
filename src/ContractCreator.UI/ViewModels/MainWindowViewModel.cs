@@ -44,7 +44,8 @@ public class MainWindowViewModel : ViewModelBase
                     Items = new ObservableCollection<MenuItemViewModel>
                     {
                         new MenuItemViewModel("Список контрагентов"),
-                        new MenuItemViewModel("Контакты")
+                        new MenuItemViewModel("Контакты",
+                            ReactiveCommand.Create(() => _navigationService.NavigateTo<ContactListViewModel>()))
                     }
                 },
 
@@ -70,6 +71,15 @@ public class MainWindowViewModel : ViewModelBase
 
                         new MenuItemViewModel("Сотрудники",
                             ReactiveCommand.Create(() => _navigationService.NavigateTo<WorkerListViewModel>()))
+                    }
+                },
+                
+                new MenuItemViewModel("Номенклатура")
+                {
+                    Items = new ObservableCollection<MenuItemViewModel>
+                    {
+                        new MenuItemViewModel("Список товаров"),
+                        new MenuItemViewModel("Список услуг")
                     }
                 },
             };

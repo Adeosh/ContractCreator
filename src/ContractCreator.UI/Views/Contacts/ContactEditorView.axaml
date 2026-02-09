@@ -1,13 +1,13 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
+<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="using:ContractCreator.UI.ViewModels.Workers"
+             xmlns:vm="using:ContractCreator.UI.ViewModels.Contacts"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="ContractCreator.UI.Views.Workers.WorkerEditorView"
-             x:DataType="vm:WorkerEditorViewModel">
+             x:Class="ContractCreator.UI.Views.Contacts.ContactEditorView"
+             x:DataType="vm:ContactEditorViewModel">
 
-  <ScrollViewer>
+    <ScrollViewer>
         <StackPanel Margin="20" Spacing="10" MaxWidth="500">
             <TextBlock Text="Добавление сотрудника" FontSize="20" FontWeight="Bold" Margin="0,0,0,20"/>
             
@@ -28,16 +28,8 @@
             <TextBlock Text="Должность" />
             <TextBox Text="{Binding Position}" />
 
-            <Grid ColumnDefinitions="*, 10, *">
-                <StackPanel Grid.Column="0">
-                    <TextBlock Text="ИНН" />
-                    <TextBox Text="{Binding Inn}" />
-                </StackPanel>
-                <StackPanel Grid.Column="2">
-                    <TextBlock Text="Телефон" />
-                    <TextBox Text="{Binding Phone}" />
-                </StackPanel>
-            </Grid>
+            <TextBlock Text="Телефон" />
+            <TextBox Text="{Binding Phone}" />
 
             <TextBlock Text="Email" />
             <TextBox Text="{Binding Email}" />
@@ -55,4 +47,5 @@
 
         </StackPanel>
     </ScrollViewer>
+    
 </UserControl>
