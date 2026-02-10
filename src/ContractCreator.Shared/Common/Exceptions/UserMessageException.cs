@@ -13,8 +13,8 @@
         public UserMessageType Type { get; }
 
         public UserMessageException(
-            string message, 
-            string title = "Внимание", 
+            string message,
+            string title = "Внимание",
             UserMessageType type = UserMessageType.Warning) : base(message)
         {
             Title = title;

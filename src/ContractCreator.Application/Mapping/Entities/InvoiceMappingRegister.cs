@@ -9,16 +9,16 @@ namespace ContractCreator.Application.Mapping.Entities
         public void Register(TypeAdapterConfig config)
         {
             config.NewConfig<ContractInvoiceItem, ContractInvoiceItemDto>()
-            .Map(dest => dest.CurrencyName, src => src.Currency != null 
-            ? src.Currency.CurrencyName 
+            .Map(dest => dest.CurrencyName, src => src.Currency != null
+            ? src.Currency.CurrencyName
             : string.Empty);
 
             config.NewConfig<ContractInvoiceItemDto, ContractInvoiceItem>();
 
 
             config.NewConfig<ContractInvoice, ContractInvoiceDto>()
-                .Map(dest => dest.CurrencyName, src => src.Currency != null 
-                ? src.Currency.CurrencyName 
+                .Map(dest => dest.CurrencyName, src => src.Currency != null
+                ? src.Currency.CurrencyName
                 : string.Empty)
                 .PreserveReference(true);
 

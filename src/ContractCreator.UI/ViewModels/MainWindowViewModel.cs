@@ -10,6 +10,7 @@ public class MainWindowViewModel : ViewModelBase
 
     [Reactive] public ViewModelBase CurrentPage { get; set; }
     [Reactive] public bool IsDarkTheme { get; set; }
+    [Reactive] public string CurrentFirmName { get; set; } = "Фирма не выбрана";
 
     public ObservableCollection<MenuItemViewModel> MenuItems { get; }
     #endregion
@@ -25,6 +26,7 @@ public class MainWindowViewModel : ViewModelBase
         SetupMain();
 
         IsDarkTheme = _settingsService.IsDarkTheme;
+        CurrentFirmName = _settingsService.CurrentFirmName;
 
         MenuItems = new ObservableCollection<MenuItemViewModel>
             {
@@ -73,7 +75,7 @@ public class MainWindowViewModel : ViewModelBase
                             ReactiveCommand.Create(() => _navigationService.NavigateTo<WorkerListViewModel>()))
                     }
                 },
-                
+
                 new MenuItemViewModel("Номенклатура")
                 {
                     Items = new ObservableCollection<MenuItemViewModel>
@@ -95,5 +97,9 @@ public class MainWindowViewModel : ViewModelBase
                 {
                     _settingsService.IsDarkTheme = isDark;
                 });
+
+        _settingsService.CurrentFirmNameChanged
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(name => CurrentFirmName = name ?? string.Empty);
     }
 }

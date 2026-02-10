@@ -31,7 +31,7 @@ public class ContactEditorViewModel : ViewModelBase, IParametrizedViewModel
         SaveCommand = ReactiveCommand.CreateFromTask(SaveContactAsync);
         CancelCommand = ReactiveCommand.Create(() => _navigation.NavigateBack());
     }
-    
+
     public async Task ApplyParameterAsync(object parameter)
     {
         if (parameter is EditorParams param)
@@ -42,63 +42,63 @@ public class ContactEditorViewModel : ViewModelBase, IParametrizedViewModel
                 await LoadContactAsync(param.Id);
         }
     }
-    
+
     private async Task LoadContactAsync(int id)
+    {
+        try
         {
-            try
+            var dto = await _contactService.GetContactByIdAsync(id);
+            if (dto != null)
             {
-                var dto = await _contactService.GetContactByIdAsync(id);
-                if (dto != null)
-                {
-                    Id = dto.Id;
-                    CounterpartyId = dto.CounterpartyId;
-                    FirstName = dto.FirstName;
-                    LastName = dto.LastName;
-                    MiddleName = dto.MiddleName ?? string.Empty;
-                    Position = dto.Position;
-                    Phone = dto.Phone;
-                    Email = dto.Email ?? string.Empty;
-                    Note = dto.Note;
-                    IsDirector = dto.IsDirector;
-                    IsAccountant = dto.IsAccountant;
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.Message);
-                throw new UserMessageException("Ошибка при загрузке контакта!",
-                    "Ошибка", UserMessageType.Error);
+                Id = dto.Id;
+                CounterpartyId = dto.CounterpartyId;
+                FirstName = dto.FirstName;
+                LastName = dto.LastName;
+                MiddleName = dto.MiddleName ?? string.Empty;
+                Position = dto.Position;
+                Phone = dto.Phone;
+                Email = dto.Email ?? string.Empty;
+                Note = dto.Note;
+                IsDirector = dto.IsDirector;
+                IsAccountant = dto.IsAccountant;
             }
         }
-
-        private async Task SaveContactAsync()
+        catch (Exception ex)
         {
-            try
-            {
-                var dto = new ContactDto()
-                {
-                    FirstName = FirstName,
-                    LastName = LastName,
-                    MiddleName = MiddleName,
-                    Position = Position,
-                    Phone = Phone,
-                    Email = Email,
-                    Note = Note,
-                    IsDirector = IsDirector,
-                    IsAccountant = IsAccountant,
-                    CounterpartyId = CounterpartyId,
-                    IsDeleted = false
-                };
-
-                await _contactService.CreateContactAsync(dto);
-
-                _navigation.NavigateBack();
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.Message);
-                throw new UserMessageException("Ошибка при сохранении контакта!",
-                    "Ошибка", UserMessageType.Error);
-            }
+            Log.Error(ex.Message);
+            throw new UserMessageException("Ошибка при загрузке контакта!",
+                "Ошибка", UserMessageType.Error);
         }
+    }
+
+    private async Task SaveContactAsync()
+    {
+        try
+        {
+            var dto = new ContactDto()
+            {
+                FirstName = FirstName,
+                LastName = LastName,
+                MiddleName = MiddleName,
+                Position = Position,
+                Phone = Phone,
+                Email = Email,
+                Note = Note,
+                IsDirector = IsDirector,
+                IsAccountant = IsAccountant,
+                CounterpartyId = CounterpartyId,
+                IsDeleted = false
+            };
+
+            await _contactService.CreateContactAsync(dto);
+
+            _navigation.NavigateBack();
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex.Message);
+            throw new UserMessageException("Ошибка при сохранении контакта!",
+                "Ошибка", UserMessageType.Error);
+        }
+    }
 }

@@ -1,4 +1,5 @@
 ﻿using Avalonia.Styling;
+using System.Reactive.Subjects;
 using System.Text.Json;
 using AvaloniaApp = Avalonia.Application;
 
@@ -9,6 +10,8 @@ namespace ContractCreator.UI.Services.Settings
         private const string FileName = "user_settings.json";
         private readonly JsonSerializerOptions _jsonOptions = new() { WriteIndented = true };
         private AppSettings _settings;
+        private readonly BehaviorSubject<int?> _currentFirmIdSubject;
+        private readonly BehaviorSubject<string> _currentFirmNameSubject;
 
         public int? CurrentFirmId
         {
@@ -17,8 +20,26 @@ namespace ContractCreator.UI.Services.Settings
             {
                 _settings.CurrentFirmId = value;
                 Save();
+                _currentFirmIdSubject.OnNext(value);
             }
         }
+
+        public string CurrentFirmName
+        {
+            get => _settings.CurrentFirmName ?? "Фирма не выбрана";
+            set
+            {
+                if (_settings.CurrentFirmName != value)
+                {
+                    _settings.CurrentFirmName = value;
+                    Save();
+                    _currentFirmNameSubject.OnNext(value ?? "Фирма не выбрана");
+                }
+            }
+        }
+
+        public IObservable<int?> CurrentFirmIdChanged => _currentFirmIdSubject;
+        public IObservable<string> CurrentFirmNameChanged => _currentFirmNameSubject;
 
         public bool IsDarkTheme
         {
@@ -29,10 +50,7 @@ namespace ContractCreator.UI.Services.Settings
                 {
                     _settings.IsDarkTheme = value;
 
-                    // Сначала меняем визуал
                     ApplyTheme(value);
-
-                    // Потом сохраняем
                     Save();
                 }
             }
@@ -41,7 +59,10 @@ namespace ContractCreator.UI.Services.Settings
         public SettingsService()
         {
             Load();
-            ApplyTheme(_settings.IsDarkTheme);
+            ApplyTheme(_settings!.IsDarkTheme);
+
+            _currentFirmIdSubject = new BehaviorSubject<int?>(_settings.CurrentFirmId);
+            _currentFirmNameSubject = new BehaviorSubject<string>(_settings.CurrentFirmName ?? "Фирма не выбрана");
         }
 
         private void Load()
@@ -98,6 +119,7 @@ namespace ContractCreator.UI.Services.Settings
         private class AppSettings
         {
             public int? CurrentFirmId { get; set; }
+            public string? CurrentFirmName { get; set; }
             public bool IsDarkTheme { get; set; } = false;
         }
     }

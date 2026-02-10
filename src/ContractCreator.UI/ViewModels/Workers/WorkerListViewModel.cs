@@ -1,6 +1,9 @@
-﻿namespace ContractCreator.UI.ViewModels.Workers
+﻿using ContractCreator.UI.ViewModels.Base;
+using System.Reactive.Concurrency;
+
+namespace ContractCreator.UI.ViewModels.Workers
 {
-    public class WorkerListViewModel : ViewModelBase
+    public class WorkerListViewModel : EntityListViewModel<WorkerDto>
     {
         #region Props
         private readonly IWorkerService _workerService;
@@ -8,10 +11,8 @@
         private readonly INavigationService _navigation;
 
         [Reactive] public WorkerDto? SelectedWorker { get; set; }
-        public ObservableCollection<WorkerDto> Workers { get; } = new();
         #endregion
         #region Actions
-        public ReactiveCommand<Unit, Unit> LoadDataCommand { get; }
         public ReactiveCommand<Unit, Unit> CreateCommand { get; }
         public ReactiveCommand<WorkerDto, Unit> EditCommand { get; }
         public ReactiveCommand<WorkerDto, Unit> DeleteCommand { get; }
@@ -25,8 +26,6 @@
             _workerService = workerService;
             _settingsService = settingsService;
             _navigation = navigation;
-
-            LoadDataCommand = ReactiveCommand.CreateFromTask(LoadDataAsync);
 
             CreateCommand = ReactiveCommand.Create(() =>
             {
@@ -47,30 +46,36 @@
             DeleteCommand = ReactiveCommand.CreateFromTask<WorkerDto>(async worker =>
             {
                 await _workerService.DeleteWorkerAsync(worker.Id);
-                Workers.Remove(worker);
+                Items.Remove(worker);
             });
 
-            LoadDataCommand.Execute().Subscribe();
+            RxApp.MainThreadScheduler.Schedule(async () => await RefreshListAsync());
         }
 
-        private async Task LoadDataAsync()
+        protected override async Task RefreshListAsync()
         {
+            IsBusy = true;
             try
             {
-                Workers.Clear();
-                var currentFirm = _settingsService.CurrentFirmId;
-                if (currentFirm != null)
+                var data = await _workerService.GetWorkersByFirmIdAsync(_settingsService.CurrentFirmId
+                    ?? throw new UserMessageException("Ошибка при загрузке сотрудников! Фирма не выбрана!", "Ошибка", UserMessageType.Error));
+
+                if (data != null)
                 {
-                    var list = await _workerService.GetWorkersByFirmIdAsync(currentFirm.Value);
-                    foreach (var item in list) 
-                        Workers.Add(item);
+                    Items.Clear();
+                    foreach (var item in data)
+                        Items.Add(item);
                 }
             }
             catch (Exception ex)
             {
                 Log.Error(ex.Message);
-                throw new UserMessageException("Ошибка при загрузке сотрудников!", 
+                throw new UserMessageException("Ошибка при загрузке сотрудников!",
                     "Ошибка", UserMessageType.Error);
+            }
+            finally 
+            { 
+                IsBusy = false; 
             }
         }
     }

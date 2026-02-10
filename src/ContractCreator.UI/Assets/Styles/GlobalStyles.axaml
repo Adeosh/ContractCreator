@@ -154,7 +154,7 @@
     </Style>
 
 
-    <Style Selector="TextBox.outline, MaskedTextBox.outline, ComboBox.outline">
+    <Style Selector="TextBox.outline, MaskedTextBox.outline, ComboBox.outline, AutoCompleteBox.outline">
         <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
         <Setter Property="Background" Value="{DynamicResource CardBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
@@ -162,6 +162,38 @@
     
     <Style Selector="TextBox.outline:error /template/ Border#PART_BorderElement">
         <Setter Property="BorderBrush" Value="{DynamicResource ErrorBrush}"/>
+    </Style>
+
+    <Style Selector="CheckBox /template/ Border#NormalRectangle">
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource CardBrush}"/>
+        <Setter Property="CornerRadius" Value="4"/>
+        <Setter Property="BorderThickness" Value="1"/>
+    </Style>
+
+    <Style Selector="CheckBox:pointerover /template/ Border#NormalRectangle">
+        <Setter Property="BorderBrush" Value="{DynamicResource ActionBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource CardBrush}"/>
+    </Style>
+
+    <Style Selector="CheckBox:checked /template/ Border#NormalRectangle">
+        <Setter Property="Background" Value="{DynamicResource ActionBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ActionBrush}"/>
+    </Style>
+
+    <Style Selector="CheckBox:checked:pointerover /template/ Border#NormalRectangle">
+        <Setter Property="Background" Value="{DynamicResource ActionHoverBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ActionHoverBrush}"/>
+    </Style>
+
+    <Style Selector="CheckBox:checked /template/ Path#CheckGlyph">
+        <Setter Property="Fill" Value="{DynamicResource CardBrush}"/>
+    </Style>
+    
+    <Style Selector="CheckBox /template/ ContentPresenter#ContentPresenter">
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
 
 </Styles>

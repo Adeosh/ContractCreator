@@ -158,6 +158,7 @@ namespace ContractCreator.Infrastructure.Services.Gar
         #endregion
 
         private readonly AppDbContext _context;
+        private readonly SemaphoreSlim _semaphore = new(1, 1);
 
         public GarService(AppDbContext context)
         {
@@ -201,32 +202,41 @@ namespace ContractCreator.Infrastructure.Services.Gar
 
         private async Task<List<AddressSearchResultDto>> ExecuteSearch(string tsQueryString, int limit, CancellationToken ct)
         {
-            var rawData = await _context.ClassifierGars
-                .AsNoTracking()
-                .Where(a => a.FullAddress != null &&
-                            EF.Functions.ToTsVector("russian", a.FullAddress)
-                                .Matches(EF.Functions.ToTsQuery("russian", tsQueryString)))
-                .Select(x => new
-                {
-                    x.ObjectId,
-                    x.FullAddress,
-                    x.PostalIndex,
-                    x.Level,
-                    Rank = EF.Functions.ToTsVector("russian", x.FullAddress)
-                        .RankCoverDensity(EF.Functions.ToTsQuery("russian", tsQueryString),
-                                          NpgsqlTsRankingNormalization.DivideByItselfPlusOne)
-                })
-                .OrderByDescending(x => x.Rank)
-                .ThenBy(x => x.Level)
-                .Take(limit)
-                .ToListAsync(ct);
+            await _semaphore.WaitAsync(ct);
 
-            return rawData.Select(x => new AddressSearchResultDto
+            try
             {
-                ObjectId = x.ObjectId,
-                FullAddress = x.FullAddress,
-                PostalIndex = x.PostalIndex,
-            }).ToList();
+                var rawData = await _context.ClassifierGars
+                    .AsNoTracking()
+                    .Where(a => a.FullAddress != null &&
+                                EF.Functions.ToTsVector("russian", a.FullAddress)
+                                    .Matches(EF.Functions.ToTsQuery("russian", tsQueryString)))
+                    .Select(x => new
+                    {
+                        x.ObjectId,
+                        x.FullAddress,
+                        x.PostalIndex,
+                        x.Level,
+                        Rank = EF.Functions.ToTsVector("russian", x.FullAddress)
+                            .RankCoverDensity(EF.Functions.ToTsQuery("russian", tsQueryString),
+                                              NpgsqlTsRankingNormalization.DivideByItselfPlusOne)
+                    })
+                    .OrderByDescending(x => x.Rank)
+                    .ThenBy(x => x.Level)
+                    .Take(limit)
+                    .ToListAsync(ct);
+
+                return rawData.Select(x => new AddressSearchResultDto
+                {
+                    ObjectId = x.ObjectId,
+                    FullAddress = x.FullAddress,
+                    PostalIndex = x.PostalIndex,
+                }).ToList();
+            }
+            finally
+            {
+                _semaphore.Release();
+            }
         }
     }
 }

@@ -38,7 +38,7 @@
 		</Grid>
 
 		<DataGrid Grid.Row="1"
-				  ItemsSource="{Binding Workers}"
+				  ItemsSource="{Binding Items}"
 				  SelectedItem="{Binding SelectedWorker}"
 				  AutoGenerateColumns="False"
 				  IsReadOnly="True"
@@ -86,7 +86,7 @@
 
 		<TextBlock Grid.Row="1"
 				   Text="Список сотрудников пуст. Нажмите 'Добавить'."
-				   IsVisible="{Binding !Workers.Count}"
+				   IsVisible="{Binding !Items.Count}"
 				   HorizontalAlignment="Center"
 				   VerticalAlignment="Center"
 				   Foreground="Gray"/>

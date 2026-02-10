@@ -18,14 +18,14 @@ public class ContactListViewModel : ViewModelBase
     #endregion
 
     public ContactListViewModel(
-        IContactService contactService, 
-        ISettingsService settingsService, 
+        IContactService contactService,
+        ISettingsService settingsService,
         INavigationService navigation)
     {
         _contactService = contactService;
         _settingsService = settingsService;
         _navigation = navigation;
-        
+
         LoadDataCommand = ReactiveCommand.CreateFromTask(LoadDataAsync);
 
         CreateCommand = ReactiveCommand.Create(() =>
@@ -48,7 +48,7 @@ public class ContactListViewModel : ViewModelBase
 
         LoadDataCommand.Execute().Subscribe();
     }
-    
+
     private async Task LoadDataAsync()
     {
         try
@@ -61,7 +61,7 @@ public class ContactListViewModel : ViewModelBase
         catch (Exception ex)
         {
             Log.Error(ex.Message);
-            throw new UserMessageException("Ошибка при загрузке контактов!", 
+            throw new UserMessageException("Ошибка при загрузке контактов!",
                 "Ошибка", UserMessageType.Error);
         }
     }

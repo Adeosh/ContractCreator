@@ -3,17 +3,14 @@
         xmlns:vm="using:ContractCreator.UI.ViewModels"
         x:Class="ContractCreator.UI.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        Title="Актум"
-        
+        Title="Актум"     
         Width="1920" Height="1080"
         MinWidth="1024" MinHeight="768"
-        WindowStartupLocation="CenterScreen"
-        
+        WindowStartupLocation="CenterScreen"      
         SystemDecorations="Full"
         ExtendClientAreaToDecorationsHint="True"
         ExtendClientAreaChromeHints="NoChrome"
         ExtendClientAreaTitleBarHeightHint="-1"
-        
         Background="Transparent">
 
     <Border BorderThickness="1" 
@@ -32,13 +29,17 @@
                   Background="Transparent"
                   PointerPressed="OnTitleBarPointerPressed">
                 
-                <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="20,0,0,0" Spacing="10" HorizontalAlignment="Left">
-                    <TextBlock Text="📄 Актум" 
-                               FontWeight="Bold" 
-                               FontSize="18" 
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="20,0,0,0" Spacing="15" HorizontalAlignment="Left">
+                    <TextBlock Text="📄 Актум" FontWeight="Bold" FontSize="18" VerticalAlignment="Center" Foreground="{DynamicResource ActionBrush}"/>
+                    
+                    <Border Width="1" Height="20" Background="{DynamicResource BorderBrush}" VerticalAlignment="Center"/>
+
+                    <TextBlock Text="{Binding CurrentFirmName}" 
+                               FontWeight="SemiBold" 
+                               FontSize="14" 
                                VerticalAlignment="Center"
-                               Foreground="{DynamicResource ActionBrush}"
-                               IsHitTestVisible="False"/>
+                               Foreground="{DynamicResource PrimaryTextBrush}"
+                               ToolTip.Tip="Текущая рабочая фирма"/>
                 </StackPanel>
 
                 <Menu Grid.Column="1" 

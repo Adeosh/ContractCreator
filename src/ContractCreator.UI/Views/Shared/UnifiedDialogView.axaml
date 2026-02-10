@@ -1,0 +1,54 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:ContractCreator.UI.ViewModels.Shared"
+        Width="450" Height="250"
+        CanResize="False"
+        x:Class="ContractCreator.UI.Views.Shared.UnifiedDialogView"
+        x:DataType="vm:UnifiedDialogViewModel"
+        WindowStartupLocation="CenterOwner"
+        SystemDecorations="BorderOnly"
+        Background="Transparent"
+        TransparencyLevelHint="AcrylicBlur"
+        Title="{Binding Title}">
+
+    <Border Background="{DynamicResource CardBrush}" 
+            CornerRadius="10" 
+            Padding="20" 
+            BorderThickness="2" 
+            BorderBrush="{Binding HeaderColor}"
+            BoxShadow="0 4 10 0 #40000000">
+            
+        <Grid RowDefinitions="Auto, *, Auto">
+            
+            <StackPanel Orientation="Horizontal" Spacing="15" Grid.Row="0">
+                <TextBlock Text="{Binding Icon}" FontSize="28" VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding Title}" FontSize="20" FontWeight="Bold" 
+                           Foreground="{DynamicResource PrimaryTextBrush}" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <ScrollViewer Grid.Row="1" Margin="0,20">
+                <TextBlock Text="{Binding Message}" 
+                           TextWrapping="Wrap" 
+                           FontSize="15" 
+                           LineHeight="22"
+                           Foreground="{DynamicResource SecondaryTextBrush}"/>
+            </ScrollViewer>
+
+            <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="15" HorizontalAlignment="Right">
+                
+                <Button Command="{Binding CloseCommand}" 
+                        CommandParameter="False"
+                        Content="{Binding CancelText}"
+                        IsVisible="{Binding IsConfirmation}"
+                        Width="100" HorizontalContentAlignment="Center"/>
+
+                <Button Command="{Binding CloseCommand}" 
+                        CommandParameter="True"
+                        Content="{Binding ConfirmText}"
+                        Classes="accent"
+                        FontWeight="Bold"
+                        Width="100" HorizontalContentAlignment="Center"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

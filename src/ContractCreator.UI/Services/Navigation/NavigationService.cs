@@ -27,7 +27,7 @@ namespace ContractCreator.UI.Services.Navigation
 
         public void NavigateTo<T>() where T : ViewModelBase
         {
-            if (_currentView != null) 
+            if (_currentView != null)
                 _history.Push(_currentView);
 
             var viewModel = _serviceProvider.GetRequiredService<T>();
@@ -36,7 +36,7 @@ namespace ContractCreator.UI.Services.Navigation
 
         public void NavigateTo<T>(object parameter) where T : ViewModelBase
         {
-            if (_currentView != null) 
+            if (_currentView != null)
                 _history.Push(_currentView);
 
             var viewModel = _serviceProvider.GetRequiredService<T>();
@@ -48,7 +48,7 @@ namespace ContractCreator.UI.Services.Navigation
 
         public void NavigateTo(Type viewModelType)
         {
-            if (_currentView != null) 
+            if (_currentView != null)
                 _history.Push(_currentView);
 
             var viewModel = (ViewModelBase)_serviceProvider.GetRequiredService(viewModelType);

@@ -17,10 +17,10 @@ namespace ContractCreator.Domain.Enums
         [Description("Единый сельскохозяйственный налог")]
         ESHN = 4,
         /// <summary> "Патентная система налогообложения" </summary>
-        [Description("Патентная система налогообложения")] 
+        [Description("Патентная система налогообложения")]
         PSN = 5,
         /// <summary> "Налог на профессиональный доход" </summary>
-        [Description("Налог на профессиональный доход")] 
+        [Description("Налог на профессиональный доход")]
         NPD = 6
     }
 }

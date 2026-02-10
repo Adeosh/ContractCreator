@@ -1,5 +1,4 @@
 ﻿using Avalonia.Controls;
-using ContractCreator.Shared.DTOs.Data;
 using ContractCreator.UI.ViewModels.UserControls;
 
 namespace ContractCreator.UI.Views.UserControls;

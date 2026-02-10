@@ -9,5 +9,6 @@
         public string Code { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public string DisplayName => $"{Code} — {Name}";
+        public override string ToString() => DisplayName;
     }
 }

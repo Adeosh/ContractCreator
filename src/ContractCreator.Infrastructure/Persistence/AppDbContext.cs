@@ -56,7 +56,7 @@ namespace ContractCreator.Infrastructure.Persistence
                 foreach (var property in entity.GetProperties())
                 {
                     if (property.GetColumnName(StoreObjectIdentifier.Table(
-                        entity.GetTableName()!, 
+                        entity.GetTableName()!,
                         entity.GetSchema())) == null)
                     {
                         property.SetColumnName(property.Name);

@@ -10,8 +10,8 @@ namespace ContractCreator.Application.Mapping.Entities
         public void Register(TypeAdapterConfig config)
         {
             config.NewConfig<ContractSpecification, ContractSpecificationDto>()
-                .Map(dest => dest.CurrencyName, src => src.Currency != null 
-                ? src.Currency.CurrencyName 
+                .Map(dest => dest.CurrencyName, src => src.Currency != null
+                ? src.Currency.CurrencyName
                 : string.Empty);
 
             config.NewConfig<ContractSpecificationDto, ContractSpecification>()
@@ -20,16 +20,16 @@ namespace ContractCreator.Application.Mapping.Entities
             config.NewConfig<Contract, ContractDto>()
                 .Map(dest => dest.Type, src => (byte)src.Type)
                 .Map(dest => dest.EnterpriseRole, src => (byte)src.EnterpriseRole)
-                .Map(dest => dest.Initiator, src => src.Initiator.HasValue 
-                ? (byte?)src.Initiator.Value 
+                .Map(dest => dest.Initiator, src => src.Initiator.HasValue
+                ? (byte?)src.Initiator.Value
                 : null)
                 .PreserveReference(true);
 
             config.NewConfig<ContractDto, Contract>()
                 .Map(dest => dest.Type, src => (ContractType)src.Type)
                 .Map(dest => dest.EnterpriseRole, src => (ContractEnterpriseRole)src.EnterpriseRole)
-                .Map(dest => dest.Initiator, src => src.Initiator.HasValue 
-                ? (TerminationInitiator?)src.Initiator.Value 
+                .Map(dest => dest.Initiator, src => src.Initiator.HasValue
+                ? (TerminationInitiator?)src.Initiator.Value
                 : null);
 
             config.NewConfig<ContractStageType, ContractStageDto>();

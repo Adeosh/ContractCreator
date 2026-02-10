@@ -23,7 +23,7 @@
 				 </Grid>
 
 				 <DataGrid Grid.Row="1"
-						   ItemsSource="{Binding Firms}"
+						   ItemsSource="{Binding Items}"
 						   SelectedItem="{Binding SelectedFirm}"
 						   AutoGenerateColumns="False"
 						   IsReadOnly="True"
@@ -62,7 +62,7 @@
 
 				 <TextBlock Grid.Row="1"
 							Text="Список фирм пуст"
-							IsVisible="{Binding !Firms.Count}"
+							IsVisible="{Binding !Items.Count}"
 							HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Gray"/>
 			 </Grid>
 </UserControl>

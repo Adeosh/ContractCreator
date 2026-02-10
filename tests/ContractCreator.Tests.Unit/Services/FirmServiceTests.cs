@@ -226,7 +226,7 @@ namespace ContractCreator.Tests.Unit.Services
                     PostalIndex = "630120",
                 },
                 ActualAddress = new AddressDto
-                {                    
+                {
                     FullAddress = "обл Ленинградская, г.о. Сосновоборский, г Сосновый Бор, ул Ленинградская",
                     ObjectId = 753471,
                     House = "10",

@@ -1,69 +1,24 @@
 ﻿<UserControl xmlns="https://github.com/avaloniaui"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:vm="using:ContractCreator.UI.ViewModels.Firms"
 			 xmlns:controls="using:ContractCreator.UI.Views.UserControls"
-			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="800"
+			 xmlns:dto="using:ContractCreator.Shared.DTOs"
 			 x:Class="ContractCreator.UI.Views.Firms.FirmEditorView"
 			 x:DataType="vm:FirmEditorViewModel">
 
 	<ScrollViewer>
-		<StackPanel Margin="20" Spacing="15" MaxWidth="800">
-			<TextBlock Text="Карточка фирмы" FontSize="22" FontWeight="Bold" Margin="0,0,0,10"/>
+		<StackPanel Margin="20" Spacing="15" MaxWidth="850">
+
+			<StackPanel Orientation="Horizontal" Spacing="10" Margin="0,0,0,10">
+				<Button Command="{Binding CancelCommand}" Content="🠔" ToolTip.Tip="Назад" Classes="windowBtn"/>
+				<TextBlock Text="Карточка фирмы" FontSize="22" FontWeight="Bold" VerticalAlignment="Center"/>
+			</StackPanel>
 
 			<Border Background="{DynamicResource CardBrush}" CornerRadius="8" Padding="15" BoxShadow="0 1 3 0 #20000000">
 				<StackPanel Spacing="15">
-					<TextBlock Text="Основная информация" FontWeight="Bold" FontSize="16" Foreground="{DynamicResource PrimaryTextColor}"/>
+					<TextBlock Text="Правовой статус" FontWeight="Bold" FontSize="16" Foreground="{DynamicResource PrimaryTextColor}"/>
 
-					<StackPanel>
-						<TextBlock Text="Полное наименование" FontWeight="Medium" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
-						<TextBox Text="{Binding FullName}" Watermark="ООО 'Ромашка'" Classes="outline"/>
-					</StackPanel>
-
-					<StackPanel>
-						<TextBlock Text="Краткое наименование" FontWeight="Medium" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
-						<TextBox Text="{Binding ShortName}" Watermark="Ромашка" Classes="outline"/>
-					</StackPanel>
-				</StackPanel>
-			</Border>
-
-			<Border Background="{DynamicResource CardBrush}" CornerRadius="8" Padding="15" BoxShadow="0 1 3 0 #20000000">
-				<StackPanel Spacing="15">
-					<TextBlock Text="Реквизиты" FontWeight="Bold" FontSize="16" Foreground="{DynamicResource PrimaryTextColor}"/>
-
-					<Grid ColumnDefinitions="*, 15, *">
-						<StackPanel Grid.Column="0" Spacing="5">
-							<TextBlock Text="ИНН" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
-							<TextBox Text="{Binding Inn}" Classes="outline"/>
-						</StackPanel>
-						<StackPanel Grid.Column="2" Spacing="5">
-							<TextBlock Text="КПП" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
-							<TextBox Text="{Binding Kpp}" Classes="outline"/>
-						</StackPanel>
-					</Grid>
-
-					<Grid ColumnDefinitions="*, 15, *">
-						<StackPanel Grid.Column="0" Spacing="5">
-							<TextBlock Text="ОГРН" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
-							<TextBox Text="{Binding Ogrn}" Classes="outline"/>
-						</StackPanel>
-						<StackPanel Grid.Column="2" Spacing="5">
-							<TextBlock Text="Телефон" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
-
-							<MaskedTextBox Mask="+7 (000) 000-00-00"
-										   Text="{Binding Phone}"
-										   Classes="outline"
-										   HidePromptOnLeave="True"/>
-						</StackPanel>
-					</Grid>
-
-					<StackPanel Spacing="5">
-						<TextBlock Text="Email" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
-						<TextBox Text="{Binding Email}" Classes="outline"/>
-					</StackPanel>
-
-					<Grid ColumnDefinitions="*, 15, *">
+					<Grid ColumnDefinitions="*, 15, 2*">
 						<StackPanel Grid.Column="0" Spacing="5">
 							<TextBlock Text="Правовая форма" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
 							<ComboBox ItemsSource="{Binding LegalForms}"
@@ -76,7 +31,77 @@
 								</ComboBox.ItemTemplate>
 							</ComboBox>
 						</StackPanel>
+
 						<StackPanel Grid.Column="2" Spacing="5">
+							<TextBlock Text="ОКОПФ" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
+							<AutoCompleteBox ItemsSource="{Binding OkopfList}"
+											 SelectedItem="{Binding SelectedOkopf}"
+											 ValueMemberBinding="{Binding DisplayName}"
+											 ToolTip.Tip="{Binding SelectedOkopf.DisplayName}"
+											 FilterMode="Contains"
+											 Watermark="Введите код или название..."
+											 Classes="outline"/>
+						</StackPanel>
+					</Grid>
+				</StackPanel>
+			</Border>
+
+			<Border Background="{DynamicResource CardBrush}" CornerRadius="8" Padding="15" BoxShadow="0 1 3 0 #20000000">
+				<StackPanel Spacing="15">
+					<TextBlock Text="Наименование" FontWeight="Bold" FontSize="16" Foreground="{DynamicResource PrimaryTextColor}"/>
+
+					<Grid ColumnDefinitions="*, 15, 2*">
+						<StackPanel Grid.Column="0" Spacing="5">
+							<TextBlock Text="Краткое наименование" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
+							<TextBox Text="{Binding ShortName}" Watermark="ООО 'Ромашка'" Classes="outline"/>
+						</StackPanel>
+
+						<StackPanel Grid.Column="2" Spacing="5">
+							<TextBlock Text="Полное наименование" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
+							<TextBox Text="{Binding FullName}"
+									 ToolTip.Tip="{Binding FullName}"
+									 Watermark="Общество с ограниченной ответственностью..." Classes="outline"/>
+						</StackPanel>
+					</Grid>
+				</StackPanel>
+			</Border>
+
+			<Border Background="{DynamicResource CardBrush}" CornerRadius="8" Padding="15" BoxShadow="0 1 3 0 #20000000">
+				<StackPanel Spacing="15">
+					<TextBlock Text="Регистрация и Налоги" FontWeight="Bold" FontSize="16" Foreground="{DynamicResource PrimaryTextColor}"/>
+
+					<Grid ColumnDefinitions="*, 10, *, 10, *">
+						<StackPanel Grid.Column="0" Spacing="5">
+							<TextBlock Text="ИНН" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
+							<TextBox Text="{Binding Inn}" Classes="outline"/>
+						</StackPanel>
+						<StackPanel Grid.Column="2" Spacing="5">
+							<TextBlock Text="КПП" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
+							<TextBox Text="{Binding Kpp}" Classes="outline"/>
+						</StackPanel>
+						<StackPanel Grid.Column="4" Spacing="5">
+							<TextBlock Text="ОГРН" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
+							<TextBox Text="{Binding Ogrn}" Classes="outline"/>
+						</StackPanel>
+					</Grid>
+
+					<Grid ColumnDefinitions="*, 10, *, 10, *">
+						<StackPanel Grid.Column="0" Spacing="5">
+							<TextBlock Text="ОКТМО" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
+							<TextBox Text="{Binding Oktmo}" Classes="outline"/>
+						</StackPanel>
+						<StackPanel Grid.Column="2" Spacing="5">
+							<TextBlock Text="ОКПО" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
+							<TextBox Text="{Binding Okpo}" Classes="outline"/>
+						</StackPanel>
+						<StackPanel Grid.Column="4" Spacing="5">
+							<TextBlock Text="ЕРНС" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
+							<TextBox Text="{Binding Erns}" Classes="outline"/>
+						</StackPanel>
+					</Grid>
+
+					<Grid ColumnDefinitions="*, 15, *">
+						<StackPanel Grid.Column="0" Spacing="5">
 							<TextBlock Text="Система налогообложения" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
 							<ComboBox ItemsSource="{Binding TaxationTypes}"
 									  SelectedItem="{Binding SelectedTaxationType}"
@@ -88,20 +113,32 @@
 								</ComboBox.ItemTemplate>
 							</ComboBox>
 						</StackPanel>
+						<CheckBox Grid.Column="2" Content="Плательщик НДС" IsChecked="{Binding IsVatPayment}" VerticalAlignment="Bottom" Margin="0,0,0,5"/>
 					</Grid>
 				</StackPanel>
 			</Border>
 
 			<Border Background="{DynamicResource CardBrush}" CornerRadius="8" Padding="15" BoxShadow="0 1 3 0 #20000000">
 				<StackPanel Spacing="20">
-					<TextBlock Text="Адреса" FontWeight="Bold" FontSize="16" Foreground="{DynamicResource PrimaryTextColor}"/>
+					<TextBlock Text="Контакты и Адреса" FontWeight="Bold" FontSize="16" Foreground="{DynamicResource PrimaryTextColor}"/>
+
+					<Grid ColumnDefinitions="*, 15, *">
+						<StackPanel Grid.Column="0" Spacing="5">
+							<TextBlock Text="Телефон" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
+							<MaskedTextBox Mask="+7 (000) 000-00-00" Text="{Binding Phone}" Classes="outline" HidePromptOnLeave="True"/>
+						</StackPanel>
+						<StackPanel Grid.Column="2" Spacing="5">
+							<TextBlock Text="Email" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
+							<TextBox Text="{Binding Email}" Classes="outline"/>
+						</StackPanel>
+					</Grid>
+
+					<Separator Background="{DynamicResource BorderBrush}" Opacity="0.3"/>
 
 					<StackPanel Spacing="5">
 						<TextBlock Text="Юридический адрес" FontWeight="SemiBold"/>
 						<controls:AddressControl DataContext="{Binding LegalAddressVM}"/>
 					</StackPanel>
-
-					<Separator Background="{DynamicResource BorderBrush}" Opacity="0.3"/>
 
 					<StackPanel Spacing="5">
 						<TextBlock Text="Фактический адрес" FontWeight="SemiBold"/>
@@ -110,10 +147,23 @@
 				</StackPanel>
 			</Border>
 
-			<StackPanel Orientation="Horizontal" Spacing="20" HorizontalAlignment="Right" Margin="0,10,0,0">
+			<Border Background="{DynamicResource CardBrush}" CornerRadius="8" Padding="15" BoxShadow="0 1 3 0 #20000000">
+				<StackPanel Spacing="20">
+					<TextBlock Text="Банковские реквизиты" FontWeight="Bold" FontSize="16" Foreground="{DynamicResource PrimaryTextColor}"/>
+
+					<controls:BankAccountsControl DataContext="{Binding BankAccountVM}"/>
+				</StackPanel>
+			</Border>
+
+			<Expander Header="Дополнительно" HorizontalAlignment="Stretch" Background="{DynamicResource CardBrush}" CornerRadius="8">
+				<TextBox Text="{Binding ExtraInformation}" Classes="outline" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="60"/>
+			</Expander>
+
+			<StackPanel Orientation="Horizontal" Spacing="20" HorizontalAlignment="Right" Margin="0,10,0,50">
 				<Button Command="{Binding CancelCommand}" Content="Отмена"/>
-				<Button Command="{Binding SaveCommand}" Content="Сохранить" Classes="accent" FontWeight="Bold" Padding="20,10"/>
+				<Button Command="{Binding SaveCommand}" Content="Сохранить изменения" Classes="accent" FontWeight="Bold" Padding="25,10"/>
 			</StackPanel>
+
 		</StackPanel>
 	</ScrollViewer>
 </UserControl>

@@ -1,15 +1,15 @@
-﻿using Avalonia.Controls;
+﻿using System.Reactive.Concurrency;
 
 namespace ContractCreator.UI.ViewModels.Firms
 {
-    public class FirmListViewModel : ViewModelBase
+    public class FirmListViewModel : EntityListViewModel<FirmDto>
     {
         #region Props
         private readonly IFirmService _firmService;
         private readonly ISettingsService _settingsService;
         private readonly INavigationService _navigation;
+        private readonly IUserDialogService _dialogService;
 
-        public ObservableCollection<FirmDto> Firms { get; } = new();
         [Reactive] public FirmDto? SelectedFirm { get; set; }
         [Reactive] public int? CurrentActiveFirmId { get; set; }
         #endregion
@@ -22,11 +22,13 @@ namespace ContractCreator.UI.ViewModels.Firms
         public FirmListViewModel(
             IFirmService firmService,
             INavigationService navigation,
-            ISettingsService settingsService)
+            ISettingsService settingsService,
+            IUserDialogService dialogService)
         {
             _firmService = firmService;
             _navigation = navigation;
             _settingsService = settingsService;
+            _dialogService = dialogService;
 
             CurrentActiveFirmId = _settingsService.CurrentFirmId;
 
@@ -46,31 +48,41 @@ namespace ContractCreator.UI.ViewModels.Firms
                 _navigation.NavigateTo<FirmEditorViewModel>(param);
             });
 
-            SetCurrentCommand = ReactiveCommand.Create<FirmDto>(firm =>
+            SetCurrentCommand = ReactiveCommand.Create<FirmDto>(async firm =>
             {
                 _settingsService.CurrentFirmId = firm.Id;
+                _settingsService.CurrentFirmName = firm.ShortName;
                 CurrentActiveFirmId = firm.Id;
-                throw new UserMessageException($"Рабочая фирма изменена на: " +
+
+                await _dialogService.ShowMessageAsync($"Рабочая фирма изменена на: " +
                     $"{firm.ShortName}", "Успех", UserMessageType.Info);
             });
 
-            LoadDataAsync().ConfigureAwait(false);
+            RxApp.MainThreadScheduler.Schedule(async () => await RefreshListAsync());
         }
 
-        public async Task LoadDataAsync()
+        protected override async Task RefreshListAsync()
         {
+            IsBusy = true;
             try
             {
-                Firms.Clear();
-                var list = await _firmService.GetAllFirmsAsync();
-                foreach (var item in list)
-                    Firms.Add(item);
+                var data = await _firmService.GetAllFirmsAsync();
+                Items.Clear();
+                if (data != null)
+                {
+                    foreach (var item in data)
+                        Items.Add(item);
+                }
             }
             catch (Exception ex)
             {
                 Log.Error(ex.Message);
                 throw new UserMessageException("Ошибка при загрузке фирм!",
                     "Ошибка", UserMessageType.Error);
+            }
+            finally 
+            { 
+                IsBusy = false; 
             }
         }
     }

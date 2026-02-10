@@ -85,6 +85,8 @@ public partial class App : Avalonia.Application
         services.AddSingleton<IUserDialogService, UserDialogService>();
         services.AddSingleton<MainWindowViewModel>();
 
+        services.AddTransient<ContactListViewModel>();
+        services.AddTransient<ContactEditorViewModel>();
         services.AddTransient<WorkerListViewModel>();
         services.AddTransient<WorkerEditorViewModel>();
         services.AddTransient<FirmListViewModel>();

@@ -63,11 +63,11 @@ namespace ContractCreator.Tests.Unit.Mapping
                 OkopfId = 123
             };
 
-            source.BankAccounts.Add(new BankAccount 
-            { 
-                Id = 1, 
-                BIC = "888633", 
-                BankName = "Sber", 
+            source.BankAccounts.Add(new BankAccount
+            {
+                Id = 1,
+                BIC = "888633",
+                BankName = "Sber",
                 AccountNumber = "01928374655647382910",
                 CorrespondentAccount = "01928374655647382910"
             });

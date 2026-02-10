@@ -2,9 +2,9 @@
 
 namespace ContractCreator.UI.Views.Shared;
 
-public partial class ErrorDialogView : Window
+public partial class UnifiedDialogView : Window
 {
-    public ErrorDialogView()
+    public UnifiedDialogView()
     {
         InitializeComponent();
     }
@@ -12,9 +12,8 @@ public partial class ErrorDialogView : Window
     protected override void OnDataContextChanged(EventArgs e)
     {
         base.OnDataContextChanged(e);
-        if (DataContext is ErrorDialogViewModel viewModel)
-        {
-            viewModel.RequestClose += () => Close();
-        }
+
+        if (DataContext is UnifiedDialogViewModel vm)
+            vm.OnCloseRequest = () => Close();
     }
 }

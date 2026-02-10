@@ -13,7 +13,14 @@ namespace ContractCreator.Application.Mapping.Entities
                 .Map(dest => dest.TaxationType, src => (byte)src.TaxationType);
 
             config.NewConfig<FirmDto, Firm>()
-                .Ignore(dest => dest.CreatedDate);
+                .Ignore(dest => dest.CreatedDate)
+                .Ignore(dest => dest.UpdatedDate)
+                .Ignore(dest => dest.BankAccounts)
+                .Ignore(dest => dest.Workers)
+                .Ignore(dest => dest.Contracts)
+                .Ignore(dest => dest.Files)
+                .Ignore(dest => dest.EconomicActivities)
+                .Ignore(dest => dest.Okopf);
         }
     }
 }
