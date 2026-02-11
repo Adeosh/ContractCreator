@@ -1,0 +1,96 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ContractCreator.UI.ViewModels.UserControls"
+             xmlns:dto="using:ContractCreator.Shared.DTOs"
+             xmlns:data="using:ContractCreator.Shared.DTOs.Data"
+             xmlns:i="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
+             x:Class="ContractCreator.UI.Views.UserControls.EconomicActivitiesControl"
+             x:DataType="vm:EconomicActivitiesViewModel">
+
+    <Grid RowDefinitions="Auto, *">
+        
+        <TextBox Grid.Row="0" 
+                 Text="{Binding SearchText}" 
+                 Watermark="Поиск по коду или названию (отображаются первые 100 совпадений)..." 
+                 Classes="clearButton"
+                 Margin="0,0,0,10"/>
+
+        <Grid Grid.Row="1" ColumnDefinitions="*, 10, *">
+            
+            <Border Grid.Column="0" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}" CornerRadius="4">
+                <Grid RowDefinitions="Auto, *">
+                    <TextBlock Text="Справочник ОКВЭД" FontWeight="SemiBold" Margin="10,5" Background="{DynamicResource CardBrush}"/>
+                    
+                    <DataGrid Grid.Row="1" 
+                              ItemsSource="{Binding FilteredAvailableActivities}"
+                              SelectedItem="{Binding SelectedAvailableItem}"
+                              AutoGenerateColumns="False" 
+                              IsReadOnly="True"
+                              GridLinesVisibility="Horizontal"
+                              BorderThickness="0">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Код" Binding="{Binding Code}" Width="80"/>
+                            <DataGridTextColumn Header="Название" Binding="{Binding Name}" Width="*"/>
+                            
+                            <DataGridTemplateColumn Width="40">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate DataType="data:ClassifierDto">
+                                        <Button Command="{Binding $parent[UserControl].((vm:EconomicActivitiesViewModel)DataContext).AddCommand}"
+                                                CommandParameter="{Binding}"
+                                                Background="Transparent" Padding="5">
+                                            <TextBlock Text="➕" Foreground="Green"/>
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </Border>
+
+            <Border Grid.Column="2" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}" CornerRadius="4" Background="{DynamicResource CardBrush}">
+                <Grid RowDefinitions="Auto, *">
+                    <TextBlock Text="Выбранные виды деятельности" FontWeight="SemiBold" Margin="10,5"/>
+
+                    <DataGrid Grid.Row="1" 
+                              ItemsSource="{Binding SelectedActivities}"
+                              SelectedItem="{Binding SelectedChosenItem}"
+                              AutoGenerateColumns="False" 
+                              IsReadOnly="True"
+                              GridLinesVisibility="Horizontal"
+                              BorderThickness="0">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="Осн." Width="50">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate DataType="dto:FirmEconomicActivityDto">
+                                        <RadioButton GroupName="MainGroup"
+                                                     IsChecked="{Binding IsMain, Mode=OneWay}"
+                                                     Command="{Binding $parent[UserControl].((vm:EconomicActivitiesViewModel)DataContext).SetMainCommand}"
+                                                     CommandParameter="{Binding}"
+                                                     HorizontalAlignment="Center"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTextColumn Header="Код" Binding="{Binding Code}" Width="80"/>
+                            <DataGridTextColumn Header="Название" Binding="{Binding Name}" Width="*"/>
+
+                            <DataGridTemplateColumn Width="40">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate DataType="dto:FirmEconomicActivityDto">
+                                        <Button Command="{Binding $parent[UserControl].((vm:EconomicActivitiesViewModel)DataContext).RemoveCommand}"
+                                                CommandParameter="{Binding}"
+                                                Background="Transparent" Padding="5">
+                                            <TextBlock Text="❌" Foreground="Red"/>
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </Border>
+
+        </Grid>
+    </Grid>
+</UserControl>

@@ -31,7 +31,7 @@ namespace ContractCreator.UI.Services.Dialogs
         {
             return await Dispatcher.UIThread.InvokeAsync(async () =>
             {
-                var viewModel = CreateViewModel(title, message, UserMessageType.Warning);
+                var viewModel = CreateViewModel(message, title, UserMessageType.Warning);
 
                 viewModel.IsConfirmation = true;
                 viewModel.ConfirmText = "Да";
@@ -44,7 +44,7 @@ namespace ContractCreator.UI.Services.Dialogs
             });
         }
 
-        private UnifiedDialogViewModel CreateViewModel(string title, string message, UserMessageType type)
+        private UnifiedDialogViewModel CreateViewModel(string message, string title, UserMessageType type)
         {
             var vm = new UnifiedDialogViewModel(title, message);
 

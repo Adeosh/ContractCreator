@@ -43,6 +43,7 @@ namespace ContractCreator.Application.Services
             if (firm == null) throw new Exception("Фирма не найдена");
 
             dto.Adapt(firm);
+            firm.UpdatedDate = DateOnly.FromDateTime(DateTime.Now);
 
             await _unitOfWork.Repository<Firm>().UpdateAsync(firm);
             await _unitOfWork.SaveChangesAsync();

@@ -22,6 +22,7 @@ namespace ContractCreator.Application.Mapping.Entities
                   .Map(dest => dest.Type, src => (byte)src.Type);
 
             config.NewConfig<GoodsAndServiceDto, GoodsAndService>()
+                  .AddDestinationTransform((string? x) => string.IsNullOrWhiteSpace(x) ? null : x)
                   .Map(dest => dest.Type, src => (ProductType)src.Type)
                   .Ignore(dest => dest.CreatedDate);
         }

@@ -148,6 +148,54 @@
 			</Border>
 
 			<Border Background="{DynamicResource CardBrush}" CornerRadius="8" Padding="15" BoxShadow="0 1 3 0 #20000000">
+				<StackPanel Spacing="15">
+					<TextBlock Text="Факсимиле (Печать)" FontWeight="Bold" FontSize="16" Foreground="{DynamicResource PrimaryTextColor}"/>
+
+					<Grid ColumnDefinitions="Auto, 20, *">
+
+						<Border Grid.Column="0"
+								Width="120" Height="120"
+								BorderBrush="{DynamicResource BorderBrush}"
+								BorderThickness="1"
+								CornerRadius="4"
+								Background="{DynamicResource BackgroundBrush}">
+							<Panel>
+								<TextBlock Text="Нет печати"
+										   IsVisible="{Binding FacsimileSealBitmap, Converter={x:Static ObjectConverters.IsNull}}"
+										   VerticalAlignment="Center"
+										   HorizontalAlignment="Center"
+										   Foreground="{DynamicResource SecondaryTextBrush}"
+										   FontSize="12"/>
+
+								<Image Source="{Binding FacsimileSealBitmap}"
+									   Stretch="Uniform"
+									   IsVisible="{Binding FacsimileSealBitmap, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+							</Panel>
+						</Border>
+
+						<StackPanel Grid.Column="2" Spacing="10" VerticalAlignment="Center">
+
+							<StackPanel Spacing="5">
+								<TextBlock Text="Название файла / печати" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
+								<TextBox Text="{Binding FacsimileName}"
+										 Watermark="Например: pechat_main.png"
+										 Classes="outline"/>
+							</StackPanel>
+
+							<StackPanel Orientation="Horizontal" Spacing="10">
+								<Button Command="{Binding UploadSealCommand}" Content="Загрузить файл" Classes="small"/>
+
+								<Button Command="{Binding RemoveSealCommand}"
+										Content="Удалить"
+										Classes="small danger"
+										IsVisible="{Binding FacsimileSealBitmap, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+							</StackPanel>
+						</StackPanel>
+					</Grid>
+				</StackPanel>
+			</Border>
+
+			<Border Background="{DynamicResource CardBrush}" CornerRadius="8" Padding="15" BoxShadow="0 1 3 0 #20000000">
 				<StackPanel Spacing="20">
 					<TextBlock Text="Банковские реквизиты" FontWeight="Bold" FontSize="16" Foreground="{DynamicResource PrimaryTextColor}"/>
 
@@ -155,7 +203,11 @@
 				</StackPanel>
 			</Border>
 
-			<Expander Header="Дополнительно" HorizontalAlignment="Stretch" Background="{DynamicResource CardBrush}" CornerRadius="8">
+			<Expander Header="Коды ОКВЭД" IsExpanded="True" HorizontalAlignment="Stretch" Background="{DynamicResource CardBrush}" CornerRadius="8">
+				<controls:EconomicActivitiesControl DataContext="{Binding OkvedVM}" Height="300"/>
+			</Expander>
+
+			<Expander Header="Дополнительная информация" HorizontalAlignment="Stretch" Background="{DynamicResource CardBrush}" CornerRadius="8">
 				<TextBox Text="{Binding ExtraInformation}" Classes="outline" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="60"/>
 			</Expander>
 

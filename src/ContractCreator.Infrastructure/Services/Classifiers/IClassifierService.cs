@@ -7,5 +7,6 @@ namespace ContractCreator.Infrastructure.Services.Classifiers
         Task<List<ClassifierDto>> GetOkopfsAsync();
         Task<List<ClassifierDto>> GetCurrenciesAsync();
         Task<List<ClassifierDto>> SearchOkvedsAsync(string query);
+        Task<List<ClassifierDto>> GetAllOkvedsAsync();
     }
 }

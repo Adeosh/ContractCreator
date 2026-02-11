@@ -1,9 +1,4 @@
-﻿using ContractCreator.Shared.DTOs.Data;
-using System.Reactive.Linq;
-using System.Threading;
-
-
-namespace ContractCreator.UI.ViewModels.UserControls
+﻿namespace ContractCreator.UI.ViewModels.UserControls
 {
     public class AddressViewModel : ViewModelBase
     {
@@ -32,8 +27,7 @@ namespace ContractCreator.UI.ViewModels.UserControls
 
         private void SetupAddress()
         {
-            // ПОТОК ПОИСКА
-            this.WhenAnyValue(x => x.SearchText)
+            this.WhenAnyValue(x => x.SearchText) // поиск
                 .Skip(1)
                 .Where(_ => !_suppressSearch)
                 .Throttle(TimeSpan.FromMilliseconds(500), RxApp.TaskpoolScheduler)
@@ -70,8 +64,7 @@ namespace ContractCreator.UI.ViewModels.UserControls
                         IsDropDownOpen = false;
                 });
 
-            // ПОТОК СБРОСА
-            this.WhenAnyValue(x => x.SearchText)
+            this.WhenAnyValue(x => x.SearchText) // сброс
                 .Where(_ => !_suppressSearch)
                 .Subscribe(_ =>
                 {
@@ -105,7 +98,7 @@ namespace ContractCreator.UI.ViewModels.UserControls
             _suppressSearch = false;
         }
 
-        public AddressDto GetAddressDto() => new AddressDto
+        public AddressDto GetData() => new AddressDto
         {
             ObjectId = CurrentObjectId,
             FullAddress = SearchText,
@@ -115,7 +108,7 @@ namespace ContractCreator.UI.ViewModels.UserControls
             PostalIndex = PostalIndex
         };
 
-        public void SetAddressDto(AddressDto dto)
+        public void SetData(AddressDto dto)
         {
             if (dto == null) return;
 

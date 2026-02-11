@@ -1,6 +1,4 @@
-﻿using System.Reactive.Linq;
-
-namespace ContractCreator.UI.ViewModels.UserControls
+﻿namespace ContractCreator.UI.ViewModels.UserControls
 {
     public class BankAccountsViewModel : ViewModelBase
     {
@@ -56,7 +54,7 @@ namespace ContractCreator.UI.ViewModels.UserControls
                 this.WhenAnyValue(x => x.SelectedAccount).Select(x => x != null));
 
             SaveCommand = ReactiveCommand.CreateFromTask(SaveAsync,
-                this.WhenAnyValue(x => x.AccountNumber, x => x.Bic) // Валидация кнопки
+                this.WhenAnyValue(x => x.AccountNumber, x => x.Bic)
                     .Select(t => !string.IsNullOrWhiteSpace(t.Item1) && !string.IsNullOrWhiteSpace(t.Item2)));
 
             CancelCommand = ReactiveCommand.Create(() => { IsListMode = true; });
@@ -282,8 +280,8 @@ namespace ContractCreator.UI.ViewModels.UserControls
             if (SelectedAccount == null) return;
 
             bool isConfirmed = await _dialogService.ShowConfirmationAsync(
-                "Удаление счета",
-                $"Вы действительно хотите удалить счет в банке \"{SelectedAccount.BankName}\"?\nЭто действие нельзя отменить.");
+                $"Вы действительно хотите удалить счет в банке \"{SelectedAccount.BankName}\"?\nЭто действие нельзя отменить.",
+                "Удаление счета");
 
             if (!isConfirmed)
                 return;

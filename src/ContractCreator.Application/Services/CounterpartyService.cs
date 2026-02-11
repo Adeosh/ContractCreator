@@ -47,6 +47,7 @@ namespace ContractCreator.Application.Services
             if (entity == null) throw new Exception("Контрагент не найден");
 
             dto.Adapt(entity);
+            entity.UpdatedDate = DateOnly.FromDateTime(DateTime.Now);
 
             await _unitOfWork.Repository<Counterparty>().UpdateAsync(entity);
             await _unitOfWork.SaveChangesAsync();

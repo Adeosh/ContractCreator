@@ -10,7 +10,8 @@ namespace ContractCreator.Application.Mapping.Entities
         public void Register(TypeAdapterConfig config)
         {
             config.NewConfig<Worker, WorkerDto>();
-            config.NewConfig<WorkerDto, Worker>();
+            config.NewConfig<WorkerDto, Worker>()
+                .AddDestinationTransform((string? x) => string.IsNullOrWhiteSpace(x) ? null : x);
         }
     }
 }

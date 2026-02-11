@@ -9,7 +9,8 @@ namespace ContractCreator.Application.Mapping.Entities
         public void Register(TypeAdapterConfig config)
         {
             config.NewConfig<Contact, ContactDto>();
-            config.NewConfig<ContactDto, Contact>();
+            config.NewConfig<ContactDto, Contact>()
+                .AddDestinationTransform((string? x) => string.IsNullOrWhiteSpace(x) ? null : x)
         }
     }
 }

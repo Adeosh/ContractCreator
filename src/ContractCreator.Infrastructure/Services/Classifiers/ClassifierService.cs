@@ -41,6 +41,19 @@ namespace ContractCreator.Infrastructure.Services.Classifiers
                 .ToListAsync();
         }
 
+        public async Task<List<ClassifierDto>> GetAllOkvedsAsync()
+        {
+            return await _context.ClassifierOkveds
+                .AsNoTracking()
+                .Select(x => new ClassifierDto
+                {
+                    Id = x.Id,
+                    Code = x.Code,
+                    Name = x.Name
+                })
+                .ToListAsync();
+        }
+
         public async Task<List<ClassifierDto>> SearchOkvedsAsync(string query)
         {
             if (string.IsNullOrWhiteSpace(query)) return new List<ClassifierDto>();

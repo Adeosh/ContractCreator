@@ -1,6 +1,4 @@
-﻿using System.Reactive.Linq;
-
-namespace ContractCreator.UI.ViewModels.Base
+﻿namespace ContractCreator.UI.ViewModels.Base
 {
     public abstract class EntityListViewModel<TDto> : ViewModelBase
     {

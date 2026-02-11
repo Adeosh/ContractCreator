@@ -26,6 +26,7 @@ namespace ContractCreator.Application.Mapping.Entities
                 .PreserveReference(true);
 
             config.NewConfig<ContractDto, Contract>()
+                .AddDestinationTransform((string? x) => string.IsNullOrWhiteSpace(x) ? null : x)
                 .Map(dest => dest.Type, src => (ContractType)src.Type)
                 .Map(dest => dest.EnterpriseRole, src => (ContractEnterpriseRole)src.EnterpriseRole)
                 .Map(dest => dest.Initiator, src => src.Initiator.HasValue

@@ -1,6 +1,4 @@
-﻿using System.Reactive.Linq;
-
-namespace ContractCreator.UI.ViewModels;
+﻿namespace ContractCreator.UI.ViewModels;
 
 public class MainWindowViewModel : ViewModelBase
 {

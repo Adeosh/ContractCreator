@@ -20,10 +20,10 @@ namespace ContractCreator.UI.ViewModels.Shared
         public ReactiveCommand<object, Unit> CloseCommand { get; }
         #endregion
 
-        public UnifiedDialogViewModel(string title, string message)
+        public UnifiedDialogViewModel(string message, string title)
         {
-            Title = title;
             Message = message;
+            Title = title;
 
             CloseCommand = ReactiveCommand.Create<object>(parameter =>
             {

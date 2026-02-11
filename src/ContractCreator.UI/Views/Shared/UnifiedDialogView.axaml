@@ -1,54 +1,83 @@
 ﻿<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:ContractCreator.UI.ViewModels.Shared"
-        Width="450" Height="250"
+        Width="440"
+        Height="250"
         CanResize="False"
         x:Class="ContractCreator.UI.Views.Shared.UnifiedDialogView"
         x:DataType="vm:UnifiedDialogViewModel"
         WindowStartupLocation="CenterOwner"
-        SystemDecorations="BorderOnly"
+        SystemDecorations="None"
         Background="Transparent"
-        TransparencyLevelHint="AcrylicBlur"
         Title="{Binding Title}">
 
-    <Border Background="{DynamicResource CardBrush}" 
-            CornerRadius="10" 
-            Padding="20" 
-            BorderThickness="2" 
+    <Border Background="{DynamicResource CardBrush}"
+            CornerRadius="14"
             BorderBrush="{Binding HeaderColor}"
-            BoxShadow="0 4 10 0 #40000000">
-            
-        <Grid RowDefinitions="Auto, *, Auto">
-            
-            <StackPanel Orientation="Horizontal" Spacing="15" Grid.Row="0">
-                <TextBlock Text="{Binding Icon}" FontSize="28" VerticalAlignment="Center"/>
-                <TextBlock Text="{Binding Title}" FontSize="20" FontWeight="Bold" 
-                           Foreground="{DynamicResource PrimaryTextBrush}" VerticalAlignment="Center"/>
-            </StackPanel>
+            BorderThickness="2"
+            BoxShadow="0 8 25 0 #40000000"
+            ClipToBounds="True">
 
-            <ScrollViewer Grid.Row="1" Margin="0,20">
-                <TextBlock Text="{Binding Message}" 
-                           TextWrapping="Wrap" 
-                           FontSize="15" 
-                           LineHeight="22"
-                           Foreground="{DynamicResource SecondaryTextBrush}"/>
+        <Grid RowDefinitions="Auto,*,Auto">
+
+            <Border Grid.Row="0"
+                    Background="{DynamicResource RegionColor}"
+                    Padding="20"
+                    CornerRadius="14,14,0,0">
+
+                <Grid ColumnDefinitions="Auto,*"
+                      VerticalAlignment="Center">
+
+                    <TextBlock Text="{Binding Icon}"
+                               FontSize="24"
+                               VerticalAlignment="Center"
+                               Margin="0,0,14,0"
+                               Foreground="{DynamicResource HeaderColor}"/>
+
+                    <TextBlock Grid.Column="1"
+                               Text="{Binding Title}"
+                               FontSize="18"
+                               FontWeight="SemiBold"
+                               VerticalAlignment="Center"
+                               TextWrapping="Wrap"
+                               Foreground="{DynamicResource PrimaryTextBrush}"/>
+                </Grid>
+            </Border>
+
+            <ScrollViewer Grid.Row="1"
+                          Margin="20,15,20,10"
+                          HorizontalScrollBarVisibility="Disabled"
+                          VerticalScrollBarVisibility="Auto">
+
+                <SelectableTextBlock Text="{Binding Message}"
+                                     TextWrapping="Wrap"
+                                     FontSize="14"
+                                     LineHeight="22"
+                                     Foreground="{DynamicResource PrimaryTextBrush}"/>
             </ScrollViewer>
 
-            <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="15" HorizontalAlignment="Right">
-                
-                <Button Command="{Binding CloseCommand}" 
-                        CommandParameter="False"
+            <StackPanel Grid.Row="2"
+                        Orientation="Horizontal"
+                        Spacing="12"
+                        HorizontalAlignment="Right"
+                        Margin="20,0,20,20">
+
+                <Button Command="{Binding CloseCommand}"
+                        CommandParameter="{x:False}"
                         Content="{Binding CancelText}"
                         IsVisible="{Binding IsConfirmation}"
-                        Width="100" HorizontalContentAlignment="Center"/>
+                        MinWidth="90"
+                        Height="34"/>
 
-                <Button Command="{Binding CloseCommand}" 
-                        CommandParameter="True"
+                <Button Command="{Binding CloseCommand}"
+                        CommandParameter="{x:True}"
                         Content="{Binding ConfirmText}"
                         Classes="accent"
-                        FontWeight="Bold"
-                        Width="100" HorizontalContentAlignment="Center"/>
+                        FontWeight="SemiBold"
+                        MinWidth="100"
+                        Height="34"/>
             </StackPanel>
+
         </Grid>
     </Border>
 </Window>

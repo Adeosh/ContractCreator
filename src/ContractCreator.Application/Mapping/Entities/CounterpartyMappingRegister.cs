@@ -17,6 +17,7 @@ namespace ContractCreator.Application.Mapping.Entities
                 .PreserveReference(true);
 
             config.NewConfig<CounterpartyDto, Counterparty>()
+                .AddDestinationTransform((string? x) => string.IsNullOrWhiteSpace(x) ? null : x)
                 .Ignore(dest => dest.CreatedDate)
                 .Ignore(dest => dest.UpdatedDate)
                 .Map(dest => dest.LegalForm, src => (LegalFormType)src.LegalForm);

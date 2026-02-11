@@ -1,5 +1,4 @@
-﻿using ContractCreator.UI.ViewModels.Base;
-using System.Reactive.Concurrency;
+﻿using System.Reactive.Concurrency;
 
 namespace ContractCreator.UI.ViewModels.Workers
 {

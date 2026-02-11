@@ -9,11 +9,11 @@
         [Reactive] public int Id { get; set; }
         [Reactive] public string FirstName { get; set; } = string.Empty;
         [Reactive] public string LastName { get; set; } = string.Empty;
-        [Reactive] public string MiddleName { get; set; } = string.Empty;
+        [Reactive] public string MiddleName { get; set; }
         [Reactive] public string Position { get; set; } = string.Empty;
         [Reactive] public string Inn { get; set; } = string.Empty;
         [Reactive] public string Phone { get; set; } = string.Empty;
-        [Reactive] public string Email { get; set; } = string.Empty;
+        [Reactive] public string Email { get; set; }
         [Reactive] public string? Note { get; set; }
         [Reactive] public bool IsDirector { get; set; }
         [Reactive] public bool IsAccountant { get; set; }
@@ -60,7 +60,7 @@
                     Inn = dto.INN;
                     Phone = dto.Phone;
                     Email = dto.Email ?? string.Empty;
-                    Note = dto.Note;
+                    Note = dto.Note ?? string.Empty;
                     IsDirector = dto.IsDirector;
                     IsAccountant = dto.IsAccountant;
                 }
@@ -73,12 +73,40 @@
             }
         }
 
+        private void Validate()
+        {
+            if (string.IsNullOrWhiteSpace(FirstName))
+                throw new UserMessageException("Не указано имя сотрудника.");
+
+            if (string.IsNullOrWhiteSpace(LastName))
+                throw new UserMessageException("Не указана фамилия сотрудника.");
+
+            if (string.IsNullOrWhiteSpace(Position))
+                throw new UserMessageException("Не указана должность сотрудника.");
+
+            if (string.IsNullOrWhiteSpace(Inn))
+                throw new UserMessageException("Не указан ИНН сотрудника.");
+
+            if (Inn.Length != 12)
+                throw new UserMessageException("ИНН сотрудника должен содержать 12 цифр.");
+
+            if (string.IsNullOrWhiteSpace(Phone))
+                throw new UserMessageException("Не указан номер телефона сотрудника.");
+
+            if (!Email.Contains("@"))
+                throw new UserMessageException("Укажите корректный адрес электронной почты.");
+        }
+
+
         private async Task SaveWorkerAsync()
         {
             try
             {
+                Validate();
+
                 var dto = new WorkerDto
                 {
+                    Id = Id,
                     FirstName = FirstName,
                     LastName = LastName,
                     MiddleName = MiddleName,
@@ -93,8 +121,12 @@
                     IsDeleted = false
                 };
 
-                await _workerService.CreateWorkerAsync(dto);
+                if (Id == 0)
+                    await _workerService.CreateWorkerAsync(dto);
+                else
+                    await _workerService.UpdateWorkerAsync(dto);
 
+                MessageBus.Current.SendMessage(new EntitySavedMessage<WorkerDto>(dto));
                 _navigation.NavigateBack();
             }
             catch (Exception ex)
