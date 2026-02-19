@@ -4,26 +4,31 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ContractCreator.Infrastructure.Persistence.Configurations
 {
-    public class ContractActConfiguration : IEntityTypeConfiguration<ContractAct>
+    public class ContractWaybillConfiguration : IEntityTypeConfiguration<ContractWaybill>
     {
-        public void Configure(EntityTypeBuilder<ContractAct> builder)
+        public void Configure(EntityTypeBuilder<ContractWaybill> builder)
         {
-            builder.ToTable("ContractActs", schema: "public");
+            builder.ToTable("ContractWaybills", schema: "public");
             builder.HasKey(e => e.Id);
 
-            builder.Property(e => e.ActNumber).HasMaxLength(50).IsRequired();
-
-            builder.Property(e => e.ActDate)
-                   .HasColumnType("date")
-                   .IsRequired();
+            builder.Property(e => e.WaybillNumber).HasMaxLength(50).IsRequired();
+            builder.Property(e => e.WaybillDate)
+                .HasColumnType("date")
+                .IsRequired();
 
             builder.Property(e => e.TotalAmount).HasPrecision(18, 2);
             builder.Property(e => e.VATAmount).HasPrecision(18, 2);
             builder.Property(e => e.VATRate).HasPrecision(5, 2);
             builder.Property(e => e.AggregateAmount).HasPrecision(18, 2);
 
+            builder.HasOne(e => e.Invoice)
+                   .WithMany()
+                   .HasForeignKey(e => e.InvoiceId)
+                   .IsRequired()
+                   .OnDelete(DeleteBehavior.Restrict);
+
             builder.HasOne(e => e.Contract)
-                   .WithMany(c => c.Acts)
+                   .WithMany()
                    .HasForeignKey(e => e.ContractId)
                    .OnDelete(DeleteBehavior.Cascade);
 
@@ -31,15 +36,6 @@ namespace ContractCreator.Infrastructure.Persistence.Configurations
                    .WithMany()
                    .HasForeignKey(e => e.CurrencyId)
                    .OnDelete(DeleteBehavior.Restrict);
-
-            builder.HasOne(e => e.Invoice)
-                   .WithMany()
-                   .HasForeignKey(e => e.InvoiceId)
-                   .OnDelete(DeleteBehavior.Restrict);
-
-            builder.HasMany(e => e.Items)
-                   .WithOne(i => i.Act)
-                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

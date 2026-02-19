@@ -1,6 +1,6 @@
-﻿using ContractCreator.Domain.Enums;
-using ContractCreator.Domain.Models.Dictionaries;
+﻿using ContractCreator.Domain.Models.Dictionaries;
 using ContractCreator.Domain.ValueObjects;
+using ContractCreator.Shared.Enums;
 
 namespace ContractCreator.Domain.Models
 {

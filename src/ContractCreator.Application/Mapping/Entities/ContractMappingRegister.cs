@@ -1,6 +1,6 @@
-﻿using ContractCreator.Domain.Enums;
-using ContractCreator.Domain.Models;
+﻿using ContractCreator.Domain.Models;
 using ContractCreator.Shared.DTOs;
+using ContractCreator.Shared.Enums;
 using Mapster;
 
 namespace ContractCreator.Application.Mapping.Entities

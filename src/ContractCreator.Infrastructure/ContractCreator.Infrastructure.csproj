@@ -69,6 +69,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ContractCreator.Application\ContractCreator.Application.csproj" />
     <ProjectReference Include="..\ContractCreator.Domain\ContractCreator.Domain.csproj" />
     <ProjectReference Include="..\ContractCreator.Shared\ContractCreator.Shared.csproj" />
   </ItemGroup>

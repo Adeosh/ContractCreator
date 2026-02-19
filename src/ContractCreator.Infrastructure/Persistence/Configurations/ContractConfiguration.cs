@@ -73,6 +73,10 @@ namespace ContractCreator.Infrastructure.Persistence.Configurations
                    .WithOne(c => c.Contract)
                    .OnDelete(DeleteBehavior.Cascade);
 
+            builder.HasMany(c => c.Waybills)
+                   .WithOne(c => c.Contract)
+                   .OnDelete(DeleteBehavior.Cascade);
+
             builder.HasMany(c => c.Steps)
                    .WithOne(c => c.Contract)
                    .OnDelete(DeleteBehavior.Cascade);

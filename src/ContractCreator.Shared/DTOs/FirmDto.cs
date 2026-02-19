@@ -31,7 +31,7 @@ namespace ContractCreator.Shared.DTOs
         public List<BankAccountDto> BankAccounts { get; set; } = new();
         public List<WorkerDto> Workers { get; set; } = new();
         public List<ContractDto> Contracts { get; set; } = new();
-        public List<FirmFileDto> Files { get; set; } = new();
+        public List<EntityFileDto> Files { get; set; } = new();
         public List<FirmEconomicActivityDto> EconomicActivities { get; set; } = new();
 
         public string DisplayName => $"{ShortName} (ИНН {INN})";

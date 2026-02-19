@@ -22,11 +22,12 @@ global using ContractCreator.Infrastructure.Services.Gar;
 global using ContractCreator.Infrastructure.Services.Bic;
 global using ContractCreator.Infrastructure.Services.Classifiers;
 global using ContractCreator.Application.Interfaces;
-global using ContractCreator.Domain.Enums;
+global using ContractCreator.Application.Interfaces.Infrastructure;
 
 // Общие DTO и Exception
 global using ContractCreator.Shared.DTOs;
 global using ContractCreator.Shared.DTOs.Data;
+global using ContractCreator.Shared.Enums;
 global using ContractCreator.Shared.Common.Exceptions;
 global using ContractCreator.Shared.Common.Extensions;
 

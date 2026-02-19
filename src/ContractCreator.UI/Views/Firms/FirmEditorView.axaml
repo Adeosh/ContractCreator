@@ -211,6 +211,15 @@
 				<TextBox Text="{Binding ExtraInformation}" Classes="outline" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="60"/>
 			</Expander>
 
+			<Border Background="{DynamicResource CardBrush}" CornerRadius="8" Padding="15" BoxShadow="0 1 3 0 #20000000">
+				<StackPanel Spacing="15">
+					<TextBlock Text="Документы фирмы" FontWeight="Bold" FontSize="16" Foreground="{DynamicResource PrimaryTextColor}"/>
+
+					<controls:AttachedFilesControl DataContext="{Binding AttachedFilesVM}"/>
+
+				</StackPanel>
+			</Border>
+
 			<StackPanel Orientation="Horizontal" Spacing="20" HorizontalAlignment="Right" Margin="0,10,0,50">
 				<Button Command="{Binding CancelCommand}" Content="Отмена"/>
 				<Button Command="{Binding SaveCommand}" Content="Сохранить изменения" Classes="accent" FontWeight="Bold" Padding="25,10"/>

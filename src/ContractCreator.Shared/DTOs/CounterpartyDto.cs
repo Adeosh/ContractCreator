@@ -27,7 +27,7 @@ namespace ContractCreator.Shared.DTOs
 
         public List<BankAccountDto> BankAccounts { get; set; } = new();
         public List<ContractDto> Contracts { get; set; } = new();
-        public List<CounterpartyFileDto> Files { get; set; } = new();
+        public List<EntityFileDto> Files { get; set; } = new();
         public List<ContactDto> Contacts { get; set; } = new();
     }
 }

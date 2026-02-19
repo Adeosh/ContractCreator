@@ -1,0 +1,121 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:vm="using:ContractCreator.UI.ViewModels.UserControls"
+			 x:Class="ContractCreator.UI.Views.UserControls.AttachedFilesControl"
+			 x:DataType="vm:AttachedFilesViewModel">
+
+	<UserControl.Styles>
+		<Style Selector="TextBox.note">
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="BorderBrush" Value="Transparent"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="Padding" Value="4,2"/>
+			<Setter Property="MinHeight" Value="24"/>
+			<Setter Property="Margin" Value="-4,2,0,2"/>
+			<Setter Property="Transitions">
+				<Transitions>
+					<BrushTransition Property="BorderBrush" Duration="0:0:0.2"/>
+					<BrushTransition Property="Background" Duration="0:0:0.2"/>
+				</Transitions>
+			</Setter>
+		</Style>
+
+		<Style Selector="TextBox.note:pointerover">
+			<Setter Property="Background" Value="{DynamicResource BackgroundBrush}"/>
+			<Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+		</Style>
+
+		<Style Selector="TextBox.note:focus">
+			<Setter Property="Background" Value="{DynamicResource BackgroundBrush}"/>
+			<Setter Property="BorderBrush" Value="{DynamicResource PrimaryColor}"/>
+		</Style>
+	</UserControl.Styles>
+
+	<StackPanel Spacing="10">
+		<Button Command="{Binding AddFileCommand}"
+				Content="+ Прикрепить файл"
+				Classes="outline small"
+				HorizontalAlignment="Left"/>
+
+		<Border Background="{DynamicResource BackgroundBrush}"
+				CornerRadius="8"
+				BorderBrush="{DynamicResource BorderBrush}"
+				BorderThickness="1"
+				IsVisible="{Binding Files.Count}">
+
+			<ScrollViewer MaxHeight="220"
+						  HorizontalScrollBarVisibility="Disabled"
+						  VerticalScrollBarVisibility="Auto">
+
+				<ItemsControl ItemsSource="{Binding Files}" Margin="5">
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
+							<Border Background="{DynamicResource CardBrush}"
+									CornerRadius="4"
+									Padding="10,5"
+									Margin="0,2">
+
+								<Grid ColumnDefinitions="Auto, *, Auto, Auto, Auto, Auto">
+
+									<TextBlock Grid.Column="0" Text="📄" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="{DynamicResource PrimaryColor}"/>
+
+									<StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,15,0">
+										<TextBlock Text="{Binding FileName}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+
+										<TextBox Text="{Binding Description}"
+												 Watermark="Добавить заметку..."
+												 Classes="note"
+												 FontSize="12"
+												 Foreground="{DynamicResource SecondaryTextBrush}"/>
+
+										<TextBlock Text="{Binding DisplayStatus}" FontSize="11" Foreground="{DynamicResource SecondaryTextBrush}" Opacity="0.7"/>
+									</StackPanel>
+
+									<CheckBox Grid.Column="2"
+											  Content="Зашифровать"
+											  IsChecked="{Binding IsEncrypted}"
+											  IsVisible="{Binding IsPendingUpload}"
+											  Margin="0,0,15,0"
+											  VerticalAlignment="Center"/>
+
+									<Button Grid.Column="3"
+											Command="{Binding $parent[UserControl].((vm:AttachedFilesViewModel)DataContext).OpenFileCommand}"
+											CommandParameter="{Binding}"
+											Content="👁️"
+											Classes="flat"
+											ToolTip.Tip="Открыть / Изменить"
+											Margin="0,0,5,0"
+											VerticalAlignment="Center"/>
+
+									<Button Grid.Column="4"
+											Command="{Binding $parent[UserControl].((vm:AttachedFilesViewModel)DataContext).DownloadFileCommand}"
+											CommandParameter="{Binding}"
+											Content="💾"
+											Classes="flat"
+											IsVisible="{Binding !IsPendingUpload}"
+											ToolTip.Tip="Сохранить на компьютер"
+											Margin="0,0,10,0"
+											VerticalAlignment="Center"/>
+
+									<Button Grid.Column="5"
+											Command="{Binding $parent[UserControl].((vm:AttachedFilesViewModel)DataContext).RemoveFileCommand}"
+											CommandParameter="{Binding}"
+											Content="✕"
+											Classes="danger flat"
+											ToolTip.Tip="Удалить"
+											VerticalAlignment="Center"/>
+								</Grid>
+							</Border>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+			</ScrollViewer>
+		</Border>
+
+		<TextBlock Text="Нет прикрепленных файлов"
+				   IsVisible="{Binding !Files.Count}"
+				   Foreground="{DynamicResource SecondaryTextBrush}"
+				   FontStyle="Italic"
+				   Margin="5"/>
+	</StackPanel>
+</UserControl>

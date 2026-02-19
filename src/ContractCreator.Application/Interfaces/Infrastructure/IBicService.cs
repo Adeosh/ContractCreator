@@ -1,6 +1,6 @@
 ﻿using ContractCreator.Shared.DTOs.Data;
 
-namespace ContractCreator.Infrastructure.Services.Bic
+namespace ContractCreator.Application.Interfaces.Infrastructure
 {
     public interface IBicService
     {

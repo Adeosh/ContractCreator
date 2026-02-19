@@ -12,6 +12,7 @@ namespace ContractCreator.UI.Services.Settings
         private AppSettings _settings;
         private readonly BehaviorSubject<int?> _currentFirmIdSubject;
         private readonly BehaviorSubject<string> _currentFirmNameSubject;
+        private readonly BehaviorSubject<string> _storagePathSubject;
 
         public int? CurrentFirmId
         {
@@ -38,8 +39,23 @@ namespace ContractCreator.UI.Services.Settings
             }
         }
 
+        public string StoragePath
+        {
+            get => _settings.StoragePath ?? string.Empty;
+            set
+            {
+                if (_settings.StoragePath != value)
+                {
+                    _settings.StoragePath = value;
+                    Save();
+                    _storagePathSubject.OnNext(value ?? string.Empty);
+                }
+            }
+        }
+
         public IObservable<int?> CurrentFirmIdChanged => _currentFirmIdSubject;
         public IObservable<string> CurrentFirmNameChanged => _currentFirmNameSubject;
+        public IObservable<string> StoragePathChanged => _storagePathSubject;
 
         public bool IsDarkTheme
         {
@@ -63,6 +79,7 @@ namespace ContractCreator.UI.Services.Settings
 
             _currentFirmIdSubject = new BehaviorSubject<int?>(_settings.CurrentFirmId);
             _currentFirmNameSubject = new BehaviorSubject<string>(_settings.CurrentFirmName ?? "Фирма не выбрана");
+            _storagePathSubject = new BehaviorSubject<string>(_settings.StoragePath ?? string.Empty);
         }
 
         private void Load()
@@ -121,6 +138,7 @@ namespace ContractCreator.UI.Services.Settings
             public int? CurrentFirmId { get; set; }
             public string? CurrentFirmName { get; set; }
             public bool IsDarkTheme { get; set; } = false;
+            public string? StoragePath { get; set; }
         }
     }
 }

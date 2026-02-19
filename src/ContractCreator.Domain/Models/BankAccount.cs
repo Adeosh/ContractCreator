@@ -1,4 +1,4 @@
-﻿using ContractCreator.Domain.Enums;
+﻿using ContractCreator.Shared.Enums;
 
 namespace ContractCreator.Domain.Models
 {

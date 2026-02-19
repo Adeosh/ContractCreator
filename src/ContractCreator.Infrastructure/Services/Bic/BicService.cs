@@ -1,4 +1,5 @@
-﻿using ContractCreator.Infrastructure.Persistence;
+﻿using ContractCreator.Application.Interfaces.Infrastructure;
+using ContractCreator.Infrastructure.Persistence;
 using ContractCreator.Shared.DTOs.Data;
 using Microsoft.EntityFrameworkCore;
 

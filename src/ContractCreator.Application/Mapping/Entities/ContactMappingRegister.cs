@@ -10,7 +10,7 @@ namespace ContractCreator.Application.Mapping.Entities
         {
             config.NewConfig<Contact, ContactDto>();
             config.NewConfig<ContactDto, Contact>()
-                .AddDestinationTransform((string? x) => string.IsNullOrWhiteSpace(x) ? null : x)
+                .AddDestinationTransform((string? x) => string.IsNullOrWhiteSpace(x) ? null : x);
         }
     }
 }

@@ -23,11 +23,11 @@ namespace ContractCreator.Infrastructure.Persistence.Configurations
                    .IsRequired();
 
             builder.Property(e => e.UploadDate)
-                   .HasColumnType("timestamp without time zone")
+                   .HasColumnType("timestamp with time zone")
                    .IsRequired();
 
             builder.Property(e => e.ChangeDate)
-                   .HasColumnType("timestamp without time zone");
+                   .HasColumnType("timestamp with time zone");
 
             builder.Property(e => e.IsEncrypted)
                    .HasDefaultValue(false);

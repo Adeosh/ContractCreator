@@ -4,25 +4,25 @@ using Mapster;
 
 namespace ContractCreator.Application.Mapping.Entities
 {
-    public class ActMappingRegister : IRegister
+    public class WaybillMappingRegister : IRegister
     {
         public void Register(TypeAdapterConfig config)
         {
-            config.NewConfig<ContractActItem, ContractActItemDto>()
+            config.NewConfig<ContractWaybillItem, ContractWaybillItemDto>()
             .Map(dest => dest.CurrencyName, src => src.Currency != null
             ? src.Currency.CurrencyName
             : string.Empty);
 
-            config.NewConfig<ContractActItemDto, ContractActItem>();
+            config.NewConfig<ContractWaybillItemDto, ContractWaybillItem>();
 
 
-            config.NewConfig<ContractAct, ContractActDto>()
+            config.NewConfig<ContractWaybill, ContractWaybillDto>()
                 .Map(dest => dest.CurrencyName, src => src.Currency != null
                 ? src.Currency.CurrencyName
                 : string.Empty)
                 .PreserveReference(true);
 
-            config.NewConfig<ContractActDto, ContractAct>()
+            config.NewConfig<ContractWaybillDto, ContractWaybill>()
                 .Ignore(dest => dest.Contract)
                 .Ignore(dest => dest.Invoice)
                 .Ignore(dest => dest.Currency);

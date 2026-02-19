@@ -9,6 +9,7 @@
         private readonly IGarService _garService;
         private readonly IClassifierService _classifierService;
         private readonly IUserDialogService _dialogService;
+        private readonly IFileService _fileService;
 
         [Reactive] public int Id { get; set; }
         [Reactive] public string FullName { get; set; } = "";
@@ -31,6 +32,7 @@
         public AddressViewModel ActualAddressVM { get; }
         public BankAccountsViewModel BankAccountVM { get; }
         public EconomicActivitiesViewModel OkvedVM { get; }
+        public AttachedFilesViewModel AttachedFilesVM { get; }
 
         public ObservableCollection<ClassifierDto> OkopfList { get; } = new();
         [Reactive] public ClassifierDto? SelectedOkopf { get; set; }
@@ -56,7 +58,8 @@
             IBankAccountService bankAccountService,
             IBicService bicService,
             IUserDialogService dialogService,
-            IClassifierService classifierService)
+            IClassifierService classifierService,
+            IFileService fileService)
         {
             _firmService = firmService;
             _navigation = navigation;
@@ -64,6 +67,7 @@
             _garService = garService;
             _classifierService = classifierService;
             _dialogService = dialogService;
+            _fileService = fileService;
 
             LegalAddressVM = new AddressViewModel(_garService);
             ActualAddressVM = new AddressViewModel(_garService);
@@ -73,6 +77,7 @@
                 bicService,
                 dialogService);
             OkvedVM = new EconomicActivitiesViewModel(classifierService);
+            AttachedFilesVM = new AttachedFilesViewModel(fileService, dialogService, FileType.Firm);
 
             SaveCommand = ReactiveCommand.CreateFromTask(SaveFirmAsync);
             CancelCommand = ReactiveCommand.Create(() => _navigation.NavigateBack());
@@ -172,6 +177,9 @@
                     else
                         FacsimileSealBitmap = null;
 
+                    if (dto.Files?.Any() == true)
+                        await AttachedFilesVM.LoadExistingFilesAsync(dto.Files);
+
                     await BankAccountVM.LoadDataAsync(firmId, OwnerType.Firm);
                 }
             }
@@ -225,6 +233,7 @@
             {
                 Validate();
 
+                var firmFiles = await AttachedFilesVM.GetFilesForCommitAsync(Id);
                 var dto = new FirmDto
                 {
                     Id = Id,
@@ -248,6 +257,7 @@
                     LegalAddress = LegalAddressVM.GetData(),
                     ActualAddress = ActualAddressVM.GetData(),
                     EconomicActivities = OkvedVM.GetData(),
+                    Files = firmFiles,
                     CreatedDate = DateOnly.FromDateTime(DateTime.Now),
                     IsDeleted = false
                 };
@@ -273,6 +283,7 @@
             }
             catch (UserMessageException ex)
             {
+                await AttachedFilesVM.RollbackCommitAsync();
                 await _dialogService.ShowMessageAsync(ex.Title, ex.Message, UserMessageType.Warning);
             }
             catch (Exception ex)

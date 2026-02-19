@@ -1,9 +1,9 @@
 ﻿using ContractCreator.Application.Mapping;
-using ContractCreator.Domain.Enums;
 using ContractCreator.Domain.Models;
 using ContractCreator.Domain.ValueObjects;
 using ContractCreator.Shared.DTOs;
 using ContractCreator.Shared.DTOs.Data;
+using ContractCreator.Shared.Enums;
 using FluentAssertions;
 using Mapster;
 

@@ -21,6 +21,8 @@ namespace ContractCreator.Infrastructure.Persistence
         public DbSet<ContractActItem> ContractActItems { get; set; }
         public DbSet<ContractInvoice> ContractInvoices { get; set; }
         public DbSet<ContractInvoiceItem> ContractInvoiceItems { get; set; }
+        public DbSet<ContractWaybill> ContractWaybills { get; set; }
+        public DbSet<ContractWaybillItem> ContractWaybillItems { get; set; }
         public DbSet<ContractSpecification> ContractSpecifications { get; set; }
         public DbSet<ContractStage> ContractStages { get; set; }
         public DbSet<ContractStageChangeHistory> ChangeHistories { get; set; }
@@ -28,7 +30,7 @@ namespace ContractCreator.Infrastructure.Persistence
         public DbSet<ContractStepItem> ContractStepItems { get; set; }
         public DbSet<Counterparty> Counterparties { get; set; }
         public DbSet<CounterpartyFile> CounterpartyFiles { get; set; }
-        public DbSet<FileStorage> Storages { get; set; }
+        public DbSet<FileStorage> Files { get; set; }
         public DbSet<Firm> Firms { get; set; }
         public DbSet<FirmEconomicActivity> FirmEconomicActivities { get; set; }
         public DbSet<FirmFile> FirmFiles { get; set; }

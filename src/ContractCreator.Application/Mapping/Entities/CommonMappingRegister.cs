@@ -1,6 +1,7 @@
-﻿using ContractCreator.Domain.Enums;
-using ContractCreator.Domain.Models;
+﻿using ContractCreator.Domain.Models;
 using ContractCreator.Shared.DTOs;
+using ContractCreator.Shared.DTOs.Data;
+using ContractCreator.Shared.Enums;
 using Mapster;
 
 namespace ContractCreator.Application.Mapping.Entities
@@ -15,8 +16,8 @@ namespace ContractCreator.Application.Mapping.Entities
             config.NewConfig<FileStorageDto, FileStorage>()
                   .Map(dest => dest.Type, src => (FileType)src.Type);
 
-            config.NewConfig<FirmFile, FirmFileDto>();
-            config.NewConfig<FirmFileDto, FirmFile>();
+            config.NewConfig<FirmFile, EntityFileDto>();
+            config.NewConfig<EntityFileDto, FirmFile>();
 
             config.NewConfig<GoodsAndService, GoodsAndServiceDto>()
                   .Map(dest => dest.Type, src => (byte)src.Type);

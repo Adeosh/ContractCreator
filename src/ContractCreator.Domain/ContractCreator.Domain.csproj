@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ContractCreator.Shared\ContractCreator.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

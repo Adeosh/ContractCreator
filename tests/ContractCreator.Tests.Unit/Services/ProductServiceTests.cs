@@ -1,10 +1,10 @@
 ﻿using ContractCreator.Application.Mapping;
 using ContractCreator.Application.Services;
-using ContractCreator.Domain.Enums;
 using ContractCreator.Domain.Interfaces;
 using ContractCreator.Domain.Models;
 using ContractCreator.Domain.Models.Dictionaries;
 using ContractCreator.Shared.DTOs;
+using ContractCreator.Shared.Enums;
 using FluentAssertions;
 using Moq;
 

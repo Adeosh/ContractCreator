@@ -1,6 +1,7 @@
-﻿using ContractCreator.Domain.Enums;
-using ContractCreator.Domain.Models;
+﻿using ContractCreator.Domain.Models;
 using ContractCreator.Shared.DTOs;
+using ContractCreator.Shared.DTOs.Data;
+using ContractCreator.Shared.Enums;
 using Mapster;
 
 namespace ContractCreator.Application.Mapping.Entities
@@ -22,8 +23,8 @@ namespace ContractCreator.Application.Mapping.Entities
                 .Ignore(dest => dest.UpdatedDate)
                 .Map(dest => dest.LegalForm, src => (LegalFormType)src.LegalForm);
 
-            config.NewConfig<CounterpartyFile, CounterpartyFileDto>();
-            config.NewConfig<CounterpartyFileDto, CounterpartyFile>();
+            config.NewConfig<CounterpartyFile, EntityFileDto>();
+            config.NewConfig<EntityFileDto, CounterpartyFile>();
         }
     }
 }

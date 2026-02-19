@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace ContractCreator.Domain.Enums
+namespace ContractCreator.Shared.Enums
 {
     public enum ContractEnterpriseRole : byte
     {

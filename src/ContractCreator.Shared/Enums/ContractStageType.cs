@@ -1,4 +1,4 @@
-﻿namespace ContractCreator.Domain.Enums
+﻿namespace ContractCreator.Shared.Enums
 {
     public enum ContractStageType : byte
     {

@@ -1,5 +1,5 @@
-﻿using ContractCreator.Domain.Enums;
-using ContractCreator.Domain.Models.Dictionaries;
+﻿using ContractCreator.Domain.Models.Dictionaries;
+using ContractCreator.Shared.Enums;
 
 namespace ContractCreator.Domain.Models
 {
@@ -64,6 +64,7 @@ namespace ContractCreator.Domain.Models
         public virtual ICollection<ContractSpecification> Specifications { get; set; } = new List<ContractSpecification>();
         public virtual ICollection<ContractAct> Acts { get; set; } = new List<ContractAct>();
         public virtual ICollection<ContractInvoice> Invoices { get; set; } = new List<ContractInvoice>();
+        public virtual ICollection<ContractWaybill> Waybills { get; set; } = new List<ContractWaybill>();
         public virtual ICollection<ContractStep> Steps { get; set; } = new List<ContractStep>();
     }
 }

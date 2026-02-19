@@ -1,4 +1,5 @@
-﻿using ContractCreator.Infrastructure.Persistence;
+﻿using ContractCreator.Application.Interfaces.Infrastructure;
+using ContractCreator.Infrastructure.Persistence;
 using ContractCreator.Shared.DTOs.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -165,6 +166,8 @@ namespace ContractCreator.Infrastructure.Services.Gar
             _context = context;
         }
 
+        /// <summary> Поиск адресов по ГАР </summary>
+        /// <param name="query">Строка поиска</param>
         public async Task<IEnumerable<AddressSearchResultDto>> SearchAddressAsync(string query, CancellationToken ct)
         {
             if (string.IsNullOrWhiteSpace(query))
