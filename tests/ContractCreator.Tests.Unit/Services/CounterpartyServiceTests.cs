@@ -13,6 +13,7 @@ namespace ContractCreator.Tests.Unit.Services
 {
     public class CounterpartyServiceTests
     {
+        private readonly Mock<IUnitOfWorkFactory> _uowFactoryMock;
         private readonly Mock<IUnitOfWork> _uowMock;
         private readonly Mock<IRepository<Counterparty>> _repoMock;
         private readonly CounterpartyService _service;
@@ -21,10 +22,12 @@ namespace ContractCreator.Tests.Unit.Services
         {
             MappingConfig.Configure();
 
+            _uowFactoryMock = new Mock<IUnitOfWorkFactory>();
             _uowMock = new Mock<IUnitOfWork>();
             _repoMock = new Mock<IRepository<Counterparty>>();
             _uowMock.Setup(x => x.Repository<Counterparty>()).Returns(_repoMock.Object);
-            _service = new CounterpartyService(_uowMock.Object);
+            _uowFactoryMock.Setup(x => x.Create()).Returns(_uowMock.Object);
+            _service = new CounterpartyService(_uowFactoryMock.Object);
         }
 
         [Fact]

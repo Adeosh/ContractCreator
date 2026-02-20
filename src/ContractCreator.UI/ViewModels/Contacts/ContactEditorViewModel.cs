@@ -1,6 +1,6 @@
 ﻿namespace ContractCreator.UI.ViewModels.Contacts
 {
-    public class ContactEditorViewModel : ViewModelBase, IParametrizedViewModel
+    public class ContactEditorViewModel : ViewModelBase, INavigatedAware
     {
         #region Props
         private readonly IContactService _contactService;
@@ -32,7 +32,7 @@
             CancelCommand = ReactiveCommand.Create(() => _navigation.NavigateBack());
         }
 
-        public async Task ApplyParameterAsync(object parameter)
+        public async Task OnNavigatedToAsync(object? parameter = null)
         {
             if (parameter is EditorParams param)
             {
@@ -42,6 +42,8 @@
                     await LoadContactAsync(param.Id);
             }
         }
+
+        public Task OnNavigatedFromAsync() => Task.CompletedTask;
 
         private async Task LoadContactAsync(int id)
         {

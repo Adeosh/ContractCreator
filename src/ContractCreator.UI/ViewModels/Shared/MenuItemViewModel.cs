@@ -1,6 +1,4 @@
-﻿using System.Windows.Input;
-
-namespace ContractCreator.UI.ViewModels.Shared
+﻿namespace ContractCreator.UI.ViewModels.Shared
 {
     public class MenuItemViewModel : ReactiveObject
     {

@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace ContractCreator.UI.ViewModels.UserControls
+﻿namespace ContractCreator.UI.ViewModels.UserControls
 {
     public class AttachedFilesViewModel : ViewModelBase
     {
@@ -129,7 +127,7 @@ namespace ContractCreator.UI.ViewModels.UserControls
             if (existingFiles == null || !existingFiles.Any()) return;
 
             var fileIds = existingFiles.Select(f => f.FileId).ToList();
-            var fileInfos = await _fileService.GetFilesByIDsAsync(fileIds);
+            var fileInfos = await _fileService.GetFilesByIdsAsync(fileIds);
 
             foreach (var info in fileInfos)
             {
@@ -167,7 +165,7 @@ namespace ContractCreator.UI.ViewModels.UserControls
 
             if (_filesToDelete.Any())
             {
-                await _fileService.DeleteFilesByIDsAsync(_filesToDelete);
+                await _fileService.DeleteFilesByIdsAsync(_filesToDelete);
                 _filesToDelete.Clear();
             }
 
@@ -223,7 +221,7 @@ namespace ContractCreator.UI.ViewModels.UserControls
         {
             if (_newlyUploadedFileIds.Any())
             {
-                await _fileService.DeleteFilesByIDsAsync(_newlyUploadedFileIds);
+                await _fileService.DeleteFilesByIdsAsync(_newlyUploadedFileIds);
                 _newlyUploadedFileIds.Clear();
             }
         }

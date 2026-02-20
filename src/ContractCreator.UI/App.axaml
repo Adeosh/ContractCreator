@@ -15,6 +15,8 @@
 			<FontFamily x:Key="NunitoFont">avares://ContractCreator.UI/Assets/Fonts#Nunito</FontFamily>
 
 			<converters:EnumDescriptionConverter x:Key="EnumDescConverter" />
+			<converters:NotEqualConverter x:Key="NotEqualConverter" />
+			<converters:ActiveEntityTooltipConverter x:Key="ActiveEntityTooltipConverter" />
 		</ResourceDictionary>
 	</Application.Resources>
 

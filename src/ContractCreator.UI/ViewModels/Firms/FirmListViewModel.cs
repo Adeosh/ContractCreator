@@ -1,6 +1,4 @@
-﻿using System.Reactive.Concurrency;
-
-namespace ContractCreator.UI.ViewModels.Firms
+﻿namespace ContractCreator.UI.ViewModels.Firms
 {
     public class FirmListViewModel : EntityListViewModel<FirmDto>
     {
@@ -16,7 +14,7 @@ namespace ContractCreator.UI.ViewModels.Firms
         #region Actions
         public ReactiveCommand<Unit, Unit> CreateCommand { get; }
         public ReactiveCommand<FirmDto, Unit> EditCommand { get; }
-        public ReactiveCommand<FirmDto, Unit> SetCurrentCommand { get; }
+        public ReactiveCommand<FirmDto, Unit> DeleteCommand { get; }
         #endregion
 
         public FirmListViewModel(
@@ -48,17 +46,13 @@ namespace ContractCreator.UI.ViewModels.Firms
                 _navigation.NavigateTo<FirmEditorViewModel>(param);
             });
 
-            SetCurrentCommand = ReactiveCommand.Create<FirmDto>(async firm =>
-            {
-                _settingsService.CurrentFirmId = firm.Id;
-                _settingsService.CurrentFirmName = firm.ShortName;
-                CurrentActiveFirmId = firm.Id;
+            DeleteCommand = ReactiveCommand.CreateFromTask<FirmDto>(DeleteFirmAsync);
+        }
 
-                await _dialogService.ShowMessageAsync($"Рабочая фирма изменена на: " +
-                    $"{firm.ShortName}", "Успех", UserMessageType.Info);
-            });
-
-            RxApp.MainThreadScheduler.Schedule(async () => await RefreshListAsync());
+        public override async Task OnNavigatedToAsync(object? parameter = null)
+        {
+            CurrentActiveFirmId = _settingsService.CurrentFirmId;
+            await base.OnNavigatedToAsync(parameter);
         }
 
         protected override async Task RefreshListAsync()
@@ -83,6 +77,36 @@ namespace ContractCreator.UI.ViewModels.Firms
             finally 
             { 
                 IsBusy = false; 
+            }
+        }
+
+        private async Task DeleteFirmAsync(FirmDto firm)
+        {
+            if (firm.Id == _settingsService.CurrentFirmId)
+            {
+                await _dialogService.ShowMessageAsync(
+                    "Текущую активную фирму удалять нельзя. Сначала выберите другую рабочую фирму.",
+                    "Внимание",
+                    UserMessageType.Warning);
+                return;
+            }
+
+            bool isConfirmed = await _dialogService.ShowConfirmationAsync(
+                $"Вы действительно хотите удалить фирму \"{firm.ShortName}\"?\nЭто действие нельзя отменить.",
+                "Подтверждение удаления");
+
+            if (!isConfirmed) return;
+
+            try
+            {
+                await _firmService.DeleteFirmAsync(firm.Id);
+                Items.Remove(firm);
+                await _dialogService.ShowMessageAsync($"Фирма \"{firm.ShortName}\" успешно удалена.", "Успех", UserMessageType.Info);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Ошибка при удалении фирмы.");
+                await _dialogService.ShowMessageAsync("Не удалось удалить фирму.", "Ошибка", UserMessageType.Error);
             }
         }
     }

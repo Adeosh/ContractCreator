@@ -12,6 +12,7 @@ namespace ContractCreator.UI.Services.Settings
         private AppSettings _settings;
         private readonly BehaviorSubject<int?> _currentFirmIdSubject;
         private readonly BehaviorSubject<string> _currentFirmNameSubject;
+        private readonly BehaviorSubject<int?> _currentWorkerIdSubject;
         private readonly BehaviorSubject<string> _storagePathSubject;
 
         public int? CurrentFirmId
@@ -39,6 +40,17 @@ namespace ContractCreator.UI.Services.Settings
             }
         }
 
+        public int? CurrentWorkerId
+        {
+            get => _settings.CurrentWorkerId;
+            set
+            {
+                _settings.CurrentWorkerId = value;
+                Save();
+                _currentWorkerIdSubject.OnNext(value);
+            }
+        }
+
         public string StoragePath
         {
             get => _settings.StoragePath ?? string.Empty;
@@ -55,6 +67,7 @@ namespace ContractCreator.UI.Services.Settings
 
         public IObservable<int?> CurrentFirmIdChanged => _currentFirmIdSubject;
         public IObservable<string> CurrentFirmNameChanged => _currentFirmNameSubject;
+        public IObservable<int?> CurrentWorkerIdChanged => _currentWorkerIdSubject;
         public IObservable<string> StoragePathChanged => _storagePathSubject;
 
         public bool IsDarkTheme
@@ -79,6 +92,7 @@ namespace ContractCreator.UI.Services.Settings
 
             _currentFirmIdSubject = new BehaviorSubject<int?>(_settings.CurrentFirmId);
             _currentFirmNameSubject = new BehaviorSubject<string>(_settings.CurrentFirmName ?? "Фирма не выбрана");
+            _currentWorkerIdSubject = new BehaviorSubject<int?>(_settings.CurrentWorkerId);
             _storagePathSubject = new BehaviorSubject<string>(_settings.StoragePath ?? string.Empty);
         }
 
@@ -137,6 +151,7 @@ namespace ContractCreator.UI.Services.Settings
         {
             public int? CurrentFirmId { get; set; }
             public string? CurrentFirmName { get; set; }
+            public int? CurrentWorkerId { get; set; }
             public bool IsDarkTheme { get; set; } = false;
             public string? StoragePath { get; set; }
         }

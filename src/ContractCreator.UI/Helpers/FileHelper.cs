@@ -1,7 +1,4 @@
-﻿using Avalonia.Controls;
-using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Platform.Storage;
-using AvaloniaApp = Avalonia.Application;
+﻿using AvaloniaApp = Avalonia.Application;
 
 namespace ContractCreator.UI.Helpers
 {

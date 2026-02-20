@@ -9,58 +9,68 @@ namespace ContractCreator.Application.Services
 {
     public class CounterpartyService : ICounterpartyService
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWorkFactory _uowFactory;
 
-        public CounterpartyService(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
+        public CounterpartyService(IUnitOfWorkFactory uowFactory) => _uowFactory = uowFactory;
 
         public async Task<IEnumerable<CounterpartyDto>> GetAllCounterpartiesAsync()
         {
-            var list = await _unitOfWork.Repository<Counterparty>()
+            using var factory = _uowFactory.Create();
+
+            var list = await factory.Repository<Counterparty>()
                 .FindAsync(c => !c.IsDeleted);
             return list.Adapt<IEnumerable<CounterpartyDto>>();
         }
 
         public async Task<CounterpartyDto?> GetCounterpartyByIdAsync(int id)
         {
+            using var factory = _uowFactory.Create();
+
             var spec = new CounterpartyByIdWithDetailsSpec(id);
-            var counterparty = await _unitOfWork.Repository<Counterparty>().FirstOrDefaultAsync(spec);
+            var counterparty = await factory.Repository<Counterparty>().FirstOrDefaultAsync(spec);
 
             return counterparty?.Adapt<CounterpartyDto>();
         }
 
         public async Task<int> CreateCounterpartyAsync(CounterpartyDto dto)
         {
+            using var factory = _uowFactory.Create();
+
             var entity = dto.Adapt<Counterparty>();
             entity.CreatedDate = DateOnly.FromDateTime(DateTime.Now);
             entity.IsDeleted = false;
 
-            await _unitOfWork.Repository<Counterparty>().AddAsync(entity);
-            await _unitOfWork.SaveChangesAsync();
+            await factory.Repository<Counterparty>().AddAsync(entity);
+            await factory.SaveChangesAsync();
             return entity.Id;
         }
 
         public async Task UpdateCounterpartyAsync(CounterpartyDto dto)
         {
+            using var factory = _uowFactory.Create();
+
             var spec = new CounterpartyByIdWithDetailsSpec(dto.Id);
-            var entity = await _unitOfWork.Repository<Counterparty>().FirstOrDefaultAsync(spec);
+            var entity = await factory.Repository<Counterparty>().FirstOrDefaultAsync(spec);
 
             if (entity == null) throw new Exception("Контрагент не найден");
 
             dto.Adapt(entity);
             entity.UpdatedDate = DateOnly.FromDateTime(DateTime.Now);
 
-            await _unitOfWork.Repository<Counterparty>().UpdateAsync(entity);
-            await _unitOfWork.SaveChangesAsync();
+            await factory.Repository<Counterparty>().UpdateAsync(entity);
+            await factory.SaveChangesAsync();
         }
 
         public async Task DeleteCounterpartyAsync(int id)
         {
-            var entity = await _unitOfWork.Repository<Counterparty>().GetByIdAsync(id);
+            using var factory = _uowFactory.Create();
+
+            var entity = await factory.Repository<Counterparty>().GetByIdAsync(id);
             if (entity != null)
             {
                 entity.IsDeleted = true;
-                await _unitOfWork.Repository<Counterparty>().UpdateAsync(entity);
-                await _unitOfWork.SaveChangesAsync();
+                await factory.Repository<Counterparty>().UpdateAsync(entity);
+                await factory.SaveChangesAsync();
             }
         }
     }

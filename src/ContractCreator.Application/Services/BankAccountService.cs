@@ -8,27 +8,33 @@ namespace ContractCreator.Application.Services
 {
     public class BankAccountService : IBankAccountService
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWorkFactory _uowFactory;
 
-        public BankAccountService(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
+        public BankAccountService(IUnitOfWorkFactory uowFactory) => _uowFactory = uowFactory;
 
         public async Task<IEnumerable<BankAccountDto>> GetByFirmIdAsync(int firmId)
         {
-            var accounts = await _unitOfWork.Repository<BankAccount>()
+            using var factory = _uowFactory.Create();
+
+            var accounts = await factory.Repository<BankAccount>()
                 .FindAsync(x => x.FirmId == firmId && !x.IsDeleted);
             return accounts.Adapt<IEnumerable<BankAccountDto>>();
         }
 
         public async Task<IEnumerable<BankAccountDto>> GetByCounterpartyIdAsync(int counterpartyId)
         {
-            var accounts = await _unitOfWork.Repository<BankAccount>()
+            using var factory = _uowFactory.Create();
+
+            var accounts = await factory.Repository<BankAccount>()
                 .FindAsync(x => x.CounterpartyId == counterpartyId && !x.IsDeleted);
             return accounts.Adapt<IEnumerable<BankAccountDto>>();
         }
 
         public async Task<BankAccountDto?> GetByIdAsync(int id)
         {
-            var account = await _unitOfWork.Repository<BankAccount>().GetByIdAsync(id);
+            using var factory = _uowFactory.Create();
+
+            var account = await factory.Repository<BankAccount>().GetByIdAsync(id);
             return account?.Adapt<BankAccountDto>();
         }
 
@@ -37,33 +43,39 @@ namespace ContractCreator.Application.Services
             if (dto.FirmId == null && dto.CounterpartyId == null)
                 throw new Exception("Счет должен быть привязан к Фирме или Контрагенту");
 
+            using var factory = _uowFactory.Create();
+
             var entity = dto.Adapt<BankAccount>();
             entity.IsDeleted = false;
 
-            await _unitOfWork.Repository<BankAccount>().AddAsync(entity);
-            await _unitOfWork.SaveChangesAsync();
+            await factory.Repository<BankAccount>().AddAsync(entity);
+            await factory.SaveChangesAsync();
             return entity.Id;
         }
 
         public async Task UpdateAsync(BankAccountDto dto)
         {
-            var entity = await _unitOfWork.Repository<BankAccount>().GetByIdAsync(dto.Id);
-            if (entity == null) throw new Exception("Банковский счет не найден");
+            using var factory = _uowFactory.Create();
+            var entity = await factory.Repository<BankAccount>().GetByIdAsync(dto.Id);
+            if (entity == null) 
+                throw new Exception("Банковский счет не найден");
 
             dto.Adapt(entity);
 
-            await _unitOfWork.Repository<BankAccount>().UpdateAsync(entity);
-            await _unitOfWork.SaveChangesAsync();
+            await factory.Repository<BankAccount>().UpdateAsync(entity);
+            await factory.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(int id)
         {
-            var entity = await _unitOfWork.Repository<BankAccount>().GetByIdAsync(id);
+            using var factory = _uowFactory.Create();
+
+            var entity = await factory.Repository<BankAccount>().GetByIdAsync(id);
             if (entity != null)
             {
                 entity.IsDeleted = true;
-                await _unitOfWork.Repository<BankAccount>().UpdateAsync(entity);
-                await _unitOfWork.SaveChangesAsync();
+                await factory.Repository<BankAccount>().UpdateAsync(entity);
+                await factory.SaveChangesAsync();
             }
         }
     }

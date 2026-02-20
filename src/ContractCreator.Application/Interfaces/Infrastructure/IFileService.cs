@@ -12,10 +12,10 @@ namespace ContractCreator.Application.Interfaces.Infrastructure
         Task UpdateFileAsync(int fileId, Stream fileStream, string fileName, DateTime changeDate);
         Task<List<FileInformationDto>> GetFilesByTypeAsync(FileType fileType);
         Task<List<FileInformationDto>> GetAllFilesAsync();
-        Task<List<FileInformationDto>> GetFilesByIDsAsync(List<int> fileIds);
-        Task<List<FileDataDto>> GetFileDataByIDsAsync(List<int> fileIds);
+        Task<List<FileInformationDto>> GetFilesByIdsAsync(List<int> fileIds);
+        Task<List<FileDataDto>> GetFileDataByIdsAsync(List<int> fileIds);
         Task<bool> DeleteFileAsync(int fileId);
-        Task DeleteFilesByIDsAsync(List<int> fileIds);
+        Task DeleteFilesByIdsAsync(List<int> fileIds);
         Task<List<string>> CheckFilesComparability();
     }
 }

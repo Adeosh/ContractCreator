@@ -66,10 +66,14 @@ public partial class App : Avalonia.Application
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
+            var mainVM = ServiceProvider.GetRequiredService<MainWindowViewModel>();
+
             desktop.MainWindow = new MainWindow
             {
-                DataContext = ServiceProvider.GetRequiredService<MainWindowViewModel>(),
+                DataContext = mainVM
             };
+
+            mainVM.InitializeAsync().SafeFireAndForget();
         }
 
         base.OnFrameworkInitializationCompleted();

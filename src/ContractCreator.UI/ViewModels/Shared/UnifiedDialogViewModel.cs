@@ -1,6 +1,4 @@
-﻿using Avalonia.Media;
-
-namespace ContractCreator.UI.ViewModels.Shared
+﻿namespace ContractCreator.UI.ViewModels.Shared
 {
     public class UnifiedDialogViewModel : ViewModelBase
     {

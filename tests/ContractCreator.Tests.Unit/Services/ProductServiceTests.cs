@@ -12,6 +12,7 @@ namespace ContractCreator.Tests.Unit.Services
 {
     public class ProductServiceTests
     {
+        private readonly Mock<IUnitOfWorkFactory> _uowFactoryMock;
         private readonly Mock<IUnitOfWork> _uowMock;
         private readonly Mock<IRepository<GoodsAndService>> _repoMock;
         private readonly ProductService _service;
@@ -20,10 +21,12 @@ namespace ContractCreator.Tests.Unit.Services
         {
             MappingConfig.Configure();
 
+            _uowFactoryMock = new Mock<IUnitOfWorkFactory>();
             _uowMock = new Mock<IUnitOfWork>();
             _repoMock = new Mock<IRepository<GoodsAndService>>();
             _uowMock.Setup(x => x.Repository<GoodsAndService>()).Returns(_repoMock.Object);
-            _service = new ProductService(_uowMock.Object);
+            _uowFactoryMock.Setup(x => x.Create()).Returns(_uowMock.Object);
+            _service = new ProductService(_uowFactoryMock.Object);
         }
 
         [Fact]

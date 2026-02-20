@@ -7,16 +7,17 @@ namespace ContractCreator.Infrastructure.Services.Classifiers
 {
     public class ClassifierService : IClassifierService
     {
-        private readonly AppDbContext _context;
+        private readonly IDbContextFactory<AppDbContext> _contextFactory;
 
-        public ClassifierService(AppDbContext context)
+        public ClassifierService(IDbContextFactory<AppDbContext> contextFactory)
         {
-            _context = context;
+            _contextFactory = contextFactory;
         }
 
         public async Task<List<ClassifierDto>> GetOkopfsAsync()
         {
-            return await _context.ClassifierOkopfs
+            using var context = await _contextFactory.CreateDbContextAsync();
+            return await context.ClassifierOkopfs
                 .AsNoTracking()
                 .OrderBy(x => x.Code)
                 .Select(x => new ClassifierDto
@@ -30,7 +31,8 @@ namespace ContractCreator.Infrastructure.Services.Classifiers
 
         public async Task<List<ClassifierDto>> GetCurrenciesAsync()
         {
-            return await _context.ClassifierOkvs
+            using var context = await _contextFactory.CreateDbContextAsync();
+            return await context.ClassifierOkvs
                 .AsNoTracking()
                 .OrderBy(x => x.CurrencyName)
                 .Select(x => new ClassifierDto
@@ -44,7 +46,8 @@ namespace ContractCreator.Infrastructure.Services.Classifiers
 
         public async Task<List<ClassifierDto>> GetAllOkvedsAsync()
         {
-            return await _context.ClassifierOkveds
+            using var context = await _contextFactory.CreateDbContextAsync();
+            return await context.ClassifierOkveds
                 .AsNoTracking()
                 .Select(x => new ClassifierDto
                 {
@@ -57,9 +60,11 @@ namespace ContractCreator.Infrastructure.Services.Classifiers
 
         public async Task<List<ClassifierDto>> SearchOkvedsAsync(string query)
         {
-            if (string.IsNullOrWhiteSpace(query)) return new List<ClassifierDto>();
+            if (string.IsNullOrWhiteSpace(query)) 
+                return new List<ClassifierDto>();
 
-            return await _context.ClassifierOkveds
+            using var context = await _contextFactory.CreateDbContextAsync();
+            return await context.ClassifierOkveds
                 .AsNoTracking()
                 .Where(x => EF.Functions.Like(x.Code, $"{query}%") ||
                             EF.Functions.Like(x.Name.ToLower(), $"%{query.ToLower()}%"))

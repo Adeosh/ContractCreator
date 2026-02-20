@@ -18,11 +18,10 @@ namespace ContractCreator.Infrastructure
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-            services.AddDbContext<AppDbContext>(options =>
+            services.AddDbContextFactory<AppDbContext>(options =>
                 options.UseNpgsql(connectionString));
 
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddSingleton<IUnitOfWorkFactory, UnitOfWorkFactory>();
 
             services.AddScoped<IGarService, GarService>();
             services.AddScoped<IBicService, BicService>();

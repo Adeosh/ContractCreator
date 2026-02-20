@@ -9,59 +9,68 @@ namespace ContractCreator.Application.Services
 {
     public class FirmService : IFirmService
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWorkFactory _uowFactory;
 
-        public FirmService(IUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-        }
+        public FirmService(IUnitOfWorkFactory uowFactory) => _uowFactory = uowFactory;
 
         public async Task<FirmDto?> GetFirmByIdAsync(int id)
         {
+            using var factory = _uowFactory.Create();
+
             var spec = new FirmByIdWithDetailsSpec(id);
-            var firm = await _unitOfWork.Repository<Firm>().FirstOrDefaultAsync(spec);
+            var firm = await factory.Repository<Firm>().FirstOrDefaultAsync(spec);
 
             return firm?.Adapt<FirmDto>();
         }
 
         public async Task<int> CreateFirmAsync(FirmDto dto)
         {
+            using var factory = _uowFactory.Create();
+
             var firm = dto.Adapt<Firm>();
 
             firm.CreatedDate = DateOnly.FromDateTime(DateTime.Now);
             firm.IsDeleted = false;
 
-            await _unitOfWork.Repository<Firm>().AddAsync(firm);
-            await _unitOfWork.SaveChangesAsync();
+            await factory.Repository<Firm>().AddAsync(firm);
+            await factory.SaveChangesAsync();
 
             return firm.Id;
         }
 
         public async Task UpdateFirmAsync(FirmDto dto)
         {
-            var firm = await _unitOfWork.Repository<Firm>().GetByIdAsync(dto.Id);
+            using var factory = _uowFactory.Create();
+
+            var spec = new FirmByIdWithDetailsSpec(dto.Id);
+            var firm = await factory.Repository<Firm>().FirstOrDefaultAsync(spec);
             if (firm == null) throw new Exception("Фирма не найдена");
 
             dto.Adapt(firm);
             firm.UpdatedDate = DateOnly.FromDateTime(DateTime.Now);
 
-            await _unitOfWork.Repository<Firm>().UpdateAsync(firm);
-            await _unitOfWork.SaveChangesAsync();
+            await factory.Repository<Firm>().UpdateAsync(firm);
+            await factory.SaveChangesAsync();
         }
 
         public async Task DeleteFirmAsync(int id)
         {
-            var firm = await _unitOfWork.Repository<Firm>().GetByIdAsync(id);
+            using var factory = _uowFactory.Create();
+
+            var spec = new FirmByIdWithDetailsSpec(id);
+            var firm = await factory.Repository<Firm>().FirstOrDefaultAsync(spec);
             if (firm != null)
             {
-                await _unitOfWork.Repository<Firm>().DeleteAsync(firm);
-                await _unitOfWork.SaveChangesAsync();
+                await factory.Repository<Firm>().DeleteAsync(firm);
+                await factory.SaveChangesAsync();
             }
         }
 
         public async Task<IEnumerable<FirmDto>> GetAllFirmsAsync()
         {
-            var firms = await _unitOfWork.Repository<Firm>().ListAllAsync();
+            using var factory = _uowFactory.Create();
+
+            var firms = await factory.Repository<Firm>().ListAllAsync();
             return firms.Adapt<IEnumerable<FirmDto>>();
         }
     }

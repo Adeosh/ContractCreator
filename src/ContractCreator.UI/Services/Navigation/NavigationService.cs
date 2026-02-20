@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-
-namespace ContractCreator.UI.Services.Navigation
+﻿namespace ContractCreator.UI.Services.Navigation
 {
     public class NavigationService : INavigationService
     {
@@ -25,40 +23,39 @@ namespace ContractCreator.UI.Services.Navigation
             _serviceProvider = serviceProvider;
         }
 
-        public void NavigateTo<T>() where T : ViewModelBase
+        public void NavigateTo<T>() where T : ViewModelBase => NavigateToInternal(typeof(T), null);
+
+        public void NavigateTo<T>(object parameter) where T : ViewModelBase => NavigateToInternal(typeof(T), parameter);
+
+        public void NavigateTo(Type viewModelType) => NavigateToInternal(viewModelType, null);
+
+        private void NavigateToInternal(Type viewModelType, object? parameter)
         {
+            if (_currentView is INavigatedAware oldView) // Уведомляем текущую страницу, что мы с нее уходим
+                oldView.OnNavigatedFromAsync().SafeFireAndForget();
+
             if (_currentView != null)
                 _history.Push(_currentView);
 
-            var viewModel = _serviceProvider.GetRequiredService<T>();
+            var viewModel = (ViewModelBase)_serviceProvider.GetRequiredService(viewModelType); // Создаем новую страницу
             CurrentView = viewModel;
-        }
 
-        public void NavigateTo<T>(object parameter) where T : ViewModelBase
-        {
-            if (_currentView != null)
-                _history.Push(_currentView);
-
-            var viewModel = _serviceProvider.GetRequiredService<T>();
-            if (viewModel is IParametrizedViewModel parametrizedVm)
-                parametrizedVm.ApplyParameterAsync(parameter).SafeFireAndForget();
-
-            CurrentView = viewModel;
-        }
-
-        public void NavigateTo(Type viewModelType)
-        {
-            if (_currentView != null)
-                _history.Push(_currentView);
-
-            var viewModel = (ViewModelBase)_serviceProvider.GetRequiredService(viewModelType);
-            CurrentView = viewModel;
+            if (CurrentView is INavigatedAware newView) // Уведомляем новую страницу, что мы на нее пришли
+                newView.OnNavigatedToAsync(parameter).SafeFireAndForget();
         }
 
         public void NavigateBack()
         {
             if (_history.Count > 0)
+            {
+                if (_currentView is INavigatedAware oldView)
+                    oldView.OnNavigatedFromAsync().SafeFireAndForget();
+
                 CurrentView = _history.Pop();
+
+                if (CurrentView is INavigatedAware returnedView)
+                    returnedView.OnNavigatedToAsync(null).SafeFireAndForget();
+            }
         }
     }
 }

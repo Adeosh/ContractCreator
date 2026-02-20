@@ -15,57 +15,36 @@ namespace ContractCreator.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<T?> GetByIdAsync(int id)
-        {
-            return await _dbContext.Set<T>().FindAsync(id);
-        }
+        public async Task<T?> GetByIdAsync(int id) => await _dbContext.Set<T>().FindAsync(id);
 
-        public async Task<IEnumerable<T>> ListAllAsync()
-        {
-            return await _dbContext.Set<T>().ToListAsync();
-        }
+        public async Task<IEnumerable<T>> ListAllAsync() =>
+            await _dbContext.Set<T>().AsNoTracking().ToListAsync();
 
-        public async Task<IEnumerable<T>> ListAsync(ISpecification<T> spec)
-        {
-            var query = ApplySpecification(spec);
-            return await query.ToListAsync();
-        }
+        public async Task<IEnumerable<T>> ListAsync(ISpecification<T> spec) =>
+            await ApplySpecification(spec).AsNoTracking().ToListAsync();
 
-        public async Task<T?> FirstOrDefaultAsync(ISpecification<T> spec)
-        {
-            var query = ApplySpecification(spec);
-            return await query.FirstOrDefaultAsync();
-        }
+        public async Task<T?> FirstOrDefaultAsync(ISpecification<T> spec) =>
+            await ApplySpecification(spec).FirstOrDefaultAsync();
 
-        public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
-        {
-            return await _dbContext.Set<T>()
-                .Where(predicate)
-                .ToListAsync();
-        }
+        public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate) =>
+            await _dbContext.Set<T>().AsNoTracking().Where(predicate).ToListAsync();
 
-        public async Task<int> CountAsync(ISpecification<T> spec)
-        {
-            var query = ApplySpecification(spec);
-            return await query.CountAsync();
-        }
+        public async Task<int> CountAsync(ISpecification<T> spec) =>
+            await ApplySpecification(spec).CountAsync();
 
-        public async Task AddAsync(T entity)
-        {
+        public async Task AddAsync(T entity) =>
             await _dbContext.Set<T>().AddAsync(entity);
-            await _dbContext.SaveChangesAsync();
-        }
 
         public async Task UpdateAsync(T entity)
         {
-            _dbContext.Entry(entity).State = EntityState.Modified;
-            await _dbContext.SaveChangesAsync();
+            _dbContext.Set<T>().Update(entity);
+            await Task.CompletedTask;
         }
 
         public async Task DeleteAsync(T entity)
         {
             _dbContext.Set<T>().Remove(entity);
-            await _dbContext.SaveChangesAsync();
+            await Task.CompletedTask;
         }
 
         /// <summary>

@@ -158,12 +158,12 @@ namespace ContractCreator.Infrastructure.Services.Gar
         };
         #endregion
 
-        private readonly AppDbContext _context;
+        private readonly IDbContextFactory<AppDbContext> _contextFactory;
         private readonly SemaphoreSlim _semaphore = new(1, 1);
 
-        public GarService(AppDbContext context)
+        public GarService(IDbContextFactory<AppDbContext> contextFactory)
         {
-            _context = context;
+            _contextFactory = contextFactory;
         }
 
         /// <summary> Поиск адресов по ГАР </summary>
@@ -209,7 +209,8 @@ namespace ContractCreator.Infrastructure.Services.Gar
 
             try
             {
-                var rawData = await _context.ClassifierGars
+                using var context = await _contextFactory.CreateDbContextAsync();
+                var rawData = await context.ClassifierGars
                     .AsNoTracking()
                     .Where(a => a.FullAddress != null &&
                                 EF.Functions.ToTsVector("russian", a.FullAddress)

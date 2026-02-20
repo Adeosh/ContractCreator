@@ -45,8 +45,6 @@
                 await _contactService.DeleteContactAsync(contact.Id);
                 Contacts.Remove(contact);
             });
-
-            LoadDataCommand.Execute().Subscribe();
         }
 
         protected override async Task RefreshListAsync()

@@ -1,6 +1,4 @@
-﻿using System.Reactive.Concurrency;
-
-namespace ContractCreator.UI.ViewModels.Workers
+﻿namespace ContractCreator.UI.ViewModels.Workers
 {
     public class WorkerListViewModel : EntityListViewModel<WorkerDto>
     {
@@ -47,8 +45,6 @@ namespace ContractCreator.UI.ViewModels.Workers
                 await _workerService.DeleteWorkerAsync(worker.Id);
                 Items.Remove(worker);
             });
-
-            RxApp.MainThreadScheduler.Schedule(async () => await RefreshListAsync());
         }
 
         protected override async Task RefreshListAsync()

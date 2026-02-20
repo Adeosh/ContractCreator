@@ -7,11 +7,11 @@ namespace ContractCreator.Infrastructure.Services.Bic
 {
     public class BicService : IBicService
     {
-        private readonly AppDbContext _context;
+        private readonly IDbContextFactory<AppDbContext> _contextFactory;
 
-        public BicService(AppDbContext context)
+        public BicService(IDbContextFactory<AppDbContext> contextFactory)
         {
-            _context = context;
+            _contextFactory = contextFactory;
         }
 
         public async Task<IEnumerable<BankDto>> SearchAsync(string query)
@@ -21,7 +21,8 @@ namespace ContractCreator.Infrastructure.Services.Bic
 
             var q = query.ToLower().Trim();
 
-            var rawData = await _context.ClassifierBics
+            using var context = await _contextFactory.CreateDbContextAsync();
+            var rawData = await context.ClassifierBics
                 .AsNoTracking()
                 .Where(b => EF.Functions.Like(b.BIC, $"%{q}%") ||
                             EF.Functions.Like(b.Name.ToLower(), $"%{q}%"))

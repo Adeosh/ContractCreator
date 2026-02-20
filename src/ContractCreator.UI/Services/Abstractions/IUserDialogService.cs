@@ -1,4 +1,4 @@
-﻿namespace ContractCreator.UI.Services.Dialogs
+﻿namespace ContractCreator.UI.Services.Abstractions
 {
     public interface IUserDialogService
     {

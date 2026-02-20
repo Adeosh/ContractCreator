@@ -15,5 +15,7 @@
         public bool IsAccountant { get; set; }
         public bool IsDeleted { get; set; }
         public int FirmId { get; set; }
+
+        public string FullName => $"{LastName} {FirstName} {MiddleName})";
     }
 }

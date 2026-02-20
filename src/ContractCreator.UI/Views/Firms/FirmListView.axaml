@@ -10,59 +10,75 @@
 			 x:CompileBindings="False"
 			 x:Name="Root">
 
-			 <Grid RowDefinitions="Auto, *">
-				 <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,20">
-					 <TextBlock Text="Мои Фирмы" FontSize="24" FontWeight="SemiBold" VerticalAlignment="Center"/>
+	<Grid RowDefinitions="Auto, *">
+		<Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,20">
+			<TextBlock Text="Мои Фирмы" FontSize="24" FontWeight="SemiBold" VerticalAlignment="Center"/>
 
-					 <Button Grid.Column="1"
-							 Command="{Binding CreateCommand}"
-							 Classes="accent"
-							 Padding="10,5">
-						 <TextBlock Text="+ Создать фирму" FontWeight="Bold"/>
-					 </Button>
-				 </Grid>
+			<Button Grid.Column="1"
+					Command="{Binding CreateCommand}"
+					Classes="accent"
+					Padding="10,5">
+				<TextBlock Text="+ Создать фирму" FontWeight="Bold"/>
+			</Button>
+		</Grid>
 
-				 <DataGrid Grid.Row="1"
-						   ItemsSource="{Binding Items}"
-						   SelectedItem="{Binding SelectedFirm}"
-						   AutoGenerateColumns="False"
-						   IsReadOnly="True"
-						   GridLinesVisibility="Horizontal"
-						   BorderThickness="1" BorderBrush="#E0E0E0">
+		<DataGrid Grid.Row="1"
+				  ItemsSource="{Binding Items}"
+				  SelectedItem="{Binding SelectedFirm}"
+				  AutoGenerateColumns="False"
+				  IsReadOnly="True"
+				  GridLinesVisibility="Horizontal"
+				  BorderThickness="1" BorderBrush="#E0E0E0">
 
-					 <DataGrid.Columns>
-						 <DataGridTextColumn Header="#" Binding="{Binding Id}" Width="50" />
-						 <DataGridTextColumn Header="Название" Binding="{Binding FullName}" Width="*" />
-						 <DataGridTextColumn Header="ИНН" Binding="{Binding INN}" Width="150" />
+			<DataGrid.Columns>
+				<DataGridTextColumn Header="#" Binding="{Binding Id}" Width="50" />
+				<DataGridTextColumn Header="Название" Binding="{Binding FullName}" Width="*" />
+				<DataGridTextColumn Header="ИНН" Binding="{Binding INN}" Width="150" />
 
-						 <DataGridTemplateColumn Header="Действия" Width="Auto">
-							 <DataGridTemplateColumn.CellTemplate>
-								 <DataTemplate DataType="dto:FirmDto">
-									 <StackPanel Orientation="Horizontal" Spacing="10">
+				<DataGridTemplateColumn Header="Действия" Width="Auto">
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate DataType="dto:FirmDto">
+							<StackPanel Orientation="Horizontal" Spacing="10">
 
-										 <Button Command="{Binding #Root.DataContext.SetCurrentCommand}"
-												 CommandParameter="{Binding}"
-												 ToolTip.Tip="Сделать активной для работы"
-												 Background="Transparent">
-											 <TextBlock Text="✅" />
-										 </Button>
+								<Button Command="{Binding #Root.DataContext.DeleteCommand}"
+										CommandParameter="{Binding}"
+										Background="Transparent"
+										ToolTip.ShowOnDisabled="True">
 
-										 <Button Command="{Binding #Root.DataContext.EditCommand}"
-												 CommandParameter="{Binding}"
-												 Background="Transparent">
-											 <TextBlock Text="✏️" Foreground="Orange"/>
-										 </Button>
+									<TextBlock Text="🗑️" Foreground="Red"/>
 
-									 </StackPanel>
-								 </DataTemplate>
-							 </DataGridTemplateColumn.CellTemplate>
-						 </DataGridTemplateColumn>
-					 </DataGrid.Columns>
-				 </DataGrid>
+									<Button.IsEnabled>
+										<MultiBinding Converter="{StaticResource NotEqualConverter}">
+											<Binding Path="Id" />
+											<Binding Path="#Root.DataContext.CurrentActiveFirmId" />
+										</MultiBinding>
+									</Button.IsEnabled>
 
-				 <TextBlock Grid.Row="1"
-							Text="Список фирм пуст"
-							IsVisible="{Binding !Items.Count}"
-							HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Gray"/>
-			 </Grid>
+									<ToolTip.Tip>
+										<MultiBinding Converter="{StaticResource ActiveEntityTooltipConverter}"
+													  ConverterParameter="Свою фирму удалять нельзя">
+											<Binding Path="Id" />
+											<Binding Path="#Root.DataContext.CurrentActiveFirmId" />
+										</MultiBinding>
+									</ToolTip.Tip>
+								</Button>
+
+								<Button Command="{Binding #Root.DataContext.EditCommand}"
+										CommandParameter="{Binding}"
+										Background="Transparent">
+									<TextBlock Text="✏️" Foreground="Orange"/>
+								</Button>
+
+							</StackPanel>
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+				</DataGridTemplateColumn>
+			</DataGrid.Columns>
+		</DataGrid>
+
+		<TextBlock Grid.Row="1"
+				   Text="Список фирм пуст"
+				   IsVisible="{Binding !Items.Count}"
+				   HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Gray"/>
+	</Grid>
 </UserControl>

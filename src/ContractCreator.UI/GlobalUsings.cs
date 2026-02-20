@@ -3,17 +3,28 @@ global using System;
 global using System.IO;
 global using System.Collections.Generic;
 global using System.Collections.ObjectModel;
+global using System.Diagnostics;
+global using System.Globalization;
 global using System.Linq;
 global using System.Reactive;
 global using System.Reactive.Linq;
+global using System.Reactive.Concurrency;
 global using System.Threading;
 global using System.Threading.Tasks;
+global using System.Windows.Input;
 
 // Библиотеки
 global using ReactiveUI;
 global using ReactiveUI.Fody.Helpers;
 global using Avalonia.Media.Imaging;
+global using Avalonia.Controls;
+global using Avalonia.Controls.ApplicationLifetimes;
+global using Avalonia.Media;
+global using Avalonia.Threading;
+global using Avalonia.Platform.Storage;
+global using Avalonia.Data.Converters;
 global using Serilog;
+global using Microsoft.Extensions.DependencyInjection;
 
 // Мои библиотеки
 global using ContractCreator.Application;
@@ -32,6 +43,7 @@ global using ContractCreator.Shared.Common.Exceptions;
 global using ContractCreator.Shared.Common.Extensions;
 
 // Базовые ViewModels и Интерфейсы
+global using ContractCreator.UI.Services.Abstractions;
 global using ContractCreator.UI.Services.Navigation;
 global using ContractCreator.UI.Services.Dialogs;
 global using ContractCreator.UI.Services.Settings;

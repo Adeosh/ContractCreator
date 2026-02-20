@@ -1,6 +1,6 @@
 ﻿namespace ContractCreator.UI.ViewModels.Workers
 {
-    public class WorkerEditorViewModel : ViewModelBase, IParametrizedViewModel
+    public class WorkerEditorViewModel : ViewModelBase, INavigatedAware
     {
         #region Props
         private readonly IWorkerService _workerService;
@@ -33,7 +33,7 @@
             CancelCommand = ReactiveCommand.Create(() => _navigation.NavigateBack());
         }
 
-        public async Task ApplyParameterAsync(object parameter)
+        public async Task OnNavigatedToAsync(object? parameter = null)
         {
             if (parameter is EditorParams param)
             {
@@ -43,6 +43,8 @@
                     await LoadWorkerAsync(param.Id);
             }
         }
+
+        public Task OnNavigatedFromAsync() => Task.CompletedTask;
 
         private async Task LoadWorkerAsync(int id)
         {

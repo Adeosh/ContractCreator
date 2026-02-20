@@ -1,6 +1,6 @@
 ﻿namespace ContractCreator.UI.ViewModels.Firms
 {
-    public class FirmEditorViewModel : ViewModelBase, IParametrizedViewModel
+    public class FirmEditorViewModel : ViewModelBase, INavigatedAware
     {
         #region Props
         private readonly IFirmService _firmService;
@@ -91,7 +91,7 @@
             });
         }
 
-        public async Task ApplyParameterAsync(object parameter)
+        public async Task OnNavigatedToAsync(object? parameter = null)
         {
             await LoadOkopfAsync();
             await OkvedVM.LoadDictionaryAsync();
@@ -103,6 +103,8 @@
             else
                 await BankAccountVM.LoadDataAsync(0, OwnerType.Firm);
         }
+
+        public Task OnNavigatedFromAsync() => Task.CompletedTask;
 
         private async Task LoadOkopfAsync()
         {

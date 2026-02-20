@@ -1,8 +1,4 @@
-﻿using Avalonia.Controls;
-using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Media;
-using Avalonia.Threading;
-using AvaloniaApp = Avalonia.Application;
+﻿using AvaloniaApp = Avalonia.Application;
 
 namespace ContractCreator.UI.Services.Dialogs
 {

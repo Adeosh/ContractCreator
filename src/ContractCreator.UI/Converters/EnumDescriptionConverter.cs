@@ -1,7 +1,4 @@
-﻿using Avalonia.Data.Converters;
-using System.Globalization;
-
-namespace ContractCreator.UI.Converters
+﻿namespace ContractCreator.UI.Converters
 {
     internal class EnumDescriptionConverter : IValueConverter
     {

@@ -48,6 +48,66 @@
                 
                 <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="0,0,10,0" HorizontalAlignment="Right">
                     
+                    					<Button Classes="windowBtn"
+							Command="{Binding OpenSettingsCommand}"
+							Content="⚙️"
+							ToolTip.Tip="Настройки"
+							Margin="0,0,15,0"
+							Background="Transparent"
+							BorderThickness="0"
+							CornerRadius="15">
+						<Button.Flyout>
+							<Flyout Placement="BottomEdgeAlignedRight">
+								<StackPanel Width="350" Spacing="15" Margin="10">
+									<TextBlock Text="⚙️ Настройки" FontWeight="Bold" FontSize="18" Foreground="{DynamicResource ActionBrush}"/>
+
+									<Separator Background="{DynamicResource BorderBrush}" Margin="0,-5,0,0"/>
+
+									<StackPanel Spacing="5">
+										<TextBlock Text="Текущая рабочая фирма:" FontWeight="SemiBold" Foreground="{DynamicResource SecondaryTextBrush}"/>
+										<ComboBox ItemsSource="{Binding AvailableFirms}"
+												  SelectedItem="{Binding SelectedFirm}"
+												  DisplayMemberBinding="{Binding ShortName}"
+												  HorizontalAlignment="Stretch"
+												  PlaceholderText="Выберите фирму..."/>
+									</StackPanel>
+
+									<StackPanel Spacing="5">
+										<TextBlock Text="Ответственный сотрудник:" FontWeight="SemiBold" Foreground="{DynamicResource SecondaryTextBrush}"/>
+										<ComboBox ItemsSource="{Binding AvailableWorkers}"
+												  SelectedItem="{Binding SelectedWorker}"
+												  DisplayMemberBinding="{Binding FullName}"
+												  HorizontalAlignment="Stretch"
+												  PlaceholderText="Выберите сотрудника..."
+												  IsEnabled="{Binding SelectedFirm, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+									</StackPanel>
+
+									<StackPanel Spacing="5">
+										<TextBlock Text="Папка хранилища файлов:" FontWeight="SemiBold" Foreground="{DynamicResource SecondaryTextBrush}"/>
+										<Grid ColumnDefinitions="*, Auto">
+											<TextBox Grid.Column="0"
+													 Text="{Binding StoragePath}"
+													 IsReadOnly="True"
+													 Margin="0,0,5,0"
+													 ToolTip.Tip="{Binding StoragePath}"/>
+											<Button Grid.Column="1"
+													Content="..."
+													Command="{Binding ChangeStoragePathCommand}"
+													Classes="outline"/>
+										</Grid>
+									</StackPanel>
+
+									<Separator Background="{DynamicResource BorderBrush}" Margin="0,5"/>
+
+									<Button Content="Сверка файлов с БД"
+											Command="{Binding CheckFilesCommand}"
+											HorizontalAlignment="Stretch"
+											Classes="outline"/>
+								</StackPanel>
+							</Flyout>
+						</Button.Flyout>
+					</Button>
+
                     <ToggleSwitch IsChecked="{Binding IsDarkTheme}" 
                                   OnContent="🌙" OffContent="☀️"
                                   Margin="0,0,15,0"/>

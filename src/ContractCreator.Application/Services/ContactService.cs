@@ -8,55 +8,67 @@ namespace ContractCreator.Application.Services
 {
     public class ContactService : IContactService
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWorkFactory _uowFactory;
 
-        public ContactService(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
+        public ContactService(IUnitOfWorkFactory uowFactory) => _uowFactory = uowFactory;
 
         public async Task<IEnumerable<ContactDto>> GetAllContactsAsync()
         {
-            var contacts = await _unitOfWork.Repository<Contact>().ListAllAsync();
+            using var factory = _uowFactory.Create();
+
+            var contacts = await factory.Repository<Contact>().ListAllAsync();
             return contacts.Adapt<IEnumerable<ContactDto>>();
         }
 
         public async Task<IEnumerable<ContactDto>> GetContactsByCounterpartyIdAsync(int counterpartyId)
         {
-            var contacts = await _unitOfWork.Repository<Contact>()
+            using var factory = _uowFactory.Create();
+
+            var contacts = await factory.Repository<Contact>()
                 .FindAsync(c => c.CounterpartyId == counterpartyId && !c.IsDeleted);
             return contacts.Adapt<IEnumerable<ContactDto>>();
         }
 
         public async Task<ContactDto?> GetContactByIdAsync(int id)
         {
-            var contact = await _unitOfWork.Repository<Contact>().GetByIdAsync(id);
+            using var factory = _uowFactory.Create();
+
+            var contact = await factory.Repository<Contact>().GetByIdAsync(id);
             return contact?.Adapt<ContactDto>();
         }
 
         public async Task<int> CreateContactAsync(ContactDto dto)
         {
+            using var factory = _uowFactory.Create();
+
             var contact = dto.Adapt<Contact>();
-            await _unitOfWork.Repository<Contact>().AddAsync(contact);
-            await _unitOfWork.SaveChangesAsync();
+            await factory.Repository<Contact>().AddAsync(contact);
+            await factory.SaveChangesAsync();
             return contact.Id;
         }
 
         public async Task UpdateContactAsync(ContactDto dto)
         {
-            var contact = await _unitOfWork.Repository<Contact>().GetByIdAsync(dto.Id);
+            using var factory = _uowFactory.Create();
+
+            var contact = await factory.Repository<Contact>().GetByIdAsync(dto.Id);
             if (contact == null) throw new Exception("Контакт не найден");
 
             dto.Adapt(contact);
-            await _unitOfWork.Repository<Contact>().UpdateAsync(contact);
-            await _unitOfWork.SaveChangesAsync();
+            await factory.Repository<Contact>().UpdateAsync(contact);
+            await factory.SaveChangesAsync();
         }
 
         public async Task DeleteContactAsync(int id)
         {
-            var contact = await _unitOfWork.Repository<Contact>().GetByIdAsync(id);
+            using var factory = _uowFactory.Create();
+
+            var contact = await factory.Repository<Contact>().GetByIdAsync(id);
             if (contact != null)
             {
                 contact.IsDeleted = true;
-                await _unitOfWork.Repository<Contact>().UpdateAsync(contact);
-                await _unitOfWork.SaveChangesAsync();
+                await factory.Repository<Contact>().UpdateAsync(contact);
+                await factory.SaveChangesAsync();
             }
         }
     }

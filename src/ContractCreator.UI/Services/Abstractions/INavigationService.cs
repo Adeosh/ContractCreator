@@ -1,4 +1,4 @@
-﻿namespace ContractCreator.UI.Services.Navigation
+﻿namespace ContractCreator.UI.Services.Abstractions
 {
     public interface INavigationService
     {

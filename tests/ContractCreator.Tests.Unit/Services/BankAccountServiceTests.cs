@@ -11,6 +11,7 @@ namespace ContractCreator.Tests.Unit.Services
 {
     public class BankAccountServiceTests
     {
+        private readonly Mock<IUnitOfWorkFactory> _uowFactoryMock;
         private readonly Mock<IUnitOfWork> _uowMock;
         private readonly Mock<IRepository<BankAccount>> _repoMock;
         private readonly BankAccountService _service;
@@ -19,10 +20,12 @@ namespace ContractCreator.Tests.Unit.Services
         {
             MappingConfig.Configure();
 
+            _uowFactoryMock = new Mock<IUnitOfWorkFactory>();
             _uowMock = new Mock<IUnitOfWork>();
             _repoMock = new Mock<IRepository<BankAccount>>();
             _uowMock.Setup(x => x.Repository<BankAccount>()).Returns(_repoMock.Object);
-            _service = new BankAccountService(_uowMock.Object);
+            _uowFactoryMock.Setup(x => x.Create()).Returns(_uowMock.Object);
+            _service = new BankAccountService(_uowFactoryMock.Object);
         }
 
         [Fact]

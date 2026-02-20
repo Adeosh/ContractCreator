@@ -11,12 +11,14 @@ namespace ContractCreator.Infrastructure.Services.Files
 {
     public class FileService : IFileService
     {
-        private readonly AppDbContext _context;
+        private readonly IDbContextFactory<AppDbContext> _contextFactory;
         private readonly ISettingsService _settingsService;
 
-        public FileService(AppDbContext context, ISettingsService settingsService)
+        public FileService(
+            IDbContextFactory<AppDbContext> contextFactory, 
+            ISettingsService settingsService)
         {
-            _context = context;
+            _contextFactory = contextFactory;
             _settingsService = settingsService;
         }
 
@@ -25,6 +27,7 @@ namespace ContractCreator.Infrastructure.Services.Files
             var fileGUID = Guid.NewGuid();
             await SavePhysicalFileAsync(fileStream, fileGUID, fileType, encrypt: true);
 
+            using var context = await _contextFactory.CreateDbContextAsync();
             var fileStorage = new FileStorage
             {
                 StorageFileGuid = fileGUID,
@@ -34,8 +37,8 @@ namespace ContractCreator.Infrastructure.Services.Files
                 IsEncrypted = true
             };
 
-            _context.Files.Add(fileStorage);
-            await _context.SaveChangesAsync();
+            context.Files.Add(fileStorage);
+            await context.SaveChangesAsync();
 
             return fileStorage.Id;
         }
@@ -45,6 +48,7 @@ namespace ContractCreator.Infrastructure.Services.Files
             var fileGUID = Guid.NewGuid();
             await SavePhysicalFileAsync(fileStream, fileGUID, fileType, encrypt: false);
 
+            using var context = await _contextFactory.CreateDbContextAsync();
             var fileStorage = new FileStorage
             {
                 StorageFileGuid = fileGUID,
@@ -54,15 +58,16 @@ namespace ContractCreator.Infrastructure.Services.Files
                 IsEncrypted = false
             };
 
-            _context.Files.Add(fileStorage);
-            await _context.SaveChangesAsync();
+            context.Files.Add(fileStorage);
+            await context.SaveChangesAsync();
 
             return fileStorage.Id;
         }
 
         public async Task<FileDataDto?> DownloadFileAsync(int fileId)
         {
-            var file = await _context.Files.AsNoTracking().FirstOrDefaultAsync(f => f.Id == fileId);
+            using var context = await _contextFactory.CreateDbContextAsync();
+            var file = await context.Files.AsNoTracking().FirstOrDefaultAsync(f => f.Id == fileId);
             if (file == null) return null;
 
             var filePath = GetPhysicalFilePath(file.Type, file.StorageFileGuid);
@@ -81,9 +86,10 @@ namespace ContractCreator.Infrastructure.Services.Files
             };
         }
 
-        public async Task<List<FileDataDto>> GetFileDataByIDsAsync(List<int> fileIds)
+        public async Task<List<FileDataDto>> GetFileDataByIdsAsync(List<int> fileIds)
         {
-            var files = await _context.Files.AsNoTracking().Where(f => fileIds.Contains(f.Id)).ToListAsync();
+            using var context = await _contextFactory.CreateDbContextAsync();
+            var files = await context.Files.AsNoTracking().Where(f => fileIds.Contains(f.Id)).ToListAsync();
             var result = new List<FileDataDto>();
 
             foreach (var file in files)
@@ -109,7 +115,8 @@ namespace ContractCreator.Infrastructure.Services.Files
 
         public async Task UpdateEncryptedFileAsync(int fileId, Stream fileStream, string fileName, DateTime changeDate)
         {
-            var file = await _context.Files.FindAsync(fileId);
+            using var context = await _contextFactory.CreateDbContextAsync();
+            var file = await context.Files.FindAsync(fileId);
             if (file == null) 
                 throw new InvalidOperationException("Файл не найден в базе данных");
 
@@ -118,13 +125,14 @@ namespace ContractCreator.Infrastructure.Services.Files
             file.FileName = fileName;
             file.ChangeDate = DateTime.SpecifyKind(changeDate, DateTimeKind.Utc);
 
-            _context.Files.Update(file);
-            await _context.SaveChangesAsync();
+            context.Files.Update(file);
+            await context.SaveChangesAsync();
         }
 
         public async Task UpdateFileAsync(int fileId, Stream fileStream, string fileName, DateTime changeDate)
         {
-            var file = await _context.Files.FindAsync(fileId);
+            using var context = await _contextFactory.CreateDbContextAsync();
+            var file = await context.Files.FindAsync(fileId);
             if (file == null) throw new InvalidOperationException("Файл не найден в базе данных");
 
             await SavePhysicalFileAsync(fileStream, file.StorageFileGuid, file.Type, encrypt: false);
@@ -132,54 +140,57 @@ namespace ContractCreator.Infrastructure.Services.Files
             file.FileName = fileName;
             file.ChangeDate = DateTime.SpecifyKind(changeDate, DateTimeKind.Utc);
 
-            _context.Files.Update(file);
-            await _context.SaveChangesAsync();
+            context.Files.Update(file);
+            await context.SaveChangesAsync();
         }
 
         public async Task<bool> DeleteFileAsync(int fileId)
         {
-            var file = await _context.Files.FindAsync(fileId);
+            using var context = await _contextFactory.CreateDbContextAsync();
+            var file = await context.Files.FindAsync(fileId);
             if (file == null) return false;
 
-            _context.Files.Remove(file);
-            await _context.SaveChangesAsync();
+            context.Files.Remove(file);
+            await context.SaveChangesAsync();
 
             DeletePhysicalFile(file.Type, file.StorageFileGuid);
             return true;
         }
 
-        public async Task DeleteFilesByIDsAsync(List<int> fileIds)
+        public async Task DeleteFilesByIdsAsync(List<int> fileIds)
         {
-            var files = await _context.Files.Where(f => fileIds.Contains(f.Id)).ToListAsync();
+            using var context = await _contextFactory.CreateDbContextAsync();
+            var files = await context.Files.Where(f => fileIds.Contains(f.Id)).ToListAsync();
             if (!files.Any()) return;
 
-            _context.Files.RemoveRange(files);
-            await _context.SaveChangesAsync();
+            context.Files.RemoveRange(files);
+            await context.SaveChangesAsync();
 
             foreach (var file in files)
-            {
                 DeletePhysicalFile(file.Type, file.StorageFileGuid);
-            }
         }
 
         public async Task<List<FileInformationDto>> GetAllFilesAsync()
         {
-            return await _context.Files.AsNoTracking()
+            using var context = await _contextFactory.CreateDbContextAsync();
+            return await context.Files.AsNoTracking()
                 .Select(f => MapToDto(f))
                 .ToListAsync();
         }
 
         public async Task<List<FileInformationDto>> GetFilesByTypeAsync(FileType fileType)
         {
-            return await _context.Files.AsNoTracking()
+            using var context = await _contextFactory.CreateDbContextAsync();
+            return await context.Files.AsNoTracking()
                 .Where(f => f.Type == fileType)
                 .Select(f => MapToDto(f))
                 .ToListAsync();
         }
 
-        public async Task<List<FileInformationDto>> GetFilesByIDsAsync(List<int> fileIds)
+        public async Task<List<FileInformationDto>> GetFilesByIdsAsync(List<int> fileIds)
         {
-            return await _context.Files.AsNoTracking()
+            using var context = await _contextFactory.CreateDbContextAsync();
+            return await context.Files.AsNoTracking()
                 .Where(f => fileIds.Contains(f.Id))
                 .Select(f => MapToDto(f))
                 .ToListAsync();
@@ -201,13 +212,15 @@ namespace ContractCreator.Infrastructure.Services.Files
             if (!Directory.Exists(basePath))
                 return new List<string> { "Корневая папка хранилища не существует." };
 
-            var databaseFiles = (await _context.Files.AsNoTracking()
+            using var context = await _contextFactory.CreateDbContextAsync();
+            var databaseFiles = (await context.Files.AsNoTracking()
                 .Select(fs => fs.StorageFileGuid.ToString())
                 .ToListAsync())
                 .ToHashSet();
 
             var directoryFiles = Directory.GetFiles(basePath, "*", SearchOption.AllDirectories)
                 .Select(df => Path.GetFileNameWithoutExtension(df))
+                .Where(name => Guid.TryParse(name, out _))
                 .ToHashSet();
 
             var incomparabilityFiles = new List<string>();
@@ -258,7 +271,11 @@ namespace ContractCreator.Infrastructure.Services.Files
         {
             string storagePath = _settingsService.StoragePath;
             if (string.IsNullOrWhiteSpace(storagePath))
-                storagePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "FileStorage");
+                storagePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+
+            string finalPath = Path.Combine(storagePath, "FileStorage");
+            if (!Directory.Exists(finalPath))
+                Directory.CreateDirectory(finalPath);
 
             return storagePath;
         }

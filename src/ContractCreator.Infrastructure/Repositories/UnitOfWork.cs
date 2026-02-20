@@ -36,6 +36,7 @@ namespace ContractCreator.Infrastructure.Repositories
         public void Dispose()
         {
             _context.Dispose();
+            _repositories.Clear();
             GC.SuppressFinalize(this);
         }
     }
