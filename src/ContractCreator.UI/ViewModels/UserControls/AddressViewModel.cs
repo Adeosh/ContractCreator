@@ -44,7 +44,7 @@
                     }
                     catch (Exception ex)
                     {
-                        Log.Error(ex, "Ошибка внутри потока поиска адреса");
+                        Log.Error(ex.Message);
                         return Enumerable.Empty<AddressSearchResultDto>();
                     }
                 })

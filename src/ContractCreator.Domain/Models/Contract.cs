@@ -62,6 +62,7 @@ namespace ContractCreator.Domain.Models
         public virtual ContractStage StageType { get; set; } = null!;
 
         public virtual ICollection<ContractSpecification> Specifications { get; set; } = new List<ContractSpecification>();
+        public virtual ICollection<ContractFile> Files { get; set; } = new List<ContractFile>();
         public virtual ICollection<ContractAct> Acts { get; set; } = new List<ContractAct>();
         public virtual ICollection<ContractInvoice> Invoices { get; set; } = new List<ContractInvoice>();
         public virtual ICollection<ContractWaybill> Waybills { get; set; } = new List<ContractWaybill>();

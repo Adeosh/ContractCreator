@@ -13,6 +13,7 @@ namespace ContractCreator.Shared.DTOs
         public string? UnitOfMeasure { get; set; }
         public decimal Price { get; set; }
         public int CurrencyId { get; set; }
+        public int FirmId { get; set; }
         public bool IsDeleted { get; set; }
 
         public string TypeName => Type.GetDescription();

@@ -16,6 +16,12 @@ namespace ContractCreator.Application.Mapping.Entities
             config.NewConfig<FileStorageDto, FileStorage>()
                   .Map(dest => dest.Type, src => (FileType)src.Type);
 
+            config.NewConfig<ContractFile, EntityFileDto>();
+            config.NewConfig<EntityFileDto, ContractFile>();
+
+            config.NewConfig<CounterpartyFile, EntityFileDto>();
+            config.NewConfig<EntityFileDto, CounterpartyFile>();
+
             config.NewConfig<FirmFile, EntityFileDto>();
             config.NewConfig<EntityFileDto, FirmFile>();
 

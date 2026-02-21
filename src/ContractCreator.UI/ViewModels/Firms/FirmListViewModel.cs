@@ -43,20 +43,38 @@
 
         private void CreateFirm()
         {
-            var param = new EditorParams { Mode = EditorMode.Create };
-            _navigation.NavigateTo<FirmEditorViewModel>(param);
+            try
+            {
+                var param = new EditorParams { Mode = EditorMode.Create };
+                _navigation.NavigateTo<FirmEditorViewModel>(param);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+                throw new UserMessageException("Ошибка при создании фирм!",
+                    "Ошибка", UserMessageType.Error);
+            }
         }
 
         private void EditFirm(FirmDto firm)
         {
             if (firm == null) return;
 
-            var param = new EditorParams
+            try
             {
-                Mode = EditorMode.Edit,
-                Id = firm.Id
-            };
-            _navigation.NavigateTo<FirmEditorViewModel>(param);
+                var param = new EditorParams
+                {
+                    Mode = EditorMode.Edit,
+                    Id = firm.Id
+                };
+                _navigation.NavigateTo<FirmEditorViewModel>(param);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+                throw new UserMessageException("Ошибка при добавлении фирм!",
+                    "Ошибка", UserMessageType.Error);
+            }
         }
 
         protected override async Task RefreshListAsync()
@@ -109,7 +127,7 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Ошибка при удалении фирмы.");
+                Log.Error(ex.Message);
                 await _dialogService.ShowMessageAsync("Не удалось удалить фирму.", "Ошибка", UserMessageType.Error);
             }
         }

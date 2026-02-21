@@ -92,5 +92,7 @@ public partial class App : Avalonia.Application
         services.AddTransient<WorkerEditorViewModel>();
         services.AddTransient<FirmListViewModel>();
         services.AddTransient<FirmEditorViewModel>();
+        services.AddTransient<ProductListViewModel>();
+        services.AddTransient<ProductEditorViewModel>();
     }
 }

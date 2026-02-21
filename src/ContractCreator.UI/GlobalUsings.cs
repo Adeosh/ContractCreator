@@ -36,6 +36,7 @@ global using ContractCreator.Infrastructure.Services.Bic;
 global using ContractCreator.Infrastructure.Services.Classifiers;
 global using ContractCreator.Application.Interfaces;
 global using ContractCreator.Application.Interfaces.Infrastructure;
+global using ContractCreator.Domain.Models.Dictionaries;
 
 // Общие DTO и Exception
 global using ContractCreator.Shared.DTOs;
@@ -58,6 +59,7 @@ global using ContractCreator.UI.ViewModels.Contacts;
 global using ContractCreator.UI.ViewModels.Counterparties;
 global using ContractCreator.UI.ViewModels.Firms;
 global using ContractCreator.UI.ViewModels.Workers;
+global using ContractCreator.UI.ViewModels.Products;
 global using ContractCreator.UI.ViewModels.Shared;
 global using ContractCreator.UI.ViewModels.UserControls;
 global using ContractCreator.UI.Views.Shared;

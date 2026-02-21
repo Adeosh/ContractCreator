@@ -1,4 +1,5 @@
-﻿using AvaloniaApp = Avalonia.Application;
+﻿using ContractCreator.UI.ViewModels.Products;
+using AvaloniaApp = Avalonia.Application;
 
 namespace ContractCreator.UI.ViewModels;
 
@@ -25,7 +26,6 @@ public class MainWindowViewModel : ViewModelBase
 
     private bool _isSettingsLoaded = false;
     #endregion
-
     #region Actions
     public ReactiveCommand<Unit, Unit> ChangeStoragePathCommand { get; }
     public ReactiveCommand<Unit, Unit> CheckFilesCommand { get; }
@@ -113,10 +113,13 @@ public class MainWindowViewModel : ViewModelBase
                 {
                     Items = new ObservableCollection<MenuItemViewModel>
                     {
-                        new MenuItemViewModel("Список товаров"),
-                        new MenuItemViewModel("Список услуг")
+                        new MenuItemViewModel("Список товаров",
+                            ReactiveCommand.Create(() => _navigationService.NavigateTo<ProductListViewModel>(ProductType.Good))),
+            
+                        new MenuItemViewModel("Список услуг",
+                            ReactiveCommand.Create(() => _navigationService.NavigateTo<ProductListViewModel>(ProductType.Service)))
                     }
-                },
+                }
             };
     }
 

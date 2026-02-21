@@ -13,8 +13,10 @@ namespace ContractCreator.Domain.Models
         public string? UnitOfMeasure { get; set; }
         public decimal Price { get; set; }
         public int CurrencyId { get; set; }
+        public int FirmId { get; set; }
         public bool IsDeleted { get; set; }
 
+        public virtual Firm Firm { get; set; } = null!;
         public virtual ClassifierOkv Currency { get; set; } = null!;
     }
 }

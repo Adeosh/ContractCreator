@@ -199,7 +199,7 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Ошибка сохранения черновиков счетов");
+                Log.Error(ex.Message);
                 await _dialogService.ShowErrorAsync("Не удалось сохранить банковские счета новой фирмы.");
             }
             finally

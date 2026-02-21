@@ -1,0 +1,70 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ContractCreator.UI.ViewModels.Products"
+             x:Class="ContractCreator.UI.Views.Products.ProductEditorView"
+             x:DataType="vm:ProductEditorViewModel">
+
+    <ScrollViewer>
+        <StackPanel Margin="20" Spacing="20" MaxWidth="700">
+
+            <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,0,0,10">
+                <Button Command="{Binding CancelCommand}" Content="🠔" ToolTip.Tip="Назад" Classes="windowBtn"/>
+                <TextBlock Text="{Binding PageTitle}" FontSize="22" FontWeight="Bold" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <Border Background="{DynamicResource CardBrush}" CornerRadius="8" Padding="20" BoxShadow="0 1 3 0 #20000000">
+                <StackPanel Spacing="15">
+                    
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="Наименование *" FontWeight="SemiBold"/>
+                        <TextBox Text="{Binding Name}" Watermark="{Binding NameWatermark}" Classes="outline"/>
+                    </StackPanel>
+
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="Описание" FontWeight="SemiBold"/>
+                        <TextBox Text="{Binding Description}" 
+                                 AcceptsReturn="True" 
+                                 TextWrapping="Wrap" 
+                                 MinHeight="80" 
+                                 Watermark="Дополнительная информация (характеристики, условия и т.д.)..."
+                                 Classes="outline"/>
+                    </StackPanel>
+
+                    <Grid ColumnDefinitions="*, 15, 2*" Margin="0,10,0,0">
+                        
+                        <StackPanel Grid.Column="0" Spacing="5">
+                            <TextBlock Text="Базовая цена *" FontWeight="SemiBold"/>
+                            <TextBox Text="{Binding Price}" Classes="outline"/>
+                        </StackPanel>
+                        
+                        <StackPanel Grid.Column="2" Spacing="5">
+                            <TextBlock Text="Валюта *" FontWeight="SemiBold"/>
+                            <ComboBox ItemsSource="{Binding Currencies}" 
+                                      SelectedItem="{Binding SelectedCurrency}" 
+                                      HorizontalAlignment="Stretch">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Name}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+                    </Grid>
+
+                    <StackPanel Spacing="5" IsVisible="{Binding IsUnitOfMeasureVisible}" Width="220" HorizontalAlignment="Left" Margin="0,10,0,0">
+                        <TextBlock Text="Единица измерения" FontWeight="SemiBold"/>
+                        <TextBox Text="{Binding UnitOfMeasure}" Watermark="шт., кг., час и т.д." Classes="outline"/>
+                    </StackPanel>
+
+                </StackPanel>
+            </Border>
+
+            <StackPanel Orientation="Horizontal" Spacing="20" HorizontalAlignment="Right" Margin="0,20,0,50">
+                <Button Command="{Binding CancelCommand}" Content="Отмена"/>
+                <Button Command="{Binding SaveCommand}" Content="Сохранить" Classes="accent" FontWeight="Bold" Padding="25,10"/>
+            </StackPanel>
+
+        </StackPanel>
+    </ScrollViewer>
+
+</UserControl>

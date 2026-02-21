@@ -17,6 +17,7 @@ namespace ContractCreator.Infrastructure.Persistence
         public DbSet<ClassifierOkved> ClassifierOkveds { get; set; }
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<Contract> Contracts { get; set; }
+        public DbSet<ContractFile> ContractFiles { get; set; }
         public DbSet<ContractAct> ContractActs { get; set; }
         public DbSet<ContractActItem> ContractActItems { get; set; }
         public DbSet<ContractInvoice> ContractInvoices { get; set; }

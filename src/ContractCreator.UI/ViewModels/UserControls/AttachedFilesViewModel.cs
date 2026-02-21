@@ -120,7 +120,7 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Ошибка при открытии файла {FileName}", file.FileName);
+                Log.Error(ex.Message, "Ошибка при открытии файла {FileName}", file.FileName);
                 await _userDialogService.ShowMessageAsync("Не удалось открыть файл для редактирования.", "Ошибка", UserMessageType.Error);
             }
         }

@@ -87,7 +87,7 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Ошибка при удалении контрагента.");
+                Log.Error(ex.Message);
                 await _dialogService.ShowMessageAsync("Не удалось удалить контрагента.", "Ошибка", UserMessageType.Error);
             }
         }

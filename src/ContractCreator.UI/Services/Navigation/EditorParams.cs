@@ -19,5 +19,9 @@
         /// Id родителя (например, FirmId), к которому привязываем новую запись.
         /// </summary>
         public int ParentId { get; set; }
+        /// <summary>
+        /// Универсальное поле для передачи любых дополнительных данных (Enum, другой DTO, фильтры и т.д.)
+        /// </summary>
+        public object? Payload { get; set; }
     }
 }
