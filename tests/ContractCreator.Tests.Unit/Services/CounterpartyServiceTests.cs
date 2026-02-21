@@ -216,7 +216,8 @@ namespace ContractCreator.Tests.Unit.Services
                 ActualAddress = new AddressData()
             };
 
-            _repoMock.Setup(x => x.GetByIdAsync(id)).ReturnsAsync(entity);
+            _repoMock.Setup(x => x.FirstOrDefaultAsync(It.IsAny<ISpecification<Counterparty>>()))
+                .ReturnsAsync(entity);
 
             // Act
             await _service.DeleteCounterpartyAsync(id);

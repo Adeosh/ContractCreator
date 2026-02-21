@@ -108,7 +108,7 @@ namespace ContractCreator.Tests.Unit.Mapping
 
             // Assert
             dest.Id.Should().Be(source.Id);
-            dest.LegalFormType.Should().Be((byte)source.LegalFormType);
+            dest.LegalFormType.Should().Be(source.LegalFormType);
             dest.FullName.Should().Be(source.FullName);
             dest.ShortName.Should().Be(source.ShortName);
             dest.Phone.Should().Be(source.Phone);
@@ -123,7 +123,7 @@ namespace ContractCreator.Tests.Unit.Mapping
             dest.OKPO.Should().Be(source.OKPO);
             dest.ERNS.Should().Be(source.ERNS);
             dest.ExtraInformation.Should().Be(source.ExtraInformation);
-            dest.TaxationType.Should().Be((byte)source.TaxationType);
+            dest.TaxationType.Should().Be(source.TaxationType);
             dest.IsVATPayment.Should().Be(source.IsVATPayment);
             dest.CreatedDate.Should().Be(source.CreatedDate);
             dest.UpdatedDate.Should().Be(source.UpdatedDate);

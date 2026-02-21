@@ -19,6 +19,17 @@ namespace ContractCreator.Application.Services
 
             var list = await factory.Repository<Counterparty>()
                 .FindAsync(c => !c.IsDeleted);
+
+            return list.Adapt<IEnumerable<CounterpartyDto>>();
+        }
+
+        public async Task<IEnumerable<CounterpartyDto>> GetCounterpartiesByFirmIdAsync(int firmId)
+        {
+            using var factory = _uowFactory.Create();
+
+            var list = await factory.Repository<Counterparty>()
+                .FindAsync(c => c.FirmId == firmId && !c.IsDeleted);
+
             return list.Adapt<IEnumerable<CounterpartyDto>>();
         }
 
@@ -65,7 +76,8 @@ namespace ContractCreator.Application.Services
         {
             using var factory = _uowFactory.Create();
 
-            var entity = await factory.Repository<Counterparty>().GetByIdAsync(id);
+            var spec = new CounterpartyByIdWithDetailsSpec(id);
+            var entity = await factory.Repository<Counterparty>().FirstOrDefaultAsync(spec);
             if (entity != null)
             {
                 entity.IsDeleted = true;

@@ -52,10 +52,18 @@
             var selectedFiles = await FileHelper.PickFilesAsync("Выберите файлы", allowMultiple: true);
             if (selectedFiles == null) return;
 
-            foreach (var file in selectedFiles)
+            try
             {
-                if (Files.Any(f => f.LocalFilePath == file.LocalPath)) continue;
-                Files.Add(new AttachedFileModel { FileId = 0, FileName = file.Name, LocalFilePath = file.LocalPath, IsEncrypted = true });
+                foreach (var file in selectedFiles)
+                {
+                    if (Files.Any(f => f.LocalFilePath == file.LocalPath)) continue;
+                    Files.Add(new AttachedFileModel { FileId = 0, FileName = file.Name, LocalFilePath = file.LocalPath, IsEncrypted = true });
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+                await _userDialogService.ShowMessageAsync("Не удалось добавить файл.", "Ошибка", UserMessageType.Error);
             }
         }
 
@@ -113,7 +121,7 @@
             catch (Exception ex)
             {
                 Log.Error(ex, "Ошибка при открытии файла {FileName}", file.FileName);
-                await _userDialogService.ShowMessageAsync("Ошибка", "Не удалось открыть файл для редактирования.", UserMessageType.Error);
+                await _userDialogService.ShowMessageAsync("Не удалось открыть файл для редактирования.", "Ошибка", UserMessageType.Error);
             }
         }
 
@@ -126,20 +134,28 @@
 
             if (existingFiles == null || !existingFiles.Any()) return;
 
-            var fileIds = existingFiles.Select(f => f.FileId).ToList();
-            var fileInfos = await _fileService.GetFilesByIdsAsync(fileIds);
-
-            foreach (var info in fileInfos)
+            try
             {
-                var description = existingFiles.FirstOrDefault(x => x.FileId == info.FileId)?.Description;
+                var fileIds = existingFiles.Select(f => f.FileId).ToList();
+                var fileInfos = await _fileService.GetFilesByIdsAsync(fileIds);
 
-                Files.Add(new AttachedFileModel
+                foreach (var info in fileInfos)
                 {
-                    FileId = info.FileId,
-                    FileName = info.FileName,
-                    IsEncrypted = info.IsEncrypted,
-                    Description = description
-                });
+                    var description = existingFiles.FirstOrDefault(x => x.FileId == info.FileId)?.Description;
+
+                    Files.Add(new AttachedFileModel
+                    {
+                        FileId = info.FileId,
+                        FileName = info.FileName,
+                        IsEncrypted = info.IsEncrypted,
+                        Description = description
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+                await _userDialogService.ShowMessageAsync("Не удалось загрузить файлы.", "Ошибка", UserMessageType.Error);
             }
         }
 
@@ -147,12 +163,20 @@
         {
             if (file.IsPendingUpload || file.IsPendingUpdate) return;
 
-            var data = await _fileService.DownloadFileAsync(file.FileId);
-            if (data == null) return;
+            try
+            {
+                var data = await _fileService.DownloadFileAsync(file.FileId);
+                if (data == null) return;
 
-            var savePath = await FileHelper.SaveFileAsync(data.FileName);
-            if (savePath != null)
-                await File.WriteAllBytesAsync(savePath, data.Content);
+                var savePath = await FileHelper.SaveFileAsync(data.FileName);
+                if (savePath != null)
+                    await File.WriteAllBytesAsync(savePath, data.Content);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+                await _userDialogService.ShowMessageAsync("Не удалось скачать файл.", "Ошибка", UserMessageType.Error);
+            }
         }
 
         /// <summary>

@@ -26,50 +26,9 @@
 
             SetupActivities();
 
-            AddCommand = ReactiveCommand.Create<ClassifierDto>(dto =>
-            {
-                if (dto == null) return;
-
-                if (SelectedActivities.Any(x => x.EconomicActivityId == dto.Id)) return;
-
-                var newActivity = new FirmEconomicActivityDto
-                {
-                    EconomicActivityId = dto.Id,
-                    Code = dto.Code,
-                    Name = dto.Name,
-                    IsMain = !SelectedActivities.Any()
-                };
-
-                SelectedActivities.Add(newActivity);
-            });
-
-            RemoveCommand = ReactiveCommand.Create<FirmEconomicActivityDto>(item =>
-            {
-                SelectedActivities.Remove(item);
-
-                if (item.IsMain && SelectedActivities.Any())
-                {
-                    var first = SelectedActivities.First();
-                    first.IsMain = true;
-
-                    var idx = SelectedActivities.IndexOf(first);
-                    SelectedActivities[idx] = first;
-                }
-            });
-
-            SetMainCommand = ReactiveCommand.Create<FirmEconomicActivityDto>(item =>
-            {
-                if (item.IsMain) return;
-
-                foreach (var act in SelectedActivities) 
-                    act.IsMain = (act == item);
-
-                var list = SelectedActivities.ToList();
-                SelectedActivities.Clear();
-
-                foreach (var i in list) 
-                    SelectedActivities.Add(i);
-            });
+            AddCommand = ReactiveCommand.Create<ClassifierDto>(AddActivity);
+            RemoveCommand = ReactiveCommand.Create<FirmEconomicActivityDto>(RemoveActivity);
+            SetMainCommand = ReactiveCommand.Create<FirmEconomicActivityDto>(SetMainActivity);
         }
 
         private void SetupActivities()
@@ -81,6 +40,52 @@
                 .Subscribe(_ => ApplyFilter());
         }
 
+        private void AddActivity(ClassifierDto dto)
+        {
+            if (dto == null) return;
+            if (SelectedActivities.Any(x => x.EconomicActivityId == dto.Id)) return;
+
+            var newActivity = new FirmEconomicActivityDto
+            {
+                EconomicActivityId = dto.Id,
+                Code = dto.Code,
+                Name = dto.Name,
+                IsMain = !SelectedActivities.Any()
+            };
+
+            SelectedActivities.Add(newActivity);
+        }
+
+        private void RemoveActivity(FirmEconomicActivityDto item)
+        {
+            if (item == null) return;
+
+            SelectedActivities.Remove(item);
+
+            if (item.IsMain && SelectedActivities.Any())
+            {
+                var first = SelectedActivities.First();
+                first.IsMain = true;
+
+                var idx = SelectedActivities.IndexOf(first);
+                SelectedActivities[idx] = first;
+            }
+        }
+
+        private void SetMainActivity(FirmEconomicActivityDto item)
+        {
+            if (item == null || item.IsMain) return;
+
+            foreach (var act in SelectedActivities)
+                act.IsMain = (act == item);
+
+            var list = SelectedActivities.ToList();
+            SelectedActivities.Clear();
+
+            foreach (var i in list)
+                SelectedActivities.Add(i);
+        }
+
         public async Task LoadDictionaryAsync()
         {
             try
@@ -90,7 +95,9 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Ошибка загрузки справочника ОКВЭД");
+                Log.Error(ex.Message);
+                throw new UserMessageException("Ошибка загрузки справочника ОКВЭД!",
+                    "Ошибка", UserMessageType.Error);
             }
         }
 

@@ -23,8 +23,10 @@ global using Avalonia.Media;
 global using Avalonia.Threading;
 global using Avalonia.Platform.Storage;
 global using Avalonia.Data.Converters;
+global using Avalonia.Markup.Xaml;
 global using Serilog;
 global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.Configuration;
 
 // Мои библиотеки
 global using ContractCreator.Application;
@@ -53,6 +55,7 @@ global using ContractCreator.UI.Views;
 global using ContractCreator.UI.ViewModels;
 global using ContractCreator.UI.ViewModels.Base;
 global using ContractCreator.UI.ViewModels.Contacts;
+global using ContractCreator.UI.ViewModels.Counterparties;
 global using ContractCreator.UI.ViewModels.Firms;
 global using ContractCreator.UI.ViewModels.Workers;
 global using ContractCreator.UI.ViewModels.Shared;

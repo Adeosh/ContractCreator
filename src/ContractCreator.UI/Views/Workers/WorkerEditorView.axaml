@@ -35,7 +35,7 @@
                 </StackPanel>
                 <StackPanel Grid.Column="2">
                     <TextBlock Text="Телефон" />
-                    <TextBox Text="{Binding Phone}" />
+                    <MaskedTextBox Mask="+7 (000) 000-00-00" Text="{Binding Phone}" Classes="outline" HidePromptOnLeave="True"/>
                 </StackPanel>
             </Grid>
 

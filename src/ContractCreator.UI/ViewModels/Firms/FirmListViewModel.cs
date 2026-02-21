@@ -30,22 +30,8 @@
 
             CurrentActiveFirmId = _settingsService.CurrentFirmId;
 
-            CreateCommand = ReactiveCommand.Create(() =>
-            {
-                var param = new EditorParams { Mode = EditorMode.Create };
-                _navigation.NavigateTo<FirmEditorViewModel>(param);
-            });
-
-            EditCommand = ReactiveCommand.Create<FirmDto>(firm =>
-            {
-                var param = new EditorParams
-                {
-                    Mode = EditorMode.Edit,
-                    Id = firm.Id
-                };
-                _navigation.NavigateTo<FirmEditorViewModel>(param);
-            });
-
+            CreateCommand = ReactiveCommand.Create(CreateFirm);
+            EditCommand = ReactiveCommand.Create<FirmDto>(EditFirm);
             DeleteCommand = ReactiveCommand.CreateFromTask<FirmDto>(DeleteFirmAsync);
         }
 
@@ -53,6 +39,24 @@
         {
             CurrentActiveFirmId = _settingsService.CurrentFirmId;
             await base.OnNavigatedToAsync(parameter);
+        }
+
+        private void CreateFirm()
+        {
+            var param = new EditorParams { Mode = EditorMode.Create };
+            _navigation.NavigateTo<FirmEditorViewModel>(param);
+        }
+
+        private void EditFirm(FirmDto firm)
+        {
+            if (firm == null) return;
+
+            var param = new EditorParams
+            {
+                Mode = EditorMode.Edit,
+                Id = firm.Id
+            };
+            _navigation.NavigateTo<FirmEditorViewModel>(param);
         }
 
         protected override async Task RefreshListAsync()

@@ -1,0 +1,70 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:ContractCreator.UI.ViewModels.Counterparties"
+             xmlns:dto="using:ContractCreator.Shared.DTOs"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="ContractCreator.UI.Views.Counterparties.CounterpartyListView"
+             x:DataType="vm:CounterpartyListViewModel"
+             x:CompileBindings="False"
+             x:Name="Root">
+
+    <Grid RowDefinitions="Auto, *">
+        <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,20">
+            <TextBlock Text="Список контрагентов" FontSize="24" FontWeight="SemiBold" VerticalAlignment="Center"/>
+
+            <Button Grid.Column="1"
+                    Command="{Binding CreateCommand}"
+                    Classes="accent"
+                    Padding="10,5">
+                <TextBlock Text="+ Добавить контрагента" FontWeight="Bold"/>
+            </Button>
+        </Grid>
+
+        <DataGrid Grid.Row="1"
+                  ItemsSource="{Binding Items}"
+                  SelectedItem="{Binding SelectedCounterparty}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  GridLinesVisibility="Horizontal"
+                  BorderThickness="1" BorderBrush="#E0E0E0">
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="#" Binding="{Binding Id}" Width="50" />
+                <DataGridTextColumn Header="Название" Binding="{Binding ShortName}" Width="*" />
+                <DataGridTextColumn Header="ИНН" Binding="{Binding INN}" Width="170" />
+                <DataGridTextColumn Header="Телефон" Binding="{Binding Phone}" Width="170" />
+
+                <DataGridTemplateColumn Header="Действия" Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="dto:CounterpartyDto">
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+
+                                <Button Command="{Binding #Root.DataContext.DeleteCommand}"
+                                        CommandParameter="{Binding}"
+                                        Background="Transparent"
+                                        ToolTip.Tip="Удалить контрагента">
+                                    <TextBlock Text="🗑️" Foreground="Red"/>
+                                </Button>
+
+                                <Button Command="{Binding #Root.DataContext.EditCommand}"
+                                        CommandParameter="{Binding}"
+                                        Background="Transparent"
+                                        ToolTip.Tip="Редактировать">
+                                    <TextBlock Text="✏️" Foreground="Orange"/>
+                                </Button>
+
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <TextBlock Grid.Row="1"
+                   Text="Список контрагентов пуст (или не выбрана рабочая фирма)"
+                   IsVisible="{Binding !Items.Count}"
+                   HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Gray"/>
+    </Grid>
+</UserControl>

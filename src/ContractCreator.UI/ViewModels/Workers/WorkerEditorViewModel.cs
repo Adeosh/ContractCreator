@@ -9,11 +9,11 @@
         [Reactive] public int Id { get; set; }
         [Reactive] public string FirstName { get; set; } = string.Empty;
         [Reactive] public string LastName { get; set; } = string.Empty;
-        [Reactive] public string MiddleName { get; set; }
+        [Reactive] public string? MiddleName { get; set; }
         [Reactive] public string Position { get; set; } = string.Empty;
         [Reactive] public string Inn { get; set; } = string.Empty;
         [Reactive] public string Phone { get; set; } = string.Empty;
-        [Reactive] public string Email { get; set; }
+        [Reactive] public string? Email { get; set; }
         [Reactive] public string? Note { get; set; }
         [Reactive] public bool IsDirector { get; set; }
         [Reactive] public bool IsAccountant { get; set; }
@@ -95,7 +95,7 @@
             if (string.IsNullOrWhiteSpace(Phone))
                 throw new UserMessageException("Не указан номер телефона сотрудника.");
 
-            if (!Email.Contains("@"))
+            if (!string.IsNullOrWhiteSpace(Email) && !Email.Contains("@"))
                 throw new UserMessageException("Укажите корректный адрес электронной почты.");
         }
 

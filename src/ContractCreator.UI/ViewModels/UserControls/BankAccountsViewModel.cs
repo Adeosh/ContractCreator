@@ -103,7 +103,9 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Ошибка загрузки счетов");
+                Log.Error(ex.Message);
+                throw new UserMessageException("Ошибка загрузки счетов!",
+                    "Ошибка", UserMessageType.Error);
             }
             finally
             {
@@ -116,6 +118,7 @@
             try
             {
                 var results = await _classifierService.SearchAsync(query);
+
                 FoundBanks.Clear();
                 foreach (var b in results) 
                     FoundBanks.Add(b);
@@ -124,7 +127,9 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Ошибка поиска банка");
+                Log.Error(ex.Message);
+                throw new UserMessageException("Ошибка поиска банка!",
+                    "Ошибка", UserMessageType.Error);
             }
         }
 
@@ -180,14 +185,14 @@
 
             try
             {
-                foreach (var acc in pendingAccounts)
+                foreach (var account in pendingAccounts)
                 {
                     if (_ownerType == OwnerType.Firm)
-                        acc.FirmId = newOwnerId;
+                        account.FirmId = newOwnerId;
                     else 
-                        acc.CounterpartyId = newOwnerId;
+                        account.CounterpartyId = newOwnerId;
 
-                    await _accountService.CreateAsync(acc);
+                    await _accountService.CreateAsync(account);
                 }
 
                 await RefreshListAsync();
@@ -267,7 +272,9 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Ошибка сохранения счета");
+                Log.Error(ex.Message);
+                throw new UserMessageException("Ошибка сохранения счета!",
+                    "Ошибка", UserMessageType.Error);
             }
             finally
             {
@@ -298,7 +305,9 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Ошибка удаления");
+                Log.Error(ex.Message);
+                throw new UserMessageException("Ошибка удаления!",
+                    "Ошибка", UserMessageType.Error);
             }
         }
     }

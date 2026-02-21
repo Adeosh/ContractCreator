@@ -56,7 +56,7 @@
 
 									<ToolTip.Tip>
 										<MultiBinding Converter="{StaticResource ActiveEntityTooltipConverter}"
-													  ConverterParameter="Свою фирму удалять нельзя">
+													  ConverterParameter="Текущую фирму удалять нельзя">
 											<Binding Path="Id" />
 											<Binding Path="#Root.DataContext.CurrentActiveFirmId" />
 										</MultiBinding>

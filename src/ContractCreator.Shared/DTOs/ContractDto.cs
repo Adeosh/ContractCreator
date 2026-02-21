@@ -1,10 +1,12 @@
-﻿namespace ContractCreator.Shared.DTOs
+﻿using ContractCreator.Shared.Enums;
+
+namespace ContractCreator.Shared.DTOs
 {
     public class ContractDto
     {
         public int Id { get; set; }
-        public byte Type { get; set; }
-        public byte EnterpriseRole { get; set; }
+        public ContractType Type { get; set; }
+        public ContractEnterpriseRole EnterpriseRole { get; set; }
         public string ContractNumber { get; set; } = string.Empty;
         public decimal ContractPrice { get; set; }
         public string? ContractSubject { get; set; }
@@ -17,7 +19,7 @@
         public DateOnly? EndDate { get; set; }
         public DateOnly? ExecutionDate { get; set; }
         public string? TerminationReason { get; set; }
-        public byte? Initiator { get; set; }
+        public TerminationInitiator? Initiator { get; set; }
         public int CounterpartyId { get; set; }
         public int? CounterpartySignerId { get; set; }
         public int FirmId { get; set; }

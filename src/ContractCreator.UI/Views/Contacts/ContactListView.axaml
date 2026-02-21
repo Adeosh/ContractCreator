@@ -1,44 +1,42 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="using:ContractCreator.UI.ViewModels.Contacts"
-             xmlns:dto="using:ContractCreator.Shared.DTOs"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="ContractCreator.UI.Views.Contacts.ContactListView"
-             x:DataType="vm:ContactListViewModel"
-             x:Name="Root">
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:vm="using:ContractCreator.UI.ViewModels.Contacts"
+			 xmlns:dto="using:ContractCreator.Shared.DTOs"
+			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 x:Class="ContractCreator.UI.Views.Contacts.ContactListView"
+			 x:DataType="vm:ContactListViewModel"
+			 x:Name="Root">
 
-    <Grid RowDefinitions="Auto, *">
+	<Grid RowDefinitions="Auto, *">
 
 		<Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,20">
-
 			<StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="20" VerticalAlignment="Center">
-				<TextBlock Text="Сотрудники"
-						   FontSize="24"
-						   FontWeight="SemiBold"
-						   VerticalAlignment="Center"/>
+				<TextBlock Text="Контакты" FontSize="24" FontWeight="SemiBold" VerticalAlignment="Center"/>
 
-				<TextBox Watermark="Поиск..."
-						 Width="200"
-						 VerticalAlignment="Center"
-						 Classes="clearButton"/>
+				<ComboBox ItemsSource="{Binding FilterCounterparties}"
+						  SelectedItem="{Binding SelectedFilterCounterparty}"
+						  Width="250"
+						  VerticalAlignment="Center">
+					<ComboBox.ItemTemplate>
+						<DataTemplate>
+							<TextBlock Text="{Binding ShortName}"/>
+						</DataTemplate>
+					</ComboBox.ItemTemplate>
+				</ComboBox>
 			</StackPanel>
 
-			<Button Grid.Column="1"
-					Command="{Binding CreateCommand}"
-					Classes="accent"
-					Padding="15,8"
-					CornerRadius="6">
+			<Button Grid.Column="1" Command="{Binding CreateCommand}" Classes="accent" Padding="15,8" CornerRadius="6">
 				<StackPanel Orientation="Horizontal" Spacing="8">
 					<TextBlock Text="+" FontWeight="Bold"/>
-					<TextBlock Text="Добавить сотрудника"/>
+					<TextBlock Text="Добавить контакт"/>
 				</StackPanel>
 			</Button>
 		</Grid>
 
 		<DataGrid Grid.Row="1"
-				  ItemsSource="{Binding Contacts}"
+				  ItemsSource="{Binding Items}"
 				  SelectedItem="{Binding SelectedContact}"
 				  AutoGenerateColumns="False"
 				  IsReadOnly="True"
@@ -59,7 +57,7 @@
 						<DataTemplate DataType="dto:WorkerDto">
 							<StackPanel Orientation="Horizontal" Spacing="5" HorizontalAlignment="Center">
 
-								<Button Command="{Binding $parent[UserControl].((vm:ContactListViewModel)DataContext).EditCommand}"
+								<Button Command="{ReflectionBinding #Root.DataContext.EditCommand}"
 										CommandParameter="{Binding}"
 										ToolTip.Tip="Редактировать"
 										Background="Transparent"
@@ -67,7 +65,7 @@
 									<TextBlock Text="✏️" Foreground="Orange"/>
 								</Button>
 
-								<Button Command="{Binding $parent[UserControl].((vm:ContactListViewModel)DataContext).DeleteCommand}"
+								<Button Command="{ReflectionBinding #Root.DataContext.DeleteCommand}"
 										CommandParameter="{Binding}"
 										ToolTip.Tip="Удалить"
 										Background="Transparent"
@@ -85,11 +83,11 @@
 
 		<TextBlock Grid.Row="1"
 				   Text="Список контактов пуст. Нажмите 'Добавить'."
-				   IsVisible="{Binding !Contacts.Count}"
+				   IsVisible="{Binding !Items.Count}"
 				   HorizontalAlignment="Center"
 				   VerticalAlignment="Center"
 				   Foreground="Gray"/>
 
 	</Grid>
-    
+
 </UserControl>

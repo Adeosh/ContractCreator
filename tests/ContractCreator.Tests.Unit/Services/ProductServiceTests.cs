@@ -64,11 +64,11 @@ namespace ContractCreator.Tests.Unit.Services
 
             var good = result.First(x => x.Id == 1);
             good.TypeName.Should().Be("Товар");
-            good.Type.Should().Be(1);
+            good.Type.Should().Be(ProductType.Good);
 
             var service = result.First(x => x.Id == 2);
             service.TypeName.Should().Be("Услуга");
-            service.Type.Should().Be(2);
+            service.Type.Should().Be(ProductType.Service);
         }
 
         [Fact]
@@ -101,7 +101,7 @@ namespace ContractCreator.Tests.Unit.Services
             var dto = new GoodsAndServiceDto
             {
                 Name = "New Laptop",
-                Type = (byte)ProductType.Good,
+                Type = ProductType.Good,
                 Price = 50000,
                 CurrencyId = 95
             };
@@ -127,7 +127,7 @@ namespace ContractCreator.Tests.Unit.Services
             var dto = new GoodsAndServiceDto
             {
                 Name = "Consulting",
-                Type = (byte)ProductType.Service,
+                Type = ProductType.Service,
                 Price = 1000,
                 CurrencyId = 95
             };
@@ -160,7 +160,7 @@ namespace ContractCreator.Tests.Unit.Services
             {
                 Id = id,
                 Name = "New Name",
-                Type = (byte)ProductType.Service
+                Type = ProductType.Service
             };
 
             _repoMock.Setup(x => x.GetByIdAsync(id)).ReturnsAsync(entity);

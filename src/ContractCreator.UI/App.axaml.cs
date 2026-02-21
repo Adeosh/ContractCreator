@@ -1,9 +1,4 @@
-﻿using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Markup.Xaml;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace ContractCreator.UI;
+﻿namespace ContractCreator.UI;
 
 public partial class App : Avalonia.Application
 {
@@ -91,10 +86,11 @@ public partial class App : Avalonia.Application
 
         services.AddTransient<ContactListViewModel>();
         services.AddTransient<ContactEditorViewModel>();
+        services.AddTransient<CounterpartyListViewModel>();
+        services.AddTransient<CounterpartyEditorViewModel>();
         services.AddTransient<WorkerListViewModel>();
         services.AddTransient<WorkerEditorViewModel>();
         services.AddTransient<FirmListViewModel>();
         services.AddTransient<FirmEditorViewModel>();
-
     }
 }

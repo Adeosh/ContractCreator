@@ -1,11 +1,12 @@
 ﻿using ContractCreator.Shared.DTOs.Data;
+using ContractCreator.Shared.Enums;
 
 namespace ContractCreator.Shared.DTOs
 {
     public class FirmDto
     {
         public int Id { get; set; }
-        public byte LegalFormType { get; set; }
+        public LegalFormType LegalFormType { get; set; }
         public string FullName { get; set; } = string.Empty;
         public string ShortName { get; set; } = string.Empty;
         public string Phone { get; set; } = string.Empty;
@@ -19,7 +20,7 @@ namespace ContractCreator.Shared.DTOs
         public string? OKPO { get; set; }
         public string? ERNS { get; set; }
         public string? ExtraInformation { get; set; }
-        public byte TaxationType { get; set; }
+        public TaxationSystemType TaxationType { get; set; }
         public bool IsVATPayment { get; set; }
         public DateOnly CreatedDate { get; set; }
         public DateOnly? UpdatedDate { get; set; }

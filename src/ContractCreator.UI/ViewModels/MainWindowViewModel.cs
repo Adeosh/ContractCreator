@@ -12,7 +12,7 @@ public class MainWindowViewModel : ViewModelBase
     private readonly IWorkerService _workerService;
     private readonly IUserDialogService _dialogService;
 
-    [Reactive] public ViewModelBase CurrentPage { get; set; }
+    [Reactive] public ViewModelBase? CurrentPage { get; set; }
     [Reactive] public bool IsDarkTheme { get; set; }
     [Reactive] public string CurrentFirmName { get; set; } = "Фирма не выбрана";
     [Reactive] public string StoragePath { get; set; } = string.Empty;
@@ -77,7 +77,8 @@ public class MainWindowViewModel : ViewModelBase
                 {
                     Items = new ObservableCollection<MenuItemViewModel>
                     {
-                        new MenuItemViewModel("Список контрагентов"),
+                        new MenuItemViewModel("Список контрагентов",
+                            ReactiveCommand.Create(() => _navigationService.NavigateTo<CounterpartyListViewModel>())),
                         new MenuItemViewModel("Контакты",
                             ReactiveCommand.Create(() => _navigationService.NavigateTo<ContactListViewModel>()))
                     }
@@ -238,7 +239,8 @@ public class MainWindowViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
-            await _dialogService.ShowMessageAsync($"Ошибка при проверке файлов: {ex.Message}", "Ошибка", UserMessageType.Error);
+            Log.Error(ex.Message);
+            await _dialogService.ShowMessageAsync($"Ошибка при проверке файлов!", "Ошибка", UserMessageType.Error);
         }
     }
 }

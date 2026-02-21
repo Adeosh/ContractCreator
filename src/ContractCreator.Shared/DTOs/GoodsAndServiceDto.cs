@@ -1,9 +1,12 @@
-﻿namespace ContractCreator.Shared.DTOs
+﻿using ContractCreator.Shared.Common.Extensions;
+using ContractCreator.Shared.Enums;
+
+namespace ContractCreator.Shared.DTOs
 {
     public class GoodsAndServiceDto
     {
         public int Id { get; set; }
-        public byte Type { get; set; }
+        public ProductType Type { get; set; }
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
         public DateOnly CreatedDate { get; set; }
@@ -12,6 +15,6 @@
         public int CurrencyId { get; set; }
         public bool IsDeleted { get; set; }
 
-        public string TypeName => Type == 1 ? "Товар" : "Услуга";
+        public string TypeName => Type.GetDescription();
     }
 }

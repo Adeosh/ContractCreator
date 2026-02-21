@@ -129,7 +129,7 @@ namespace ContractCreator.Tests.Unit.Services
                 OKPO = "12345678",
                 ERNS = "999",
                 ExtraInformation = "Заметки",
-                TaxationType = (byte)TaxationSystemType.AUSN,
+                TaxationType = TaxationSystemType.AUSN,
                 IsVATPayment = true,
                 CreatedDate = new DateOnly(2024, 1, 1),
                 UpdatedDate = new DateOnly(2024, 2, 2),
@@ -244,7 +244,7 @@ namespace ContractCreator.Tests.Unit.Services
                 OKPO = "12345678",
                 ERNS = "999",
                 ExtraInformation = "Заметки для обновления",
-                TaxationType = (byte)TaxationSystemType.NPD,
+                TaxationType = TaxationSystemType.NPD,
                 IsVATPayment = true,
                 CreatedDate = new DateOnly(2024, 1, 1),
                 UpdatedDate = new DateOnly(2024, 2, 2),
@@ -255,7 +255,7 @@ namespace ContractCreator.Tests.Unit.Services
             };
 
             // Настраиваем мок: GetByIdAsync должен вернуть нашу фирму
-            _firmRepoMock.Setup(x => x.GetByIdAsync(firmId))
+            _firmRepoMock.Setup(x => x.FirstOrDefaultAsync(It.IsAny<ISpecification<Firm>>()))
                 .ReturnsAsync(existingFirm);
 
             // Act
@@ -295,7 +295,8 @@ namespace ContractCreator.Tests.Unit.Services
             var firmId = 5;
             var firm = new Firm { Id = firmId, FullName = "Удалить", ShortName = "Уд", Phone = "1", INN = "1", Email = new EmailAddress("a@a.ru"), LegalAddress = new AddressData(), ActualAddress = new AddressData() };
 
-            _firmRepoMock.Setup(x => x.GetByIdAsync(firmId)).ReturnsAsync(firm);
+            _firmRepoMock.Setup(x => x.FirstOrDefaultAsync(It.IsAny<ISpecification<Firm>>()))
+                .ReturnsAsync(firm);
 
             // Act
             await _service.DeleteFirmAsync(firmId);

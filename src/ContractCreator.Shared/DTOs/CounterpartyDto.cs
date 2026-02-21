@@ -1,11 +1,12 @@
 ﻿using ContractCreator.Shared.DTOs.Data;
+using ContractCreator.Shared.Enums;
 
 namespace ContractCreator.Shared.DTOs
 {
     public class CounterpartyDto
     {
         public int Id { get; set; }
-        public byte LegalForm { get; set; }
+        public LegalFormType LegalForm { get; set; }
         public string FullName { get; set; } = string.Empty;
         public string ShortName { get; set; } = string.Empty;
         public string? Phone { get; set; }

@@ -71,7 +71,6 @@
 
             LegalAddressVM = new AddressViewModel(_garService);
             ActualAddressVM = new AddressViewModel(_garService);
-
             BankAccountVM = new BankAccountsViewModel(
                 bankAccountService,
                 bicService,
@@ -111,27 +110,39 @@
             try
             {
                 var okopfs = await _classifierService.GetOkopfsAsync();
+
                 OkopfList.Clear();
                 foreach (var item in okopfs)
                     OkopfList.Add(item);
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Ошибка загрузки справочников");
+                Log.Error(ex.Message);
+                throw new UserMessageException("Ошибка загрузки справочников!",
+                    "Ошибка", UserMessageType.Error);
             }
         }
 
         private async Task UploadSealAsync()
         {
-            var result = await FileHelper.PickImageAsync("Выберите скан печати");
-
-            if (result != null)
+            try
             {
-                FacsimileName = result.Value.FileName;
-                FacsimileSeal = result.Value.Data;
+                var result = await FileHelper.PickImageAsync("Выберите скан печати");
 
-                using var imageStream = new MemoryStream(FacsimileSeal);
-                FacsimileSealBitmap = new Bitmap(imageStream);
+                if (result != null)
+                {
+                    FacsimileName = result.Value.FileName;
+                    FacsimileSeal = result.Value.Data;
+
+                    using var imageStream = new MemoryStream(FacsimileSeal);
+                    FacsimileSealBitmap = new Bitmap(imageStream);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+                throw new UserMessageException("Ошибка при загрузки факсимиле!",
+                    "Ошибка", UserMessageType.Error);
             }
         }
 
@@ -239,7 +250,7 @@
                 var dto = new FirmDto
                 {
                     Id = Id,
-                    LegalFormType = (byte)SelectedLegalForm,
+                    LegalFormType = SelectedLegalForm,
                     OkopfId = SelectedOkopf!.Id,
                     FullName = FullName,
                     ShortName = ShortName,
@@ -251,7 +262,7 @@
                     OKTMO = Oktmo,
                     OKPO = Okpo,
                     ERNS = Erns,
-                    TaxationType = (byte)SelectedTaxationType,
+                    TaxationType = SelectedTaxationType,
                     ExtraInformation = ExtraInformation,
                     IsVATPayment = IsVatPayment,
                     FacsimileName = FacsimileName,
@@ -280,7 +291,6 @@
                 else
                     await _firmService.UpdateFirmAsync(dto);
 
-                MessageBus.Current.SendMessage(new EntitySavedMessage<FirmDto>(dto));
                 _navigation.NavigateBack();
             }
             catch (UserMessageException ex)
