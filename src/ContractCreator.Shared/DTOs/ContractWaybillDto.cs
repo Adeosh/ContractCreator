@@ -4,8 +4,8 @@
     {
         public int Id { get; set; }
         public int ContractId { get; set; }
-        public string ActNumber { get; set; } = string.Empty;
-        public DateOnly ActDate { get; set; }
+        public string WaybillNumber { get; set; } = string.Empty;
+        public DateOnly WaybillDate { get; set; }
         public decimal? TotalAmount { get; set; }
         public decimal? VATAmount { get; set; }
         public decimal VATRate { get; set; }

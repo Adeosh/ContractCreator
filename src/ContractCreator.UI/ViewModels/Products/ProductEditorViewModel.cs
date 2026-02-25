@@ -69,7 +69,7 @@
                         return;
                     }
                     FirmId = currentFirmId.Value;
-                    SelectedCurrency = Currencies.FirstOrDefault(c => c.Code == "RUB" || c.Id == ClassifierOkv.RUB) ?? Currencies.FirstOrDefault();
+                    SelectedCurrency = Currencies.FirstOrDefault(c => c.Id == ClassifierOkv.RUB) ?? Currencies.FirstOrDefault();
                 }
 
                 this.RaisePropertyChanged(nameof(PageTitle));

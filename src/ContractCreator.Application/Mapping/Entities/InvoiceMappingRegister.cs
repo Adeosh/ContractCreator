@@ -24,7 +24,8 @@ namespace ContractCreator.Application.Mapping.Entities
 
             config.NewConfig<ContractInvoiceDto, ContractInvoice>()
                 .Ignore(dest => dest.Contract)
-                .Ignore(dest => dest.Currency);
+                .Ignore(dest => dest.Currency)
+                .Ignore(dest => dest.Items);
         }
     }
 }

@@ -7,6 +7,7 @@ using ContractCreator.Domain.ValueObjects;
 using ContractCreator.Shared.DTOs;
 using ContractCreator.Shared.DTOs.Data;
 using ContractCreator.Shared.Enums;
+using ContractCreator.Tests.Unit.Data;
 using FluentAssertions;
 using Moq;
 
@@ -36,48 +37,7 @@ namespace ContractCreator.Tests.Unit.Services
         {
             // Arrange
             var firmId = 1;
-            var existingFirm = new Firm
-            {
-                Id = firmId,
-                FullName = "Тестовая фирма",
-                ShortName = "ТФ",
-                Phone = "+7 922 344 99 00",
-                Email = new EmailAddress("test@firm.ru"),
-                LegalAddress = new AddressData
-                {
-                    FullAddress = "обл Ленинградская, г.о. Сосновоборский, г Сосновый Бор, ул Ленинградская",
-                    ObjectId = 753471,
-                    House = "10",
-                    Flat = "1",
-                    Building = "A",
-                    PostalIndex = "188540",
-                },
-                ActualAddress = new AddressData
-                {
-                    FullAddress = "обл Новосибирская, г.о. город Новосибирск, г Новосибирск, ул Прогулочная",
-                    ObjectId = 931166,
-                    House = "44",
-                    Flat = "100",
-                    Building = "3",
-                    PostalIndex = "630120",
-                },
-                INN = "1234567890",
-                KPP = "123456789",
-                OGRN = "1027739460737",
-                OKTMO = "45300000",
-                OKPO = "12345678",
-                ERNS = "9990009991",
-                ExtraInformation = "Заметки",
-                LegalFormType = LegalFormType.LimitedLiabilityCompany,
-                TaxationType = TaxationSystemType.AUSN,
-                IsVATPayment = true,
-                CreatedDate = new DateOnly(2024, 1, 1),
-                UpdatedDate = new DateOnly(2024, 2, 2),
-                FacsimileSeal = new byte[] { 0x01, 0x02 },
-                FacsimileName = "Sign.png",
-                IsDeleted = false,
-                OkopfId = 123
-            };
+            var existingFirm = TestDataFactory.CreateFirm(firmId);
 
             _firmRepoMock
                 .Setup(x => x.FirstOrDefaultAsync(It.IsAny<FirmByIdWithDetailsSpec>()))
@@ -89,8 +49,8 @@ namespace ContractCreator.Tests.Unit.Services
             // Assert
             result.Should().NotBeNull();
             result!.Id.Should().Be(firmId);
-            result.FullName.Should().Be("Тестовая фирма");
-            result.Email.Should().Be("test@firm.ru");
+            result.FullName.Should().Be($"Тестовая фирма {firmId}");
+            result.Email.Should().Be("firm@test.ru");
         }
 
         [Fact]
@@ -166,50 +126,10 @@ namespace ContractCreator.Tests.Unit.Services
         public async Task UpdateFirmAsync_ShouldUpdateEntity_WhenFirmExists()
         {
             // Arrange
-            var firmId = 10;
+            var firmId = 1;
 
             // Существующая в "базе" фирма
-            var existingFirm = new Firm
-            {
-                Id = firmId,
-                FullName = "Тестовая фирма",
-                ShortName = "ТФ",
-                Phone = "+7 922 344 99 00",
-                Email = new EmailAddress("test@firm.ru"),
-                LegalAddress = new AddressData
-                {
-                    FullAddress = "обл Ленинградская, г.о. Сосновоборский, г Сосновый Бор, ул Ленинградская",
-                    ObjectId = 753471,
-                    House = "10",
-                    Flat = "1",
-                    Building = "A",
-                    PostalIndex = "188540",
-                },
-                ActualAddress = new AddressData
-                {
-                    FullAddress = "обл Новосибирская, г.о. город Новосибирск, г Новосибирск, ул Прогулочная",
-                    ObjectId = 931166,
-                    House = "44",
-                    Flat = "100",
-                    Building = "3",
-                    PostalIndex = "630120",
-                },
-                INN = "1234567890",
-                KPP = "123456789",
-                OGRN = "1027739460737",
-                OKTMO = "45300000",
-                OKPO = "12345678",
-                ERNS = "999",
-                ExtraInformation = "Заметки",
-                TaxationType = TaxationSystemType.AUSN,
-                IsVATPayment = true,
-                CreatedDate = new DateOnly(2024, 1, 1),
-                UpdatedDate = new DateOnly(2024, 2, 2),
-                FacsimileSeal = new byte[] { 0x01, 0x02 },
-                FacsimileName = "Sign.png",
-                IsDeleted = false,
-                OkopfId = 123
-            };
+            var existingFirm = TestDataFactory.CreateFirm(firmId);
 
             // DTO с новыми данными
             var updateDto = new FirmDto
@@ -292,8 +212,8 @@ namespace ContractCreator.Tests.Unit.Services
         public async Task DeleteFirmAsync_ShouldCallDelete_WhenFirmExists()
         {
             // Arrange
-            var firmId = 5;
-            var firm = new Firm { Id = firmId, FullName = "Удалить", ShortName = "Уд", Phone = "1", INN = "1", Email = new EmailAddress("a@a.ru"), LegalAddress = new AddressData(), ActualAddress = new AddressData() };
+            var firmId = 1;
+            var firm = TestDataFactory.CreateFirm();
 
             _firmRepoMock.Setup(x => x.FirstOrDefaultAsync(It.IsAny<ISpecification<Firm>>()))
                 .ReturnsAsync(firm);

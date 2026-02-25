@@ -1,0 +1,94 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:vm="using:ContractCreator.UI.ViewModels.Contracts"
+			 xmlns:dto="using:ContractCreator.Shared.DTOs"
+			 x:Class="ContractCreator.UI.Views.Contracts.ContractListView"
+			 x:DataType="vm:ContractListViewModel"
+			 x:Name="Root">
+
+	<Grid RowDefinitions="Auto, *">
+
+		<Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,20">
+			<StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="20" VerticalAlignment="Center">
+				<TextBlock Text="Договоры и Контракты" FontSize="24" FontWeight="SemiBold" VerticalAlignment="Center"/>
+				<TextBox Watermark="Поиск по номеру или контрагенту..." Width="300" Classes="clearButton" VerticalAlignment="Center"/>
+			</StackPanel>
+
+			<Button Grid.Column="1" Command="{Binding CreateCommand}" Classes="accent" Padding="15,8" CornerRadius="6">
+				<StackPanel Orientation="Horizontal" Spacing="8">
+					<TextBlock Text="+" FontWeight="Bold"/>
+					<TextBlock Text="Создать документ"/>
+				</StackPanel>
+			</Button>
+		</Grid>
+
+		<DataGrid Grid.Row="1"
+				  ItemsSource="{Binding Items}"
+				  SelectedItem="{Binding SelectedContract}"
+				  AutoGenerateColumns="False"
+				  IsReadOnly="True"
+				  GridLinesVisibility="Horizontal"
+				  Background="Transparent"
+				  BorderThickness="1"
+				  BorderBrush="#E0E0E0">
+
+			<DataGrid.Columns>
+				<DataGridTextColumn Header="№ Документа" Binding="{Binding ContractNumber}" Width="150" FontWeight="Medium"/>
+				<DataGridTextColumn Header="Контрагент" Binding="{Binding CounterpartyName}" Width="2*" />
+				<DataGridTextColumn Header="Предмет" Binding="{Binding ContractSubject}" Width="2*" />
+
+				<DataGridTextColumn Header="Сумма" Binding="{Binding ContractPrice, StringFormat={}{0:N2}}" Width="120" />
+
+				<DataGridTemplateColumn Header="Контроль сроков" Width="180">
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate DataType="dto:ContractDto">
+							<Border Background="{Binding DeadlineColor}"
+									CornerRadius="12"
+									Padding="10,4"
+									HorizontalAlignment="Left"
+									VerticalAlignment="Center"
+									Margin="5,0">
+								<TextBlock Text="{Binding DeadlineStatus}"
+										   Foreground="White"
+										   FontWeight="SemiBold"
+										   FontSize="12"/>
+							</Border>
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+				</DataGridTemplateColumn>
+
+				<DataGridTemplateColumn Header="Действия" Width="Auto">
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate DataType="dto:ContractDto">
+							<StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
+								<Button Command="{ReflectionBinding #Root.DataContext.EditCommand}"
+										CommandParameter="{Binding}"
+										ToolTip.Tip="Открыть/Редактировать"
+										Background="Transparent"
+										Padding="5">
+									<TextBlock Text="✏️" Foreground="Orange"/>
+								</Button>
+								<Button Command="{ReflectionBinding #Root.DataContext.DeleteCommand}"
+										CommandParameter="{Binding}"
+										ToolTip.Tip="Удалить"
+										Background="Transparent"
+										Padding="5">
+									<TextBlock Text="❌" Foreground="Red"/>
+								</Button>
+							</StackPanel>
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+				</DataGridTemplateColumn>
+
+			</DataGrid.Columns>
+		</DataGrid>
+
+		<TextBlock Grid.Row="1"
+				   Text="Контракты не найдены. Создайте первый документ."
+				   IsVisible="{Binding !Items.Count}"
+				   HorizontalAlignment="Center"
+				   VerticalAlignment="Center"
+				   Foreground="Gray"/>
+	</Grid>
+
+</UserControl>

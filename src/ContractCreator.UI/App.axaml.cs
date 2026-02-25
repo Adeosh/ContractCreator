@@ -1,4 +1,6 @@
-﻿namespace ContractCreator.UI;
+﻿using ContractCreator.UI.ViewModels.Contracts;
+
+namespace ContractCreator.UI;
 
 public partial class App : Avalonia.Application
 {
@@ -94,5 +96,7 @@ public partial class App : Avalonia.Application
         services.AddTransient<FirmEditorViewModel>();
         services.AddTransient<ProductListViewModel>();
         services.AddTransient<ProductEditorViewModel>();
+        services.AddTransient<ContractListViewModel>();
+        services.AddTransient<ContractEditorViewModel>();
     }
 }

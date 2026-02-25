@@ -13,6 +13,12 @@ namespace ContractCreator.Application
 
             services.AddScoped<IBankAccountService, BankAccountService>();
             services.AddScoped<IContactService, ContactService>();
+            services.AddScoped<IContractService, ContractService>();
+            services.AddScoped<IContractInvoiceService, ContractInvoiceService>();
+            services.AddScoped<IContractActService, ContractActService>();
+            services.AddScoped<IContractWaybillService, ContractWaybillService>();
+            services.AddScoped<IContractStepService, ContractStepService>();
+            services.AddScoped<IContractSpecificationService, ContractSpecificationService>();
             services.AddScoped<ICounterpartyService, CounterpartyService>();
             services.AddScoped<IFirmService, FirmService>();
             services.AddScoped<IProductService, ProductService>();

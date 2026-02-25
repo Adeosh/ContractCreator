@@ -10,6 +10,8 @@
         public decimal UnitPrice { get; set; }
         public decimal TotalAmount { get; set; }
         public decimal VATRate { get; set; }
+        public decimal VATPrice { get; set; }
+        public decimal TotalVATAmount { get; set; }
         public int CurrencyId { get; set; }
         public string CurrencyName { get; set; } = string.Empty;
     }

@@ -1,5 +1,4 @@
-﻿using ContractCreator.UI.ViewModels.Products;
-using AvaloniaApp = Avalonia.Application;
+﻿using AvaloniaApp = Avalonia.Application;
 
 namespace ContractCreator.UI.ViewModels;
 
@@ -66,7 +65,8 @@ public class MainWindowViewModel : ViewModelBase
                 {
                     Items = new ObservableCollection<MenuItemViewModel>
                     {
-                        new MenuItemViewModel("Договоры/контракты"),
+                        new MenuItemViewModel("Договоры/контракты",
+                            ReactiveCommand.Create(() => _navigationService.NavigateTo<ContractListViewModel>())),
                         new MenuItemViewModel("Счета"),
                         new MenuItemViewModel("Акты"),
                         new MenuItemViewModel("Накладные")

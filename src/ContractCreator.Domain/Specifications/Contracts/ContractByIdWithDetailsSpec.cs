@@ -6,9 +6,12 @@ namespace ContractCreator.Domain.Specifications.Contracts
     {
         public ContractByIdWithDetailsSpec(int id) : base(x => x.Id == id)
         {
+            AddInclude(x => x.Currency);
+            AddInclude(x => x.StageType);
             AddInclude(x => x.Acts);
             AddInclude(x => x.Invoices);
             AddInclude(x => x.Steps);
+            AddInclude(x => x.Waybills);
             AddInclude(x => x.Firm);
             AddInclude(x => x.Counterparty);
             AddInclude(x => x.FirmSigner!);
