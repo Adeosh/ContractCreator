@@ -227,7 +227,7 @@
         {
             if (!Specifications.Any())
             {
-                _dialogService.ShowMessageAsync("Внимание", "Сначала добавьте позиции во вкладке 'Спецификация'.", UserMessageType.Warning);
+                _dialogService.ShowMessageAsync("Сначала добавьте позиции во вкладке 'Спецификация'.", "Внимание", UserMessageType.Warning);
                 return;
             }
 
@@ -284,14 +284,13 @@
 
             if (string.IsNullOrWhiteSpace(CurrentEditingStep.StepName))
             {
-                _dialogService.ShowMessageAsync("Внимание", "Укажите наименование этапа.", UserMessageType.Warning);
+                _dialogService.ShowMessageAsync("Укажите наименование этапа.", "Внимание", UserMessageType.Warning);
                 return;
             }
 
-            // Проверяем, не ввел ли юзер больше, чем доступно
-            if (StepEditorItems.Any(x => x.QuantityToTake > x.AvailableQuantity))
+            if (StepEditorItems.Any(x => x.QuantityToTake > x.AvailableQuantity)) // Проверяем, не ввел ли юзер больше, чем доступно
             {
-                _dialogService.ShowMessageAsync("Ошибка", "Количество в этапе не может превышать доступный остаток по спецификации.", UserMessageType.Error);
+                _dialogService.ShowMessageAsync("Количество в этапе не может превышать доступный остаток по спецификации.", "Ошибка", UserMessageType.Error);
                 return;
             }
 
@@ -299,7 +298,7 @@
 
             if (!itemsToAdd.Any())
             {
-                _dialogService.ShowMessageAsync("Внимание", "Этап не может быть пустым. Укажите количество хотя бы для одной позиции.", UserMessageType.Warning);
+                _dialogService.ShowMessageAsync("Этап не может быть пустым. Укажите количество хотя бы для одной позиции.", "Внимание", UserMessageType.Warning);
                 return;
             }
 
@@ -342,7 +341,7 @@
 
                 if (FirmId == 0)
                 {
-                    await _dialogService.ShowMessageAsync("Ошибка", "Не определена активная фирма.", UserMessageType.Error);
+                    await _dialogService.ShowMessageAsync("Не определена активная фирма.", "Ошибка", UserMessageType.Error);
                     _navigation.NavigateBack();
                     return;
                 }
@@ -357,7 +356,7 @@
                 {
                     IssueDate = DateOnly.FromDateTime(DateTime.Now);
                     SelectedCurrency = Currencies.FirstOrDefault(c => c.Code == "RUB" || c.Code == "643");
-                    SelectedStage = AvailableStages.FirstOrDefault(); // Обычно первая стадия - Черновик
+                    SelectedStage = AvailableStages.FirstOrDefault();
                 }
 
                 this.RaisePropertyChanged(nameof(PageTitle));
@@ -417,7 +416,7 @@
                 catch (Exception ex)
                 {
                     Log.Error(ex, "Ошибка загрузки номенклатуры");
-                    await _dialogService.ShowMessageAsync("Ошибка", "Не удалось загрузить список номенклатуры.", UserMessageType.Error);
+                    await _dialogService.ShowMessageAsync("Не удалось загрузить список номенклатуры.", "Ошибка", UserMessageType.Error);
                     return;
                 }
             }
@@ -450,19 +449,19 @@
         {
             if (SelectedProductToAdd == null)
             {
-                _dialogService.ShowMessageAsync("Внимание", "Выберите позицию из списка.", UserMessageType.Warning);
+                _dialogService.ShowMessageAsync("Выберите позицию из списка.", "Внимание", UserMessageType.Warning);
                 return;
             }
 
             if (QuantityToAdd <= 0)
             {
-                _dialogService.ShowMessageAsync("Внимание", "Количество должно быть больше 0.", UserMessageType.Warning);
+                _dialogService.ShowMessageAsync("Количество должно быть больше 0.", "Внимание", UserMessageType.Warning);
                 return;
             }
 
             if (Specifications.Any(s => s.NomenclatureName == SelectedProductToAdd.Name))
             {
-                _dialogService.ShowMessageAsync("Внимание", "Эта позиция уже есть в спецификации.", UserMessageType.Warning);
+                _dialogService.ShowMessageAsync("Эта позиция уже есть в спецификации.", "Внимание", UserMessageType.Warning);
                 return;
             }
 
@@ -568,16 +567,23 @@
             catch (Exception ex)
             {
                 Log.Error(ex, "Ошибка загрузки контракта");
-                await _dialogService.ShowMessageAsync("Ошибка", "Не удалось загрузить данные контракта.", UserMessageType.Error);
+                await _dialogService.ShowMessageAsync("Не удалось загрузить данные контракта.", "Ошибка", UserMessageType.Error);
             }
         }
 
         private void Validate()
         {
-            if (SelectedCounterparty == null) throw new UserMessageException("Контрагент не выбран.");
-            if (SelectedCounterpartySigner == null) throw new UserMessageException("Подписант со стороны контрагента не выбран.");
-            if (SelectedFirmSigner == null) throw new UserMessageException("Подписант со стороны предприятия не выбран.");
-            if (SelectedStage == null) throw new UserMessageException("Статус не выбран.");
+            if (SelectedCounterparty == null) 
+                throw new UserMessageException("Контрагент не выбран.");
+
+            if (SelectedCounterpartySigner == null) 
+                throw new UserMessageException("Подписант со стороны контрагента не выбран.");
+
+            if (SelectedFirmSigner == null) 
+                throw new UserMessageException("Подписант со стороны предприятия не выбран.");
+
+            if (SelectedStage == null) 
+                throw new UserMessageException("Статус не выбран.");
 
             int stageId = SelectedStage.Id;
 
@@ -609,33 +615,48 @@
 
             if (IsSubmission)
             {
-                if (SubmissionDate == null) throw new UserMessageException("Дата подачи заявки не заполнена.");
-                if (string.IsNullOrEmpty(SubmissionCode)) throw new UserMessageException("Идентификационный код закупки не заполнен.");
+                if (SubmissionDate == null) 
+                    throw new UserMessageException("Дата подачи заявки не заполнена.");
+
+                if (string.IsNullOrEmpty(SubmissionCode)) 
+                    throw new UserMessageException("Идентификационный код закупки не заполнен.");
             }
 
             if (IsTermination)
             {
-                if (string.IsNullOrEmpty(TerminationReason)) throw new UserMessageException("Причина расторжения не заполнена.");
-                if (SelectedInitiator == null) throw new UserMessageException("Инициатор расторжения не выбран.");
+                if (string.IsNullOrEmpty(TerminationReason)) 
+                    throw new UserMessageException("Причина расторжения не заполнена.");
+
+                if (SelectedInitiator == null) 
+                    throw new UserMessageException("Инициатор расторжения не выбран.");
             }
         }
 
         private void ValidateCommonFields()
         {
-            if (string.IsNullOrWhiteSpace(ContractNumber)) throw new UserMessageException("Введите номер контракта или договора.");
-            if (IssueDate == null) throw new UserMessageException("Дата подписания не выбрана.");
-            if (StartDate == null) throw new UserMessageException("Дата начала не выбрана.");
-            if (EndDate == null) throw new UserMessageException("Дата окончания не выбрана.");
+            if (string.IsNullOrWhiteSpace(ContractNumber))
+                throw new UserMessageException("Введите номер контракта или договора.");
+
+            if (IssueDate == null) 
+                throw new UserMessageException("Дата подписания не выбрана.");
+
+            if (StartDate == null) 
+                throw new UserMessageException("Дата начала не выбрана.");
+
+            if (EndDate == null) 
+                throw new UserMessageException("Дата окончания не выбрана.");
         }
 
         private void ValidateContractorFields()
         {
-            if (Specifications.Count == 0) throw new UserMessageException("Добавьте номенклатуру товара или услуги!");
+            if (Specifications.Count == 0) 
+                throw new UserMessageException("Добавьте номенклатуру товара или услуги!");
         }
 
         private void ValidateCustomerFields()
         {
-            if (ContractPrice <= 0) throw new UserMessageException("Введите сумму контракта или договора.");
+            if (ContractPrice <= 0) 
+                throw new UserMessageException("Введите сумму контракта или договора.");
         }
 
         private async Task SaveAsync()
@@ -688,14 +709,14 @@
             }
             catch (UserMessageException ex)
             {
-                await _dialogService.ShowMessageAsync("Внимание", ex.Message, UserMessageType.Warning);
+                await _dialogService.ShowMessageAsync(ex.Message, "Внимание", UserMessageType.Warning);
             }
             catch (Exception ex)
             {
                 await AttachedFilesVM.RollbackCommitAsync();
 
                 Log.Error(ex, "Ошибка сохранения контракта");
-                await _dialogService.ShowMessageAsync("Ошибка", "Произошла ошибка при сохранении документа.", UserMessageType.Error);
+                await _dialogService.ShowMessageAsync("Произошла ошибка при сохранении документа.", "Ошибка", UserMessageType.Error);
             }
         }
     }

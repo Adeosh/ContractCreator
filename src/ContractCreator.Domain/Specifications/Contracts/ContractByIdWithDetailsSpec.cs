@@ -11,14 +11,13 @@ namespace ContractCreator.Domain.Specifications.Contracts
             AddInclude(x => x.Files);
             AddInclude(x => x.Acts);
             AddInclude(x => x.Invoices);
-            AddInclude(x => x.Steps);
-            AddInclude("Steps.Items");
-            AddInclude("Steps.Currency");
             AddInclude(x => x.Waybills);
             AddInclude(x => x.Firm);
             AddInclude(x => x.Counterparty);
             AddInclude(x => x.FirmSigner!);
             AddInclude(x => x.CounterpartySigner!);
+            AddInclude(x => x.Steps);
+            AddInclude("Steps.Currency");
             AddInclude(x => x.Specifications);
             AddInclude("Specifications.Currency");
         }

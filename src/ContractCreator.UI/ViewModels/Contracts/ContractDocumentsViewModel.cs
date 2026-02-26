@@ -53,10 +53,8 @@
         {
             try
             {
-                // Загружаем шапку для информационной панели
                 ContractInfo = await _contractService.GetContractByIdAsync(ContractId);
 
-                // Загружаем все документы по этому контракту
                 var invoices = await _invoiceService.GetByContractIdAsync(ContractId);
                 var acts = await _actService.GetByContractIdAsync(ContractId);
                 var waybills = await _waybillService.GetByContractIdAsync(ContractId);
@@ -79,7 +77,7 @@
 
         private void OpenInvoiceEditor()
         {
-            // Здесь мы вызовем InvoiceEditorViewModel
+
         }
     }
 }
