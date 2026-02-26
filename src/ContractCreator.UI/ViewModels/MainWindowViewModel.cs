@@ -66,10 +66,13 @@ public class MainWindowViewModel : ViewModelBase
                     Items = new ObservableCollection<MenuItemViewModel>
                     {
                         new MenuItemViewModel("Договоры/контракты",
-                            ReactiveCommand.Create(() => _navigationService.NavigateTo<ContractListViewModel>())),
-                        new MenuItemViewModel("Счета"),
-                        new MenuItemViewModel("Акты"),
-                        new MenuItemViewModel("Накладные")
+                            ReactiveCommand.Create(() => _navigationService.NavigateTo<ContractListViewModel>(ContractListMode.All))),
+        
+                        new MenuItemViewModel("Работа с документами",
+                            ReactiveCommand.Create(() => _navigationService.NavigateTo<ContractListViewModel>(ContractListMode.Execution))),
+        
+                        new MenuItemViewModel("Архив",
+                            ReactiveCommand.Create(() => _navigationService.NavigateTo<ContractListViewModel>(ContractListMode.Archive)))
                     }
                 },
 

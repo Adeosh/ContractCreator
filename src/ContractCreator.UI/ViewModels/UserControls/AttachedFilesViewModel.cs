@@ -5,9 +5,10 @@
         #region Props
         private readonly IFileService _fileService;
         private readonly IUserDialogService _userDialogService;
-        private readonly FileType _fileType;
         private readonly List<int> _filesToDelete = new();
         private readonly List<int> _newlyUploadedFileIds = new();
+
+        public FileType CurrentFileType { get; set; }
 
         public sealed class AttachedFileModel : ReactiveObject
         {
@@ -35,11 +36,11 @@
         public AttachedFilesViewModel(
             IFileService fileService, 
             IUserDialogService userDialogService,
-            FileType fileType)
+            FileType fileType = FileType.None)
         {
             _fileService = fileService;
             _userDialogService = userDialogService;
-            _fileType = fileType;
+            CurrentFileType = fileType;
 
             AddFileCommand = ReactiveCommand.CreateFromTask(AddFileAsync);
             RemoveFileCommand = ReactiveCommand.Create<AttachedFileModel>(RemoveFile);
@@ -201,8 +202,8 @@
                 {
                     using var stream = File.OpenRead(file.LocalFilePath);
                     int newId = file.IsEncrypted
-                        ? await _fileService.UploadEncryptedFileAsync(stream, _fileType, file.FileName, DateTime.Now)
-                        : await _fileService.UploadFileAsync(stream, _fileType, file.FileName, DateTime.Now);
+                        ? await _fileService.UploadEncryptedFileAsync(stream, CurrentFileType, file.FileName, DateTime.Now)
+                        : await _fileService.UploadFileAsync(stream, CurrentFileType, file.FileName, DateTime.Now);
 
                     _newlyUploadedFileIds.Add(newId);
                     file.FileId = newId;

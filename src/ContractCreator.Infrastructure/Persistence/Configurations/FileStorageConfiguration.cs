@@ -8,7 +8,7 @@ namespace ContractCreator.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<FileStorage> builder)
         {
-            builder.ToTable("Storages", schema: "public");
+            builder.ToTable("StorageFiles", schema: "public");
             builder.HasKey(e => e.Id);
 
             builder.Property(e => e.StorageFileGuid)

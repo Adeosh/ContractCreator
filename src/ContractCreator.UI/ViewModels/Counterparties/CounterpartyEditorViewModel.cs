@@ -7,9 +7,7 @@
         private readonly IContactService _contactService;
         private readonly INavigationService _navigation;
         private readonly ISettingsService _settingsService;
-        private readonly IGarService _garService;
         private readonly IUserDialogService _dialogService;
-        private readonly IFileService _fileService;
 
         [Reactive] public int Id { get; set; }
         [Reactive] public int FirmId { get; set; }
@@ -48,25 +46,23 @@
             IContactService contactService,
             INavigationService navigation,
             ISettingsService settingsService,
-            IGarService garService,
-            IBankAccountService bankAccountService,
-            IBicService bicService,
             IUserDialogService dialogService,
-            IFileService fileService)
+            AddressViewModel legalAddressVM,
+            AddressViewModel actualAddressVM,
+            BankAccountsViewModel bankAccountVM,
+            AttachedFilesViewModel attachedFilesVM)
         {
             _counterpartyService = counterpartyService;
             _contactService = contactService;
             _navigation = navigation;
             _settingsService = settingsService;
-            _garService = garService;
             _dialogService = dialogService;
-            _fileService = fileService;
 
-            LegalAddressVM = new AddressViewModel(_garService);
-            ActualAddressVM = new AddressViewModel(_garService);
-
-            BankAccountVM = new BankAccountsViewModel(bankAccountService, bicService, dialogService);
-            AttachedFilesVM = new AttachedFilesViewModel(fileService, dialogService, FileType.Counterparty);
+            LegalAddressVM = legalAddressVM;
+            ActualAddressVM = actualAddressVM;
+            BankAccountVM = bankAccountVM;
+            AttachedFilesVM = attachedFilesVM;
+            AttachedFilesVM.CurrentFileType = FileType.Counterparty;
 
             SaveCommand = ReactiveCommand.CreateFromTask(SaveCounterpartyAsync);
             CancelCommand = ReactiveCommand.Create(() => _navigation.NavigateBack());

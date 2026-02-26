@@ -28,7 +28,7 @@ namespace ContractCreator.Infrastructure.Persistence.Configurations
                    .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(e => e.Contract)
-                   .WithMany()
+                   .WithMany(c => c.Waybills)
                    .HasForeignKey(e => e.ContractId)
                    .OnDelete(DeleteBehavior.Cascade);
 

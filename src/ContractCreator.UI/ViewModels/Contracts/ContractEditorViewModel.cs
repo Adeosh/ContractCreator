@@ -14,6 +14,8 @@
 
         public string PageTitle => Id == 0 ? "Создание документа" : $"Документ № {ContractNumber}";
 
+        public AttachedFilesViewModel AttachedFilesVM { get; }
+
         #region Contract
         [Reactive] public int Id { get; set; }
         [Reactive] public int FirmId { get; set; }
@@ -104,7 +106,8 @@
             INavigationService navigation,
             IUserDialogService dialogService,
             ISettingsService settingsService,
-            IProductService productService)
+            IProductService productService,
+            AttachedFilesViewModel attachedFilesVM)
         {
             _contractService = contractService;
             _counterpartyService = counterpartyService;
@@ -114,6 +117,8 @@
             _dialogService = dialogService;
             _settingsService = settingsService;
             _productService = productService;
+
+            AttachedFilesVM = attachedFilesVM;
 
             SaveCommand = ReactiveCommand.CreateFromTask(SaveAsync);
             CancelCommand = ReactiveCommand.Create(() => _navigation.NavigateBack());
@@ -162,6 +167,10 @@
                                         stageId == (int)ContractStageType.Termination ||
                                         stageId == (int)ContractStageType.Terminated;
                 });
+
+            this.WhenAnyValue(x => x.SelectedType)
+                .Subscribe(type => AttachedFilesVM.CurrentFileType =
+                    type == ContractType.Contract ? FileType.Contract : FileType.Agreement);
 
             this.WhenAnyValue(x => x.SelectedRole)
                 .Subscribe(role => IsCustomerRole = role == ContractEnterpriseRole.Customer);
@@ -533,7 +542,6 @@
                     if (dto.Initiator.HasValue)
                         SelectedInitiator = dto.Initiator.Value;
 
-
                     SelectedCounterparty = Counterparties.FirstOrDefault(c => c.Id == dto.CounterpartyId);
                     SelectedFirmSigner = Workers.FirstOrDefault(w => w.Id == dto.FirmSignerId);
                     SelectedCurrency = Currencies.FirstOrDefault(c => c.Id == dto.CurrencyId);
@@ -552,6 +560,9 @@
                     if (dto.Steps != null)
                         foreach (var step in dto.Steps) 
                             Steps.Add(step);
+
+                    if (dto.Files != null && dto.Files.Any())
+                        await AttachedFilesVM.LoadExistingFilesAsync(dto.Files);
                 }
             }
             catch (Exception ex)
@@ -637,6 +648,8 @@
                 if (currentWorkerId == 0)
                     throw new UserMessageException("Не определен текущий пользователь системы.");
 
+                var contractFiles = await AttachedFilesVM.GetFilesForCommitAsync(Id);
+
                 var dto = new ContractDto
                 {
                     Id = Id,
@@ -656,12 +669,12 @@
                     ExecutionDate = ExecutionDate,
                     TerminationReason = TerminationReason,
                     Initiator = SelectedInitiator.HasValue ? SelectedInitiator.Value : null,
-
                     CounterpartyId = SelectedCounterparty!.Id,
                     CounterpartySignerId = SelectedCounterpartySigner?.Id,
                     FirmSignerId = SelectedFirmSigner?.Id ?? 0,
                     CurrencyId = SelectedCurrency!.Id,
-                    StageTypeId = SelectedStage!.Id
+                    StageTypeId = SelectedStage!.Id,
+                    Files = contractFiles
                 };
 
                 await _contractService.SaveContractWithDetailsAsync(
@@ -679,6 +692,8 @@
             }
             catch (Exception ex)
             {
+                await AttachedFilesVM.RollbackCommitAsync();
+
                 Log.Error(ex, "Ошибка сохранения контракта");
                 await _dialogService.ShowMessageAsync("Ошибка", "Произошла ошибка при сохранении документа.", UserMessageType.Error);
             }

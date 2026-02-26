@@ -86,6 +86,11 @@ public partial class App : Avalonia.Application
         services.AddSingleton<IUserDialogService, UserDialogService>();
         services.AddSingleton<MainWindowViewModel>();
 
+        services.AddTransient<AddressViewModel>();
+        services.AddTransient<AttachedFilesViewModel>();
+        services.AddTransient<BankAccountsViewModel>();
+        services.AddTransient<EconomicActivitiesViewModel>();
+
         services.AddTransient<ContactListViewModel>();
         services.AddTransient<ContactEditorViewModel>();
         services.AddTransient<CounterpartyListViewModel>();
@@ -98,5 +103,6 @@ public partial class App : Avalonia.Application
         services.AddTransient<ProductEditorViewModel>();
         services.AddTransient<ContractListViewModel>();
         services.AddTransient<ContractEditorViewModel>();
+        services.AddTransient<ContractDocumentsViewModel>();
     }
 }

@@ -8,12 +8,16 @@
         private readonly INavigationService _navigation;
         private readonly IUserDialogService _dialogService;
 
+        public string? PageTitle { get; set; }
+
         [Reactive] public ContractDto? SelectedContract { get; set; }
+        [Reactive] public ContractListMode CurrentMode { get; set; } = ContractListMode.All;
         #endregion
         #region Actions
         public ReactiveCommand<Unit, Unit> CreateCommand { get; }
         public ReactiveCommand<ContractDto, Unit> EditCommand { get; }
         public ReactiveCommand<ContractDto, Unit> DeleteCommand { get; }
+        public ReactiveCommand<ContractDto, Unit> OpenDocumentsWorkspaceCommand { get; }
         #endregion
 
         public ContractListViewModel(
@@ -30,6 +34,29 @@
             CreateCommand = ReactiveCommand.Create(CreateContract);
             EditCommand = ReactiveCommand.Create<ContractDto>(EditContract);
             DeleteCommand = ReactiveCommand.CreateFromTask<ContractDto>(DeleteContractAsync);
+            OpenDocumentsWorkspaceCommand = ReactiveCommand.Create<ContractDto>(OpenDocumentsWorkspace);
+        }
+
+        public override async Task OnNavigatedToAsync(object? parameter = null)
+        {
+            if (parameter is ContractListMode mode)
+            {
+                CurrentMode = mode;
+                PageTitle = mode switch
+                {
+                    ContractListMode.Execution => "Работа с документами (На исполнении)",
+                    ContractListMode.Archive => "Архив документов",
+                    _ => "Договоры и контракты (Все)"
+                };
+            }
+            await RefreshListAsync();
+        }
+
+        private void OpenDocumentsWorkspace(ContractDto contract)
+        {
+            if (contract == null) return;
+
+            _navigation.NavigateTo<ContractDocumentsViewModel>(contract.Id);
         }
 
         protected override async Task RefreshListAsync()
@@ -47,9 +74,24 @@
                 }
 
                 var data = await _contractService.GetContractsByFirmIdAsync(currentFirmId.Value);
+                IEnumerable<ContractDto> filteredData = data;
+
+                if (CurrentMode == ContractListMode.Execution)
+                {
+                    filteredData = data.Where(c =>
+                        c.StageTypeId == (int)ContractStageType.Execution ||
+                        c.StageTypeId == (int)ContractStageType.Concluded);
+                }
+                else if (CurrentMode == ContractListMode.Archive)
+                {
+                    filteredData = data.Where(c =>
+                        c.StageTypeId == (int)ContractStageType.Paid ||
+                        c.StageTypeId == (int)ContractStageType.Executed ||
+                        c.StageTypeId == (int)ContractStageType.Terminated);
+                }
 
                 Items.Clear();
-                foreach (var item in data)
+                foreach (var item in filteredData)
                     Items.Add(item);
             }
             catch (Exception ex)

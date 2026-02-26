@@ -42,6 +42,7 @@ global using ContractCreator.Domain.Models.Dictionaries;
 global using ContractCreator.Shared.DTOs;
 global using ContractCreator.Shared.DTOs.Data;
 global using ContractCreator.Shared.Enums;
+global using ContractCreator.Shared.Enums.General;
 global using ContractCreator.Shared.Common.Exceptions;
 global using ContractCreator.Shared.Common.Extensions;
 

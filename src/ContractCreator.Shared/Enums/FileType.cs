@@ -4,6 +4,9 @@ namespace ContractCreator.Shared.Enums
 {
     public enum FileType : byte
     {
+        /// <summary> Не определено </summary>
+        [Description("Не определено")]
+        None = 0,
         /// <summary> Предприятие </summary>
         [Description("Предприятие")]
         Firm = 1,

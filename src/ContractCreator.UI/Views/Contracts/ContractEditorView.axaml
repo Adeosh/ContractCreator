@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:vm="using:ContractCreator.UI.ViewModels.Contracts"
+			 xmlns:controls="using:ContractCreator.UI.Views.UserControls"
 			 xmlns:dto="using:ContractCreator.Shared.DTOs"
 			 x:Class="ContractCreator.UI.Views.Contracts.ContractEditorView"
 			 x:DataType="vm:ContractEditorViewModel"
@@ -31,13 +32,27 @@
 									<StackPanel Grid.Column="0" Spacing="5">
 										<TextBlock Text="Вид соглашения *" FontWeight="Bold"/>
 										<ComboBox ItemsSource="{Binding ContractTypes}"
-												  SelectedItem="{Binding SelectedType}" HorizontalAlignment="Stretch"/>
+												  SelectedItem="{Binding SelectedType}"
+												  HorizontalAlignment="Stretch">
+											<ComboBox.ItemTemplate>
+												<DataTemplate>
+													<TextBlock Text="{Binding Converter={StaticResource EnumDescConverter}}"/>
+												</DataTemplate>
+											</ComboBox.ItemTemplate>
+										</ComboBox>
 									</StackPanel>
 
 									<StackPanel Grid.Column="2" Spacing="5">
 										<TextBlock Text="Роль предприятия *" FontWeight="Bold"/>
 										<ComboBox ItemsSource="{Binding EnterpriseRoles}"
-												  SelectedItem="{Binding SelectedRole}" HorizontalAlignment="Stretch"/>
+												  SelectedItem="{Binding SelectedRole}"
+												  HorizontalAlignment="Stretch">
+											<ComboBox.ItemTemplate>
+												<DataTemplate>
+													<TextBlock Text="{Binding Converter={StaticResource EnumDescConverter}}"/>
+												</DataTemplate>
+											</ComboBox.ItemTemplate>
+										</ComboBox>
 									</StackPanel>
 
 									<StackPanel Grid.Column="4" Spacing="5">
@@ -123,15 +138,15 @@
 								<Grid ColumnDefinitions="*, 20, *, 20, *" IsVisible="{Binding IsConclusionStage}">
 									<StackPanel Grid.Column="0" Spacing="5">
 										<TextBlock Text="Дата подписания" />
-										<DatePicker SelectedDate="{Binding IssueDate}" HorizontalAlignment="Stretch" />
+										<DatePicker SelectedDate="{Binding IssueDate, Converter={StaticResource DateConverter}}" HorizontalAlignment="Stretch" />
 									</StackPanel>
 									<StackPanel Grid.Column="2" Spacing="5">
 										<TextBlock Text="Дата начала" />
-										<DatePicker SelectedDate="{Binding StartDate}" HorizontalAlignment="Stretch" />
+										<DatePicker SelectedDate="{Binding StartDate, Converter={StaticResource DateConverter}}" HorizontalAlignment="Stretch" />
 									</StackPanel>
 									<StackPanel Grid.Column="4" Spacing="5">
 										<TextBlock Text="Дата окончания" />
-										<DatePicker SelectedDate="{Binding EndDate}" HorizontalAlignment="Stretch" />
+										<DatePicker SelectedDate="{Binding EndDate, Converter={StaticResource DateConverter}}" HorizontalAlignment="Stretch" />
 									</StackPanel>
 								</Grid>
 
@@ -146,7 +161,7 @@
 									<TextBlock Text="Торги" FontWeight="Bold" Foreground="#E65100"/>
 									<StackPanel Spacing="5" Width="300" HorizontalAlignment="Left">
 										<TextBlock Text="Дата и время начала торгов *" />
-										<DatePicker SelectedDate="{Binding TenderDate}" HorizontalAlignment="Stretch"/>
+										<DatePicker SelectedDate="{Binding TenderDate, Converter={StaticResource DateConverter}}" HorizontalAlignment="Stretch"/>
 									</StackPanel>
 								</StackPanel>
 							</Border>
@@ -157,7 +172,7 @@
 									<Grid ColumnDefinitions="*, 20, *">
 										<StackPanel Grid.Column="0" Spacing="5">
 											<TextBlock Text="Дата и время окончания *" />
-											<DatePicker SelectedDate="{Binding SubmissionDate}" HorizontalAlignment="Stretch" />
+											<DatePicker SelectedDate="{Binding SubmissionDate, Converter={StaticResource DateConverter}}" HorizontalAlignment="Stretch" />
 										</StackPanel>
 										<StackPanel Grid.Column="2" Spacing="5">
 											<TextBlock Text="Идентификационный код закупки *" />
@@ -181,7 +196,7 @@
 										</StackPanel>
 										<StackPanel Grid.Column="2" Spacing="5">
 											<TextBlock Text="Дата завершения/расторжения" />
-											<DatePicker SelectedDate="{Binding ExecutionDate}" HorizontalAlignment="Stretch"/>
+											<DatePicker SelectedDate="{Binding ExecutionDate, Converter={StaticResource DateConverter}}" HorizontalAlignment="Stretch"/>
 										</StackPanel>
 									</Grid>
 									<StackPanel Spacing="5">
@@ -245,8 +260,8 @@
 						<DataGrid Grid.Row="1" ItemsSource="{Binding Steps}" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="All">
 							<DataGrid.Columns>
 								<DataGridTextColumn Header="Наименование этапа" Binding="{Binding StepName}" Width="*"/>
-								<DataGridTextColumn Header="Начало" Binding="{Binding StartStepDate}" Width="120"/>
-								<DataGridTextColumn Header="Окончание" Binding="{Binding EndStepDate}" Width="120"/>
+								<DataGridTextColumn Header="Начало" Binding="{Binding StartStepDate, Converter={StaticResource DateConverter}}" Width="120"/>
+								<DataGridTextColumn Header="Окончание" Binding="{Binding EndStepDate, Converter={StaticResource DateConverter}}" Width="120"/>
 								<DataGridTextColumn Header="Сумма этапа" Binding="{Binding TotalAmount, StringFormat='{}{0:N2}'}" Width="150" FontWeight="Bold"/>
 								<DataGridTemplateColumn Header="Действия" Width="100">
 									<DataGridTemplateColumn.CellTemplate>
@@ -262,6 +277,12 @@
 								</DataGridTemplateColumn>
 							</DataGrid.Columns>
 						</DataGrid>
+					</Grid>
+				</TabItem>
+
+				<TabItem Header="Файлы">
+					<Grid Margin="10">
+						<controls:AttachedFilesControl DataContext="{Binding AttachedFilesVM}" />
 					</Grid>
 				</TabItem>
 			</TabControl>
@@ -360,11 +381,11 @@
 					<Grid ColumnDefinitions="*, 20, *">
 						<StackPanel Grid.Column="0" Spacing="5">
 							<TextBlock Text="Начало этапа" FontWeight="SemiBold"/>
-							<DatePicker SelectedDate="{Binding CurrentEditingStep.StartStepDate}" HorizontalAlignment="Stretch"/>
+							<DatePicker SelectedDate="{Binding CurrentEditingStep.StartStepDate, Converter={StaticResource DateConverter}}" HorizontalAlignment="Stretch"/>
 						</StackPanel>
 						<StackPanel Grid.Column="2" Spacing="5">
 							<TextBlock Text="Окончание этапа" FontWeight="SemiBold"/>
-							<DatePicker SelectedDate="{Binding CurrentEditingStep.EndStepDate}" HorizontalAlignment="Stretch"/>
+							<DatePicker SelectedDate="{Binding CurrentEditingStep.EndStepDate, Converter={StaticResource DateConverter}}" HorizontalAlignment="Stretch"/>
 						</StackPanel>
 					</Grid>
 				</StackPanel>

@@ -1,4 +1,5 @@
-﻿using ContractCreator.Shared.Enums;
+﻿using ContractCreator.Shared.DTOs.Data;
+using ContractCreator.Shared.Enums;
 
 namespace ContractCreator.Shared.DTOs
 {
@@ -33,6 +34,7 @@ namespace ContractCreator.Shared.DTOs
         public List<ContractActDto> Acts { get; set; } = new();
         public List<ContractWaybillDto> Waybills { get; set; } = new();
         public List<ContractStepDto> Steps { get; set; } = new();
+        public List<EntityFileDto> Files { get; set; } = new();
 
         public int? DaysUntilEnd => EndDate.HasValue
             ? EndDate.Value.DayNumber - DateOnly.FromDateTime(DateTime.Now).DayNumber

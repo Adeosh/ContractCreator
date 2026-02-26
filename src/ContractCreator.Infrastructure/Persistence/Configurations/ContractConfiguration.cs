@@ -60,26 +60,6 @@ namespace ContractCreator.Infrastructure.Persistence.Configurations
                    .WithMany()
                    .HasForeignKey(c => c.CurrencyId)
                    .OnDelete(DeleteBehavior.Restrict);
-
-            builder.HasMany(c => c.Specifications)
-                   .WithOne(s => s.Contract)
-                   .OnDelete(DeleteBehavior.Cascade);
-
-            builder.HasMany(c => c.Invoices)
-                   .WithOne(i => i.Contract)
-                   .OnDelete(DeleteBehavior.Cascade);
-
-            builder.HasMany(c => c.Acts)
-                   .WithOne(c => c.Contract)
-                   .OnDelete(DeleteBehavior.Cascade);
-
-            builder.HasMany(c => c.Waybills)
-                   .WithOne(c => c.Contract)
-                   .OnDelete(DeleteBehavior.Cascade);
-
-            builder.HasMany(c => c.Steps)
-                   .WithOne(c => c.Contract)
-                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

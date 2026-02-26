@@ -18,11 +18,21 @@ namespace ContractCreator.Application.Mapping.Entities
                 .Ignore(dest => dest.Contract)
                 .Ignore(dest => dest.Currency);
 
+            config.NewConfig<ContractStep, ContractStepDto>()
+                .Map(dest => dest.CurrencyName, src => src.Currency != null ? src.Currency.CurrencyName : string.Empty) // Вытаскиваем имя валюты!
+                .Map(dest => dest.Items, src => src.Items)
+                .PreserveReference(true);
+
+            config.NewConfig<ContractStepItem, ContractStepItemDto>()
+                .PreserveReference(true);
+
             config.NewConfig<Contract, ContractDto>()
                 .Map(dest => dest.Type, src => src.Type)
                 .Map(dest => dest.EnterpriseRole, src => src.EnterpriseRole)
                 .Map(dest => dest.Initiator, src => src.Initiator.HasValue ? (byte?)src.Initiator.Value : null)
                 .Map(dest => dest.CounterpartyName, src => src.Counterparty != null ? src.Counterparty.ShortName : string.Empty)
+                .Map(dest => dest.Specifications, src => src.Specifications)
+                .Map(dest => dest.Steps, src => src.Steps)
                 .PreserveReference(true);
 
             config.NewConfig<ContractDto, Contract>()

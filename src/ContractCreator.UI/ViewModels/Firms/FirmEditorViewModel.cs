@@ -6,10 +6,8 @@
         private readonly IFirmService _firmService;
         private readonly INavigationService _navigation;
         private readonly ISettingsService _settingsService;
-        private readonly IGarService _garService;
         private readonly IClassifierService _classifierService;
         private readonly IUserDialogService _dialogService;
-        private readonly IFileService _fileService;
 
         [Reactive] public int Id { get; set; }
         [Reactive] public string FullName { get; set; } = "";
@@ -54,29 +52,26 @@
             IFirmService firmService,
             INavigationService navigation,
             ISettingsService settingsService,
-            IGarService garService,
-            IBankAccountService bankAccountService,
-            IBicService bicService,
             IUserDialogService dialogService,
             IClassifierService classifierService,
-            IFileService fileService)
+            AddressViewModel legalAddressVM,
+            AddressViewModel actualAddressVM,
+            BankAccountsViewModel bankAccountVM,
+            EconomicActivitiesViewModel okvedVM,
+            AttachedFilesViewModel attachedFilesVM)
         {
             _firmService = firmService;
             _navigation = navigation;
             _settingsService = settingsService;
-            _garService = garService;
             _classifierService = classifierService;
             _dialogService = dialogService;
-            _fileService = fileService;
 
-            LegalAddressVM = new AddressViewModel(_garService);
-            ActualAddressVM = new AddressViewModel(_garService);
-            BankAccountVM = new BankAccountsViewModel(
-                bankAccountService,
-                bicService,
-                dialogService);
+            LegalAddressVM = legalAddressVM;
+            ActualAddressVM = actualAddressVM;
+            BankAccountVM = bankAccountVM;
             OkvedVM = new EconomicActivitiesViewModel(classifierService);
-            AttachedFilesVM = new AttachedFilesViewModel(fileService, dialogService, FileType.Firm);
+            AttachedFilesVM = attachedFilesVM;
+            AttachedFilesVM.CurrentFileType = FileType.Firm;
 
             SaveCommand = ReactiveCommand.CreateFromTask(SaveFirmAsync);
             CancelCommand = ReactiveCommand.Create(() => _navigation.NavigateBack());

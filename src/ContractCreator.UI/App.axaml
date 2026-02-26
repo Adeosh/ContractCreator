@@ -17,6 +17,7 @@
 			<converters:EnumDescriptionConverter x:Key="EnumDescConverter" />
 			<converters:NotEqualConverter x:Key="NotEqualConverter" />
 			<converters:ActiveEntityTooltipConverter x:Key="ActiveEntityTooltipConverter" />
+			<converters:DateOnlyToDateTimeOffsetConverter x:Key="DateConverter"/>
 		</ResourceDictionary>
 	</Application.Resources>
 

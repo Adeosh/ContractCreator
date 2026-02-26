@@ -1,0 +1,107 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ContractCreator.UI.ViewModels.Contracts"
+             x:Class="ContractCreator.UI.Views.Contracts.ContractDocumentsView"
+             x:DataType="vm:ContractDocumentsViewModel">
+
+    <Grid RowDefinitions="Auto, Auto, *">
+        
+        <Border Grid.Row="0" Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}" Padding="15">
+            <StackPanel Orientation="Horizontal" Spacing="15">
+                <Button Command="{Binding CancelCommand}" Content="🠔" Classes="windowBtn"/>
+                <TextBlock Text="Рабочее место по контракту" FontSize="20" FontWeight="Bold" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="1" Background="{DynamicResource CardBrush}" CornerRadius="8" Padding="15" Margin="10">
+            <Grid ColumnDefinitions="*, *, *, *">
+                <StackPanel Grid.Column="0" Spacing="5">
+                    <TextBlock Text="Номер и Дата:" Foreground="Gray" FontSize="12"/>
+                    <TextBlock FontWeight="SemiBold" FontSize="14">
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="№ {0} от {1:dd.MM.yyyy}">
+                                <Binding Path="ContractInfo.ContractNumber"/>
+                                <Binding Path="ContractInfo.IssueDate"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Spacing="5">
+                    <TextBlock Text="Контрагент:" Foreground="Gray" FontSize="12"/>
+                    <TextBlock Text="{Binding ContractInfo.CounterpartyName}" FontWeight="SemiBold" FontSize="14" TextWrapping="Wrap"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" Spacing="5">
+                    <TextBlock Text="Предмет договора:" Foreground="Gray" FontSize="12"/>
+                    <TextBlock Text="{Binding ContractInfo.ContractSubject}" FontSize="13" TextWrapping="Wrap" MaxHeight="40"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="3" Spacing="5">
+                    <TextBlock Text="Сумма контракта:" Foreground="Gray" FontSize="12"/>
+                    <TextBlock Text="{Binding ContractInfo.ContractPrice, StringFormat='{}{0:N2} руб.'}" 
+                               FontWeight="Bold" FontSize="16" Foreground="#2E7D32"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <TabControl Grid.Row="2" Margin="10,0,10,10">
+            
+            <TabItem Header="Счета">
+                <Grid RowDefinitions="Auto, *">
+                    <Button Grid.Row="0" Command="{Binding CreateInvoiceCommand}" Classes="accent" Margin="0,10,0,15" Padding="15,8" HorizontalAlignment="Left">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Text="+" FontWeight="Bold"/>
+                            <TextBlock Text="Создать счет"/>
+                        </StackPanel>
+                    </Button>
+
+                    <DataGrid Grid.Row="1" ItemsSource="{Binding Invoices}" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="Horizontal">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="№ Счета" Binding="{Binding InvoiceNumber}" Width="150"/>
+                            <DataGridTextColumn Header="Дата" Binding="{Binding InvoiceDate, StringFormat=d}" Width="120"/>
+                            <DataGridTextColumn Header="Сумма" Binding="{Binding AggregateAmount, StringFormat='{}{0:N2}'}" Width="150" FontWeight="Bold"/>
+                            <DataGridTemplateColumn Header="Действия" Width="100">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
+                                            <Button Content="✏️" Background="Transparent" Padding="5"/>
+                                            <Button Content="❌" Foreground="Red" Background="Transparent" Padding="5"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Акты">
+                <Grid RowDefinitions="Auto, *">
+                    <Button Grid.Row="0" Content="+ Создать акт" Classes="accent" Margin="0,10,0,15" Padding="15,8" HorizontalAlignment="Left"/>
+                    <DataGrid Grid.Row="1" ItemsSource="{Binding Acts}" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="Horizontal">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="№ Акта" Binding="{Binding ActNumber}" Width="150"/>
+                            <DataGridTextColumn Header="Дата" Binding="{Binding ActDate, StringFormat=d}" Width="120"/>
+                            <DataGridTextColumn Header="Сумма" Binding="{Binding AggregateAmount, StringFormat='{}{0:N2}'}" Width="150" FontWeight="Bold"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Накладные">
+                <Grid RowDefinitions="Auto, *">
+                    <Button Grid.Row="0" Content="+ Создать накладную" Classes="accent" Margin="0,10,0,15" Padding="15,8" HorizontalAlignment="Left"/>
+                    <DataGrid Grid.Row="1" ItemsSource="{Binding Waybills}" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="Horizontal">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="№ УПД" Binding="{Binding WaybillNumber}" Width="150"/>
+                            <DataGridTextColumn Header="Дата" Binding="{Binding WaybillDate, StringFormat=d}" Width="120"/>
+                            <DataGridTextColumn Header="Сумма" Binding="{Binding AggregateAmount, StringFormat='{}{0:N2}'}" Width="150" FontWeight="Bold"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+        </TabControl>
+    </Grid>
+</UserControl>

@@ -1,11 +1,5 @@
 ﻿namespace ContractCreator.UI.Services.Navigation
 {
-    public enum EditorMode
-    {
-        Create,
-        Edit
-    }
-
     public class EditorParams
     {
         public EditorMode Mode { get; set; }

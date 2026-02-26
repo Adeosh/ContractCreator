@@ -8,9 +8,12 @@ namespace ContractCreator.Domain.Specifications.Contracts
         {
             AddInclude(x => x.Currency);
             AddInclude(x => x.StageType);
+            AddInclude(x => x.Files);
             AddInclude(x => x.Acts);
             AddInclude(x => x.Invoices);
             AddInclude(x => x.Steps);
+            AddInclude("Steps.Items");
+            AddInclude("Steps.Currency");
             AddInclude(x => x.Waybills);
             AddInclude(x => x.Firm);
             AddInclude(x => x.Counterparty);
