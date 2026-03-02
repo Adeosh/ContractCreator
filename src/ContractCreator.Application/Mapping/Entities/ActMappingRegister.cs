@@ -20,6 +20,7 @@ namespace ContractCreator.Application.Mapping.Entities
                 .Map(dest => dest.CurrencyName, src => src.Currency != null
                 ? src.Currency.CurrencyName
                 : string.Empty)
+                .Map(dest => dest.Items, src => src.Items)
                 .PreserveReference(true);
 
             config.NewConfig<ContractActDto, ContractAct>()

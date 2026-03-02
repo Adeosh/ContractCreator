@@ -58,6 +58,7 @@ global using ContractCreator.UI.ViewModels;
 global using ContractCreator.UI.ViewModels.Base;
 global using ContractCreator.UI.ViewModels.Contacts;
 global using ContractCreator.UI.ViewModels.Contracts;
+global using ContractCreator.UI.ViewModels.Contracts.Documents;
 global using ContractCreator.UI.ViewModels.Counterparties;
 global using ContractCreator.UI.ViewModels.Firms;
 global using ContractCreator.UI.ViewModels.Workers;

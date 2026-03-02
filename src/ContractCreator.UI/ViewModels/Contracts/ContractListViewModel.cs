@@ -8,8 +8,10 @@
         private readonly INavigationService _navigation;
         private readonly IUserDialogService _dialogService;
 
-        public string? PageTitle { get; set; }
-
+        [Reactive] public string PageTitle { get; set; } = string.Empty;
+        [Reactive] public bool IsCreateButtonVisible { get; set; }
+        [Reactive] public bool IsEditButtonVisible { get; set; }
+        [Reactive] public bool IsWorkspaceButtonVisible { get; set; }
         [Reactive] public ContractDto? SelectedContract { get; set; }
         [Reactive] public ContractListMode CurrentMode { get; set; } = ContractListMode.All;
         #endregion
@@ -42,13 +44,19 @@
             if (parameter is ContractListMode mode)
             {
                 CurrentMode = mode;
+
                 PageTitle = mode switch
                 {
                     ContractListMode.Execution => "Работа с документами (На исполнении)",
                     ContractListMode.Archive => "Архив документов",
                     _ => "Договоры и контракты (Все)"
                 };
+
+                IsCreateButtonVisible = mode == ContractListMode.All;
+                IsEditButtonVisible = mode == ContractListMode.All;
+                IsWorkspaceButtonVisible = mode == ContractListMode.Execution || mode == ContractListMode.Archive;
             }
+
             await RefreshListAsync();
         }
 

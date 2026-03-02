@@ -2,10 +2,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:ContractCreator.UI.ViewModels.Contracts"
              x:Class="ContractCreator.UI.Views.Contracts.ContractDocumentsView"
-             x:DataType="vm:ContractDocumentsViewModel">
+             x:DataType="vm:ContractDocumentsViewModel"
+             x:Name="Root">
 
     <Grid RowDefinitions="Auto, Auto, *">
-        
+
         <Border Grid.Row="0" Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}" Padding="15">
             <StackPanel Orientation="Horizontal" Spacing="15">
                 <Button Command="{Binding CancelCommand}" Content="🠔" Classes="windowBtn"/>
@@ -39,14 +40,14 @@
 
                 <StackPanel Grid.Column="3" Spacing="5">
                     <TextBlock Text="Сумма контракта:" Foreground="Gray" FontSize="12"/>
-                    <TextBlock Text="{Binding ContractInfo.ContractPrice, StringFormat='{}{0:N2} руб.'}" 
+                    <TextBlock Text="{Binding ContractInfo.ContractPrice, StringFormat='{}{0:N2} руб.'}"
                                FontWeight="Bold" FontSize="16" Foreground="#2E7D32"/>
                 </StackPanel>
             </Grid>
         </Border>
 
         <TabControl Grid.Row="2" Margin="10,0,10,10">
-            
+
             <TabItem Header="Счета">
                 <Grid RowDefinitions="Auto, *">
                     <Button Grid.Row="0" Command="{Binding CreateInvoiceCommand}" Classes="accent" Margin="0,10,0,15" Padding="15,8" HorizontalAlignment="Left">
@@ -61,12 +62,17 @@
                             <DataGridTextColumn Header="№ Счета" Binding="{Binding InvoiceNumber}" Width="150"/>
                             <DataGridTextColumn Header="Дата" Binding="{Binding InvoiceDate, StringFormat=d}" Width="120"/>
                             <DataGridTextColumn Header="Сумма" Binding="{Binding AggregateAmount, StringFormat='{}{0:N2}'}" Width="150" FontWeight="Bold"/>
+                            
                             <DataGridTemplateColumn Header="Действия" Width="100">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
-                                            <Button Content="✏️" Background="Transparent" Padding="5"/>
-                                            <Button Content="❌" Foreground="Red" Background="Transparent" Padding="5"/>
+                                            <Button Content="✏️" Background="Transparent" Padding="5"
+                                                    Command="{ReflectionBinding #Root.DataContext.EditInvoiceCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                            <Button Content="❌" Foreground="Red" Background="Transparent" Padding="5"
+                                                    Command="{ReflectionBinding #Root.DataContext.DeleteInvoiceCommand}"
+                                                    CommandParameter="{Binding .}"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
@@ -78,12 +84,33 @@
 
             <TabItem Header="Акты">
                 <Grid RowDefinitions="Auto, *">
-                    <Button Grid.Row="0" Content="+ Создать акт" Classes="accent" Margin="0,10,0,15" Padding="15,8" HorizontalAlignment="Left"/>
+                    <Button Grid.Row="0" Command="{Binding CreateActCommand}" Classes="accent" Margin="0,10,0,15" Padding="15,8" HorizontalAlignment="Left">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Text="+" FontWeight="Bold"/>
+                            <TextBlock Text="Создать акт"/>
+                        </StackPanel>
+                    </Button>
+
                     <DataGrid Grid.Row="1" ItemsSource="{Binding Acts}" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="Horizontal">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="№ Акта" Binding="{Binding ActNumber}" Width="150"/>
                             <DataGridTextColumn Header="Дата" Binding="{Binding ActDate, StringFormat=d}" Width="120"/>
                             <DataGridTextColumn Header="Сумма" Binding="{Binding AggregateAmount, StringFormat='{}{0:N2}'}" Width="150" FontWeight="Bold"/>
+                            
+                            <DataGridTemplateColumn Header="Действия" Width="100">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
+                                            <Button Content="✏️" Background="Transparent" Padding="5"
+                                                    Command="{ReflectionBinding #Root.DataContext.EditActCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                            <Button Content="❌" Foreground="Red" Background="Transparent" Padding="5"
+                                                    Command="{ReflectionBinding #Root.DataContext.DeleteActCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
@@ -91,12 +118,33 @@
 
             <TabItem Header="Накладные">
                 <Grid RowDefinitions="Auto, *">
-                    <Button Grid.Row="0" Content="+ Создать накладную" Classes="accent" Margin="0,10,0,15" Padding="15,8" HorizontalAlignment="Left"/>
+                    <Button Grid.Row="0" Command="{Binding CreateWaybillCommand}" Classes="accent" Margin="0,10,0,15" Padding="15,8" HorizontalAlignment="Left">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Text="+" FontWeight="Bold"/>
+                            <TextBlock Text="Создать накладную"/>
+                        </StackPanel>
+                    </Button>
+
                     <DataGrid Grid.Row="1" ItemsSource="{Binding Waybills}" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="Horizontal">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="№ УПД" Binding="{Binding WaybillNumber}" Width="150"/>
                             <DataGridTextColumn Header="Дата" Binding="{Binding WaybillDate, StringFormat=d}" Width="120"/>
                             <DataGridTextColumn Header="Сумма" Binding="{Binding AggregateAmount, StringFormat='{}{0:N2}'}" Width="150" FontWeight="Bold"/>
+                            
+                            <DataGridTemplateColumn Header="Действия" Width="100">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
+                                            <Button Content="✏️" Background="Transparent" Padding="5"
+                                                    Command="{ReflectionBinding #Root.DataContext.EditWaybillCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                            <Button Content="❌" Foreground="Red" Background="Transparent" Padding="5"
+                                                    Command="{ReflectionBinding #Root.DataContext.DeleteWaybillCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>

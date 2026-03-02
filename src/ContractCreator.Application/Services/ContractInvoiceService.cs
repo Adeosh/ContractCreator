@@ -1,6 +1,7 @@
 ﻿using ContractCreator.Application.Interfaces;
 using ContractCreator.Domain.Interfaces;
 using ContractCreator.Domain.Models;
+using ContractCreator.Domain.Specifications.Contracts.Documents;
 using ContractCreator.Shared.DTOs;
 using Mapster;
 
@@ -25,31 +26,90 @@ namespace ContractCreator.Application.Services
         public async Task<ContractInvoiceDto?> GetByIdAsync(int id)
         {
             using var factory = _uowFactory.Create();
-            var invoice = await factory.Repository<ContractInvoice>().GetByIdAsync(id);
+
+            var spec = new InvoiceByIdWithDetailsSpec(id);
+            var invoice = await factory.Repository<ContractInvoice>().FirstOrDefaultAsync(spec);
+
             return invoice?.Adapt<ContractInvoiceDto>();
         }
 
         public async Task<int> CreateAsync(ContractInvoiceDto dto)
         {
             using var factory = _uowFactory.Create();
-            var entity = dto.Adapt<ContractInvoice>();
+            await factory.BeginTransactionAsync(); // Открываем транзакцию
 
-            await factory.Repository<ContractInvoice>().AddAsync(entity);
-            await factory.SaveChangesAsync();
+            try
+            {
+                var entity = dto.Adapt<ContractInvoice>();
 
-            return entity.Id;
+                await factory.Repository<ContractInvoice>().AddAsync(entity);
+                await factory.SaveChangesAsync();
+
+                if (dto.Items != null && dto.Items.Any())
+                {
+                    var itemRepo = factory.Repository<ContractInvoiceItem>();
+                    foreach (var itemDto in dto.Items)
+                    {
+                        var itemEntity = itemDto.Adapt<ContractInvoiceItem>();
+                        itemEntity.Id = 0;
+                        itemEntity.InvoiceId = entity.Id;
+                        await itemRepo.AddAsync(itemEntity);
+                    }
+                    await factory.SaveChangesAsync();
+                }
+
+                await factory.CommitTransactionAsync();
+                return entity.Id;
+            }
+            catch
+            {
+                await factory.RollbackTransactionAsync();
+                throw;
+            }
         }
 
         public async Task UpdateAsync(ContractInvoiceDto dto)
         {
             using var factory = _uowFactory.Create();
-            var entity = await factory.Repository<ContractInvoice>().GetByIdAsync(dto.Id);
-            if (entity == null) throw new Exception("Счет не найден");
+            await factory.BeginTransactionAsync();
 
-            dto.Adapt(entity);
+            try
+            {
+                var invoiceRepo = factory.Repository<ContractInvoice>();
+                var itemRepo = factory.Repository<ContractInvoiceItem>();
 
-            await factory.Repository<ContractInvoice>().UpdateAsync(entity);
-            await factory.SaveChangesAsync();
+                var spec = new InvoiceByIdWithDetailsSpec(dto.Id);
+                var entity = await invoiceRepo.FirstOrDefaultAsync(spec);
+
+                if (entity == null) throw new Exception("Счет не найден");
+
+                dto.Adapt(entity);
+                await invoiceRepo.UpdateAsync(entity);
+
+                foreach (var oldItem in entity.Items.ToList())
+                    await itemRepo.DeleteAsync(oldItem);
+
+                await factory.SaveChangesAsync();
+
+                if (dto.Items != null)
+                {
+                    foreach (var itemDto in dto.Items)
+                    {
+                        var itemEntity = itemDto.Adapt<ContractInvoiceItem>();
+                        itemEntity.Id = 0;
+                        itemEntity.InvoiceId = entity.Id;
+                        await itemRepo.AddAsync(itemEntity);
+                    }
+                }
+
+                await factory.SaveChangesAsync();
+                await factory.CommitTransactionAsync();
+            }
+            catch
+            {
+                await factory.RollbackTransactionAsync();
+                throw;
+            }
         }
 
         public async Task DeleteAsync(int id)

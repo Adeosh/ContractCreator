@@ -3,7 +3,7 @@
     public class ContractWaybillItemDto
     {
         public int Id { get; set; }
-        public int ActId { get; set; }
+        public int WaybillId { get; set; }
         public string NomenclatureName { get; set; } = string.Empty;
         public int Quantity { get; set; }
         public string? UnitOfMeasure { get; set; }

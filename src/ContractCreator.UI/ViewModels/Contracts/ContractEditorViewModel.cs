@@ -288,7 +288,7 @@
                 return;
             }
 
-            if (StepEditorItems.Any(x => x.QuantityToTake > x.AvailableQuantity)) // Проверяем, не ввел ли юзер больше, чем доступно
+            if (StepEditorItems.Any(x => x.QuantityToTake > x.AvailableQuantity))
             {
                 _dialogService.ShowMessageAsync("Количество в этапе не может превышать доступный остаток по спецификации.", "Ошибка", UserMessageType.Error);
                 return;
@@ -441,7 +441,9 @@
             {
                 var lowerSearch = searchText.ToLower();
                 var filtered = AllProducts.Where(p => p.Name.ToLower().Contains(lowerSearch)).ToList();
-                foreach (var p in filtered) FilteredProducts.Add(p);
+
+                foreach (var p in filtered) 
+                    FilteredProducts.Add(p);
             }
         }
 
