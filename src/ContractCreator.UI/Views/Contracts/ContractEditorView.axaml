@@ -42,19 +42,6 @@
 										</ComboBox>
 									</StackPanel>
 
-									<StackPanel Grid.Column="2" Spacing="5">
-										<TextBlock Text="Роль предприятия *" FontWeight="Bold"/>
-										<ComboBox ItemsSource="{Binding EnterpriseRoles}"
-												  SelectedItem="{Binding SelectedRole}"
-												  HorizontalAlignment="Stretch">
-											<ComboBox.ItemTemplate>
-												<DataTemplate>
-													<TextBlock Text="{Binding Converter={StaticResource EnumDescConverter}}"/>
-												</DataTemplate>
-											</ComboBox.ItemTemplate>
-										</ComboBox>
-									</StackPanel>
-
 									<StackPanel Grid.Column="4" Spacing="5">
 										<TextBlock Text="Текущая стадия *" FontWeight="Bold" Foreground="DarkOrange"/>
 										<ComboBox ItemsSource="{Binding AvailableStages}"

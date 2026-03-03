@@ -1,5 +1,6 @@
 ﻿using ContractCreator.Domain.Models;
 using ContractCreator.Domain.Models.Dictionaries;
+using ContractCreator.Domain.Models.Templates;
 using ContractCreator.Domain.ValueObjects;
 using ContractCreator.Infrastructure.Persistence.Converters;
 using Microsoft.EntityFrameworkCore;
@@ -31,6 +32,7 @@ namespace ContractCreator.Infrastructure.Persistence
         public DbSet<ContractStepItem> ContractStepItems { get; set; }
         public DbSet<Counterparty> Counterparties { get; set; }
         public DbSet<CounterpartyFile> CounterpartyFiles { get; set; }
+        public DbSet<DocumentTemplate> DocumentTemplates { get; set; }
         public DbSet<FileStorage> Files { get; set; }
         public DbSet<Firm> Firms { get; set; }
         public DbSet<FirmEconomicActivity> FirmEconomicActivities { get; set; }

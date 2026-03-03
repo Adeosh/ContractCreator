@@ -11,7 +11,6 @@ namespace ContractCreator.Infrastructure.Persistence.Configurations
             builder.ToTable("Contracts", schema: "public");
             builder.HasKey(e => e.Id);
             builder.Property(t => t.Type).HasConversion<byte>();
-            builder.Property(er => er.EnterpriseRole).HasConversion<byte>();
             builder.Property(i => i.Initiator).HasConversion<byte>();
 
             builder.Property(c => c.ContractNumber).HasMaxLength(50).IsRequired();

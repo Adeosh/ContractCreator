@@ -20,7 +20,6 @@
         [Reactive] public int Id { get; set; }
         [Reactive] public int FirmId { get; set; }
         [Reactive] public ContractType SelectedType { get; set; } = ContractType.Contract;
-        [Reactive] public ContractEnterpriseRole SelectedRole { get; set; } = ContractEnterpriseRole.Contractor;
         [Reactive] public ContractStageDto? SelectedStage { get; set; }
         [Reactive] public string ContractNumber { get; set; } = string.Empty;
         [Reactive] public decimal ContractPrice { get; set; }
@@ -43,7 +42,6 @@
         [Reactive] public bool IsCustomerRole { get; private set; }
 
         public ContractType[] ContractTypes => Enum.GetValues<ContractType>();
-        public ContractEnterpriseRole[] EnterpriseRoles => Enum.GetValues<ContractEnterpriseRole>();
         public TerminationInitiator[] Initiators => Enum.GetValues<TerminationInitiator>();
 
         public ObservableCollection<CounterpartyDto> Counterparties { get; } = new();
@@ -142,9 +140,6 @@
             this.WhenAnyValue(x => x.SelectedCounterparty)
                 .Subscribe(async cp => await LoadCounterpartyContactsAsync(cp?.Id));
 
-            this.WhenAnyValue(x => x.SelectedType, x => x.SelectedRole)
-                .Subscribe(_ => FilterAvailableStages());
-
             this.WhenAnyValue(x => x.SelectedStage)
                 .Subscribe(stage =>
                 {
@@ -172,9 +167,6 @@
                 .Subscribe(type => AttachedFilesVM.CurrentFileType =
                     type == ContractType.Contract ? FileType.Contract : FileType.Agreement);
 
-            this.WhenAnyValue(x => x.SelectedRole)
-                .Subscribe(role => IsCustomerRole = role == ContractEnterpriseRole.Customer);
-
             this.WhenAnyValue(x => x.ProductSearchText)
                 .Subscribe(FilterProducts);
 
@@ -186,17 +178,6 @@
             if (!AllStages.Any()) return;
 
             var excludedStages = new List<int>();
-
-            //if (SelectedRole == ContractEnterpriseRole.Customer)
-            //{
-            //    excludedStages.AddRange(new[]
-            //    {
-            //        (int)ContractStageType.ApplicationSubmission,
-            //        (int)ContractStageType.Tender,
-            //        (int)ContractStageType.TenderLost
-            //    });
-            //}
-
             var filteredStages = AllStages
                 .Where(s => s.TypeIds != null &&
                             s.TypeIds.Contains((int)SelectedType) &&
@@ -526,7 +507,6 @@
                     Id = dto.Id;
                     FirmId = dto.FirmId;
                     SelectedType = dto.Type;
-                    SelectedRole = dto.EnterpriseRole;
                     ContractNumber = dto.ContractNumber;
                     ContractPrice = dto.ContractPrice;
                     ContractSubject = dto.ContractSubject;
@@ -587,33 +567,9 @@
             if (SelectedStage == null) 
                 throw new UserMessageException("Статус не выбран.");
 
-            int stageId = SelectedStage.Id;
-
-            if (SelectedRole == ContractEnterpriseRole.Contractor)
-            {
-                if (stageId == (int)ContractStageType.Tender ||
-                    stageId == (int)ContractStageType.TenderLost ||
-                    stageId == (int)ContractStageType.Conclusion ||
-                    stageId == (int)ContractStageType.Concluded)
-                {
-                    ValidateCommonFields();
-                    ValidateContractorFields();
-                }
-            }
-            else if (SelectedRole == ContractEnterpriseRole.Customer)
-            {
-                if (stageId == (int)ContractStageType.Tender ||
-                    stageId == (int)ContractStageType.TenderLost ||
-                    stageId == (int)ContractStageType.Conclusion ||
-                    stageId == (int)ContractStageType.Concluded ||
-                    stageId == (int)ContractStageType.Execution ||
-                    stageId == (int)ContractStageType.Executed ||
-                    stageId == (int)ContractStageType.Paid)
-                {
-                    ValidateCommonFields();
-                    ValidateCustomerFields();
-                }
-            }
+            if (SelectedStage.Id != (int)ContractStageType.Draft ||
+                SelectedStage.Id != (int)ContractStageType.Agreement)
+                ValidateCommonFields();
 
             if (IsSubmission)
             {
@@ -647,18 +603,9 @@
 
             if (EndDate == null) 
                 throw new UserMessageException("Дата окончания не выбрана.");
-        }
 
-        private void ValidateContractorFields()
-        {
-            if (Specifications.Count == 0) 
+            if (Specifications.Count == 0)
                 throw new UserMessageException("Добавьте номенклатуру товара или услуги!");
-        }
-
-        private void ValidateCustomerFields()
-        {
-            if (ContractPrice <= 0) 
-                throw new UserMessageException("Введите сумму контракта или договора.");
         }
 
         private async Task SaveAsync()
@@ -678,7 +625,6 @@
                     Id = Id,
                     FirmId = FirmId,
                     Type = SelectedType,
-                    EnterpriseRole = SelectedRole,
                     ContractNumber = ContractNumber,
                     ContractPrice = ContractPrice,
                     ContractSubject = ContractSubject,

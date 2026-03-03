@@ -28,7 +28,6 @@ namespace ContractCreator.Application.Mapping.Entities
 
             config.NewConfig<Contract, ContractDto>()
                 .Map(dest => dest.Type, src => src.Type)
-                .Map(dest => dest.EnterpriseRole, src => src.EnterpriseRole)
                 .Map(dest => dest.Initiator, src => src.Initiator.HasValue ? (byte?)src.Initiator.Value : null)
                 .Map(dest => dest.CounterpartyName, src => src.Counterparty != null ? src.Counterparty.ShortName : string.Empty)
                 .Map(dest => dest.Specifications, src => src.Specifications)
@@ -38,7 +37,6 @@ namespace ContractCreator.Application.Mapping.Entities
             config.NewConfig<ContractDto, Contract>()
                 .AddDestinationTransform((string? x) => string.IsNullOrWhiteSpace(x) ? null : x)
                 .Map(dest => dest.Type, src => src.Type)
-                .Map(dest => dest.EnterpriseRole, src => src.EnterpriseRole)
                 .Map(dest => dest.Initiator, src => src.Initiator.HasValue ? (TerminationInitiator?)src.Initiator.Value : null)
                 .Ignore(dest => dest.Counterparty)
                 .Ignore(dest => dest.CounterpartySigner)

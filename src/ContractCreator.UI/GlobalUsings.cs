@@ -30,6 +30,7 @@ global using Microsoft.Extensions.Configuration;
 
 // Мои библиотеки
 global using ContractCreator.Application;
+global using ContractCreator.Application.Interfaces.Tools;
 global using ContractCreator.Infrastructure;
 global using ContractCreator.Infrastructure.Services.Gar;
 global using ContractCreator.Infrastructure.Services.Bic;

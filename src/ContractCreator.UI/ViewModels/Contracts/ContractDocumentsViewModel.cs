@@ -9,6 +9,7 @@
         private readonly IContractWaybillService _waybillService;
         private readonly INavigationService _navigation;
         private readonly IUserDialogService _dialogService;
+        private readonly IDocumentPrintService _printService;
 
         [Reactive] public int ContractId { get; set; }
         [Reactive] public ContractDto? ContractInfo { get; set; }
@@ -22,12 +23,15 @@
         public ReactiveCommand<Unit, Unit> CreateInvoiceCommand { get; }
         public ReactiveCommand<ContractInvoiceDto, Unit> EditInvoiceCommand { get; }
         public ReactiveCommand<ContractInvoiceDto, Unit> DeleteInvoiceCommand { get; }
+        public ReactiveCommand<ContractInvoiceDto, Unit> PrintInvoiceCommand { get; }
         public ReactiveCommand<Unit, Unit> CreateActCommand { get; }
         public ReactiveCommand<ContractActDto, Unit> EditActCommand { get; }
         public ReactiveCommand<ContractActDto, Unit> DeleteActCommand { get; }
+        public ReactiveCommand<ContractActDto, Unit> PrintActCommand { get; }
         public ReactiveCommand<Unit, Unit> CreateWaybillCommand { get; }
         public ReactiveCommand<ContractWaybillDto, Unit> EditWaybillCommand { get; }
         public ReactiveCommand<ContractWaybillDto, Unit> DeleteWaybillCommand { get; }
+        public ReactiveCommand<ContractWaybillDto, Unit> PrintWaybillCommand { get; }
         #endregion
 
         public ContractDocumentsViewModel(
@@ -36,7 +40,8 @@
             IContractActService actService,
             IContractWaybillService waybillService,
             INavigationService navigation,
-            IUserDialogService dialogService)
+            IUserDialogService dialogService,
+            IDocumentPrintService printService)
         {
             _contractService = contractService;
             _invoiceService = invoiceService;
@@ -44,20 +49,24 @@
             _waybillService = waybillService;
             _navigation = navigation;
             _dialogService = dialogService;
+            _printService = printService;
 
             CancelCommand = ReactiveCommand.Create(() => _navigation.NavigateBack());
 
             CreateInvoiceCommand = ReactiveCommand.Create(OpenInvoiceEditor);
             EditInvoiceCommand = ReactiveCommand.Create<ContractInvoiceDto>(EditInvoice);
             DeleteInvoiceCommand = ReactiveCommand.CreateFromTask<ContractInvoiceDto>(DeleteInvoiceAsync);
+            PrintInvoiceCommand = ReactiveCommand.CreateFromTask<ContractInvoiceDto>(PrintInvoiceAsync);
 
             CreateActCommand = ReactiveCommand.Create(OpenActEditor);
             EditActCommand = ReactiveCommand.Create<ContractActDto>(EditAct);
             DeleteActCommand = ReactiveCommand.CreateFromTask<ContractActDto>(DeleteActAsync);
+            PrintActCommand = ReactiveCommand.CreateFromTask<ContractActDto>(PrintActAsync);
 
             CreateWaybillCommand = ReactiveCommand.Create(OpenWaybillEditor);
             EditWaybillCommand = ReactiveCommand.Create<ContractWaybillDto>(EditWaybill);
             DeleteWaybillCommand = ReactiveCommand.CreateFromTask<ContractWaybillDto>(DeleteWaybillAsync);
+            PrintWaybillCommand = ReactiveCommand.CreateFromTask<ContractWaybillDto>(PrintWaybillAsync);
         }
 
         public async Task OnNavigatedToAsync(object? parameter = null)
@@ -127,6 +136,33 @@
             }
         }
 
+        private async Task PrintInvoiceAsync(ContractInvoiceDto invoice)
+        {
+            if (invoice == null) return;
+
+            try
+            {
+                string htmlContent = await _printService.GenerateHtmlAsync(invoice.Id, DocumentType.Invoice);
+                string tempPath = Path.Combine(
+                    Path.GetTempPath(),
+                    $"Счет_{invoice.InvoiceNumber}_{DateTime.Now:yyyy_MM_dd}.html"
+                );
+
+                await File.WriteAllTextAsync(tempPath, htmlContent, System.Text.Encoding.UTF8);
+
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = tempPath,
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Ошибка при печати счета");
+                await _dialogService.ShowMessageAsync($"Ошибка печати: {ex.Message}", "Ошибка", UserMessageType.Error);
+            }
+        }
+
         private void OpenActEditor() =>
             _navigation.NavigateTo<ActEditorViewModel>(new EditorParams { Mode = EditorMode.Create, ParentId = ContractId });
 
@@ -155,6 +191,33 @@
             }
         }
 
+        private async Task PrintActAsync(ContractActDto act)
+        {
+            if (act == null) return;
+
+            try
+            {
+                string htmlContent = await _printService.GenerateHtmlAsync(act.Id, DocumentType.Act);
+                string tempPath = Path.Combine(
+                    Path.GetTempPath(),
+                    $"Счет_{act.ActNumber}_{DateTime.Now:yyyy_MM_dd}.html"
+                );
+
+                await File.WriteAllTextAsync(tempPath, htmlContent, System.Text.Encoding.UTF8);
+
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = tempPath,
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Ошибка при печати акта");
+                await _dialogService.ShowMessageAsync($"Ошибка печати: {ex.Message}", "Ошибка", UserMessageType.Error);
+            }
+        }
+
         private void OpenWaybillEditor() =>
             _navigation.NavigateTo<WaybillEditorViewModel>(new EditorParams { Mode = EditorMode.Create, ParentId = ContractId });
 
@@ -180,6 +243,33 @@
             {
                 Log.Error(ex, "Ошибка при удалении накладной");
                 await _dialogService.ShowMessageAsync("Не удалось удалить накладную.", "Ошибка", UserMessageType.Error);
+            }
+        }
+
+        private async Task PrintWaybillAsync(ContractWaybillDto waybill)
+        {
+            if (waybill == null) return;
+
+            try
+            {
+                string htmlContent = await _printService.GenerateHtmlAsync(waybill.Id, DocumentType.Waybill);
+                string tempPath = Path.Combine(
+                    Path.GetTempPath(),
+                    $"Счет_{waybill.WaybillNumber}_{DateTime.Now:yyyy_MM_dd}.html"
+                );
+
+                await File.WriteAllTextAsync(tempPath, htmlContent, System.Text.Encoding.UTF8);
+
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = tempPath,
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Ошибка при печати накладной");
+                await _dialogService.ShowMessageAsync($"Ошибка печати: {ex.Message}", "Ошибка", UserMessageType.Error);
             }
         }
     }

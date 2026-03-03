@@ -8,8 +8,6 @@ namespace ContractCreator.Domain.Models
         public int Id { get; set; }
         /// <summary> Тип (Контракт/Договор) </summary>
         public ContractType Type { get; set; }
-        /// <summary> Роль предприятия </summary>
-        public ContractEnterpriseRole EnterpriseRole { get; set; }
         /// <summary> Номер </summary>
         public string ContractNumber { get; set; } = string.Empty;
         /// <summary> Цена </summary>

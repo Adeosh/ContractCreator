@@ -251,7 +251,8 @@
                     VATAmount = VATAmount,
                     AggregateAmount = AggregateAmount,
                     CurrencyId = CurrencyId,
-                    Items = InvoiceItems.ToList() // Передаем элементы в сервис для сохранения
+                    CountNomenclatureNames = InvoiceItems.Count,
+                    Items = InvoiceItems.ToList()
                 };
 
                 if (Id == 0)

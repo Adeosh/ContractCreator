@@ -1,6 +1,8 @@
-﻿namespace ContractCreator.Domain.ValueObjects
+﻿using ContractCreator.Shared.Interfaces;
+
+namespace ContractCreator.Domain.ValueObjects
 {
-    public sealed class AddressData
+    public sealed class AddressData : IAddress
     {
         /// <summary>Ссылка на ObjectId по ГАР <</summary>
         public long ObjectId { get; set; }

@@ -51,7 +51,6 @@ namespace ContractCreator.Tests.Unit.Services
                 FirmId = 10,
                 CounterpartyId = 20,
                 Type = ContractType.Contract,
-                EnterpriseRole = ContractEnterpriseRole.Contractor,
                 ContractNumber = "№ 123-А",
                 ContractPrice = 15000.00m,
                 ContractSubject = "Оказание услуг",
@@ -76,7 +75,6 @@ namespace ContractCreator.Tests.Unit.Services
             result.ContractNumber.Should().Be("№ 123-А");
             result.ContractPrice.Should().Be(15000.00m);
             result.Type.Should().Be(ContractType.Contract);
-            result.EnterpriseRole.Should().Be(ContractEnterpriseRole.Contractor);
         }
 
         [Fact]
@@ -104,7 +102,6 @@ namespace ContractCreator.Tests.Unit.Services
                 FirmId = 10,
                 CounterpartyId = 20,
                 Type = ContractType.Agreement,
-                EnterpriseRole = ContractEnterpriseRole.Customer,
                 ContractNumber = "AGR-001",
                 ContractPrice = 50000m,
                 ContractSubject = "Поставка оборудования",

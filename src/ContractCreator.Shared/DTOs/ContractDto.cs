@@ -7,7 +7,6 @@ namespace ContractCreator.Shared.DTOs
     {
         public int Id { get; set; }
         public ContractType Type { get; set; }
-        public ContractEnterpriseRole EnterpriseRole { get; set; }
         public string ContractNumber { get; set; } = string.Empty;
         public decimal ContractPrice { get; set; }
         public string? ContractSubject { get; set; }

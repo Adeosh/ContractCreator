@@ -78,7 +78,6 @@ namespace ContractCreator.Tests.Unit.Data
             FirmId = firmId,
             CounterpartyId = counterpartyId,
             Type = ContractType.Contract,
-            EnterpriseRole = ContractEnterpriseRole.Contractor,
             ContractNumber = $"DOC-{id}",
             ContractPrice = 150000m,
             ContractSubject = "Оказание услуг по разработке",

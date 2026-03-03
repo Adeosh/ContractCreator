@@ -1,8 +1,11 @@
 ﻿using ContractCreator.Application.Interfaces;
 using ContractCreator.Domain.Interfaces;
 using ContractCreator.Domain.Models;
+using ContractCreator.Domain.Services;
 using ContractCreator.Domain.Specifications.Contracts.Documents;
 using ContractCreator.Shared.DTOs;
+using ContractCreator.Shared.DTOs.PrintForms;
+using ContractCreator.Shared.Helpers;
 using Mapster;
 
 namespace ContractCreator.Application.Services
@@ -36,7 +39,7 @@ namespace ContractCreator.Application.Services
         public async Task<int> CreateAsync(ContractInvoiceDto dto)
         {
             using var factory = _uowFactory.Create();
-            await factory.BeginTransactionAsync(); // Открываем транзакцию
+            await factory.BeginTransactionAsync();
 
             try
             {
@@ -121,6 +124,115 @@ namespace ContractCreator.Application.Services
                 await factory.Repository<ContractInvoice>().DeleteAsync(entity);
                 await factory.SaveChangesAsync();
             }
+        }
+
+        public async Task<InvoicePrintDto> GetPrintDataAsync(int invoiceId)
+        {
+            using var factory = _uowFactory.Create();
+
+            var spec = new InvoicePrintSpec(invoiceId);
+            var invoice = await factory.Repository<ContractInvoice>().FirstOrDefaultAsync(spec);
+
+            if (invoice == null)
+                throw new Exception($"Счет с ID {invoiceId} не найден.");
+            if (invoice.Contract == null)
+                throw new Exception($"У счета №{invoice.InvoiceNumber} отсутствует привязка к контракту.");
+            if (invoice.Contract.Firm == null)
+                throw new Exception($"В контракте счета №{invoice.InvoiceNumber} не указана ваша фирма (Исполнитель).");
+            if (invoice.Contract.Counterparty == null)
+                throw new Exception($"В контракте счета №{invoice.InvoiceNumber} не указан контрагент (Заказчик).");
+
+            var firm = invoice.Contract.Firm;
+            var counterparty = invoice.Contract.Counterparty;
+
+            var bank = firm.BankAccounts?.FirstOrDefault(b => b.Id == invoice.BankAccountId);
+            if (bank == null)
+                throw new Exception("Не найдены банковские реквизиты, указанные в счете. Возможно, счет был удален.");
+
+            string firmFullData = DataHelper.CreateOrganizationFullDataString(
+                fullName: firm.FullName,
+                inn: firm.INN,
+                kpp: firm.KPP,
+                address: firm.ActualAddress,
+                phone: firm.Phone,
+                email: firm.Email
+            );
+
+            string counterpartyFullData = DataHelper.CreateOrganizationFullDataString(
+                fullName: counterparty.FullName,
+                inn: counterparty.INN,
+                kpp: counterparty.KPP,
+                address: counterparty.ActualAddress,
+                phone: counterparty.Phone,
+                email: counterparty.Email ?? string.Empty
+            );
+
+            string directorName = "Не указан";
+            string accountantName = "Не указан";
+
+            if (firm.Workers != null)
+            {
+                var dir = firm.Workers.FirstOrDefault(w => w.IsDirector && !w.IsDeleted);
+                if (dir != null)
+                    directorName = DataHelper.CreateFIOString(dir.LastName, dir.FirstName, dir.MiddleName ?? string.Empty, "s");
+
+                var acc = firm.Workers.FirstOrDefault(w => w.IsAccountant && !w.IsDeleted);
+                if (acc != null)
+                    accountantName = DataHelper.CreateFIOString(acc.LastName, acc.FirstName, acc.MiddleName ?? string.Empty, "s");
+            }
+
+            var dto = new InvoicePrintDto
+            {
+                DocumentId = Guid.NewGuid(),
+                DocumentDate = DateTime.Now,
+
+                InvoiceNumber = invoice.InvoiceNumber,
+                InvoiceDate = invoice.InvoiceDate.ToString("dd.MM.yyyy"),
+
+                BIC = bank.BIC,
+                CorrespondentAccount = bank.CorrespondentAccount ?? "",
+                PaidAccount = bank.AccountNumber,
+                BankInfo = string.Join(" - ", new[] { bank.BankName, bank.BankAddress }.Where(s => !string.IsNullOrWhiteSpace(s))),
+
+                INN = invoice.PurchaserINN,
+                KPP = invoice.PurchaserKPP,
+                RecipientName = firm.FullName,
+
+                FirmFullData = firmFullData,
+                CounterpartyFullData = counterpartyFullData,
+
+                TotalAmount = invoice.TotalAmount ?? 0,
+                FormattedTotalAmount = CurrencyFormatter.ShortFormatCurrency(invoice.TotalAmount ?? 0, invoice.CurrencyId),
+                VATAmount = invoice.VATAmount ?? 0,
+                FormattedVATAmount = CurrencyFormatter.ShortFormatCurrency(invoice.VATAmount ?? 0, invoice.CurrencyId),
+                AggregateAmount = invoice.AggregateAmount,
+                FormattedAggregateAmount = CurrencyFormatter.ShortFormatCurrency(invoice.AggregateAmount, invoice.CurrencyId),
+
+                AmountInWords = CurrencyFormatter.AmountToWords(invoice.AggregateAmount, invoice.CurrencyId),
+                CountNomenclatureNames = invoice.Items?.Count ?? 0,
+
+                DirectorName = directorName,
+                AccountantName = accountantName,
+            };
+
+            if (invoice.Items != null && invoice.Items.Any())
+            {
+                int num = 1;
+                foreach (var item in invoice.Items.OrderBy(i => i.Id))
+                {
+                    dto.Items.Add(new InvoicePrintItemDto
+                    {
+                        Number = num++,
+                        NomenclatureName = item.NomenclatureName,
+                        Quantity = item.Quantity,
+                        Unit = item.UnitOfMeasure ?? "шт.",
+                        UnitPrice = item.UnitPrice,
+                        TotalAmount = item.TotalAmount
+                    });
+                }
+            }
+
+            return dto;
         }
     }
 }

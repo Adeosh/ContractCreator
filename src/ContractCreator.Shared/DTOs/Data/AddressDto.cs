@@ -1,6 +1,8 @@
-﻿namespace ContractCreator.Shared.DTOs.Data
+﻿using ContractCreator.Shared.Interfaces;
+
+namespace ContractCreator.Shared.DTOs.Data
 {
-    public class AddressDto
+    public class AddressDto : IAddress
     {
         public long ObjectId { get; set; }
         public string FullAddress { get; set; } = string.Empty;

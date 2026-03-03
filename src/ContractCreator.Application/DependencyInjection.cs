@@ -1,6 +1,8 @@
 ﻿using ContractCreator.Application.Interfaces;
+using ContractCreator.Application.Interfaces.Tools;
 using ContractCreator.Application.Mapping;
 using ContractCreator.Application.Services;
+using ContractCreator.Application.Services.Tools;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ContractCreator.Application
@@ -20,6 +22,7 @@ namespace ContractCreator.Application
             services.AddScoped<IContractStepService, ContractStepService>();
             services.AddScoped<IContractSpecificationService, ContractSpecificationService>();
             services.AddScoped<ICounterpartyService, CounterpartyService>();
+            services.AddScoped<IDocumentPrintService, DocumentPrintService>();
             services.AddScoped<IFirmService, FirmService>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IWorkerService, WorkerService>();

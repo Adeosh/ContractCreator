@@ -1,4 +1,5 @@
 ﻿using ContractCreator.Shared.DTOs;
+using ContractCreator.Shared.DTOs.PrintForms;
 
 namespace ContractCreator.Application.Interfaces
 {
@@ -9,5 +10,6 @@ namespace ContractCreator.Application.Interfaces
         Task<int> CreateAsync(ContractActDto dto);
         Task UpdateAsync(ContractActDto dto);
         Task DeleteAsync(int id);
+        Task<ActPrintDto> GetPrintDataAsync(int actId);
     }
 }

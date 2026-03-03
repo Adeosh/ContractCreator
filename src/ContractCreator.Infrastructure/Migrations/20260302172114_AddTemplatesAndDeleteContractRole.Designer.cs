@@ -3,6 +3,7 @@ using System;
 using ContractCreator.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ContractCreator.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260302172114_AddTemplatesAndDeleteContractRole")]
+    partial class AddTemplatesAndDeleteContractRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -757,11 +760,11 @@ namespace ContractCreator.Infrastructure.Migrations
                     b.Property<int>("InvoiceId")
                         .HasColumnType("integer");
 
-                    b.Property<decimal?>("TotalAmount")
+                    b.Property<decimal>("TotalAmount")
                         .HasPrecision(18, 2)
                         .HasColumnType("numeric(18,2)");
 
-                    b.Property<decimal?>("VATAmount")
+                    b.Property<decimal>("VATAmount")
                         .HasPrecision(18, 2)
                         .HasColumnType("numeric(18,2)");
 
@@ -804,8 +807,8 @@ namespace ContractCreator.Infrastructure.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
-                    b.Property<int>("Quantity")
-                        .HasColumnType("integer");
+                    b.Property<decimal>("Quantity")
+                        .HasColumnType("numeric");
 
                     b.Property<decimal>("TotalAmount")
                         .ValueGeneratedOnAddOrUpdate()

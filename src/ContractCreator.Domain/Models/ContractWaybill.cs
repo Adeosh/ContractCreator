@@ -9,9 +9,9 @@ namespace ContractCreator.Domain.Models
         public int InvoiceId { get; set; }
         public required string WaybillNumber { get; set; }
         public DateOnly WaybillDate { get; set; }
-        public decimal TotalAmount { get; set; }
+        public decimal? TotalAmount { get; set; }
         public decimal VATRate { get; set; }
-        public decimal VATAmount { get; set; }
+        public decimal? VATAmount { get; set; }
         public decimal AggregateAmount { get; set; }
         public int CurrencyId { get; set; }
 

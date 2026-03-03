@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Reactive;
-using System.Threading.Tasks;
-using ContractCreator.Application.Interfaces;
-namespace ContractCreator.UI.ViewModels.Contracts.Documents
+﻿namespace ContractCreator.UI.ViewModels.Contracts.Documents
 {
     public class ActEditorViewModel : ViewModelBase, INavigatedAware
     {
@@ -15,6 +9,9 @@ namespace ContractCreator.UI.ViewModels.Contracts.Documents
         private readonly ICounterpartyService _counterpartyService;
         private readonly INavigationService _navigation;
         private readonly IUserDialogService _dialogService;
+
+        private int _contractorId;
+        private int _customerId;
 
         public string PageTitle => Id == 0 ? "Создание Акта выполненных работ" : $"Акт № {ActNumber}";
 
@@ -140,6 +137,9 @@ namespace ContractCreator.UI.ViewModels.Contracts.Documents
                 if (contract == null) return;
 
                 CurrencyId = contract.CurrencyId;
+
+                _contractorId = contract.FirmSignerId;
+                _customerId = contract.CounterpartySignerId ?? 0;
 
                 var cp = await _counterpartyService.GetCounterpartyByIdAsync(contract.CounterpartyId);
                 if (cp != null) 
@@ -312,6 +312,8 @@ namespace ContractCreator.UI.ViewModels.Contracts.Documents
                     VATAmount = VATAmount,
                     AggregateAmount = AggregateAmount,
                     CurrencyId = CurrencyId,
+                    ContractorId = _contractorId,
+                    CustomerId = _customerId,
                     Items = ActItems.ToList()
                 };
 
