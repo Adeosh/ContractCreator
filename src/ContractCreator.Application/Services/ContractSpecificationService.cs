@@ -25,7 +25,7 @@ namespace ContractCreator.Application.Services
         public async Task<ContractSpecificationDto?> GetByIdAsync(int id)
         {
             using var factory = _uowFactory.Create();
-            var specification = await factory.Repository<ContractInvoice>().GetByIdAsync(id);
+            var specification = await factory.Repository<ContractSpecification>().GetByIdAsync(id);
             return specification?.Adapt<ContractSpecificationDto>();
         }
 

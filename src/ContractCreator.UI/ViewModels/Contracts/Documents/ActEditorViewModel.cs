@@ -138,7 +138,7 @@
 
                 CurrencyId = contract.CurrencyId;
 
-                _contractorId = contract.FirmSignerId;
+                _contractorId = contract.FirmSignerId ?? 0;
                 _customerId = contract.CounterpartySignerId ?? 0;
 
                 var cp = await _counterpartyService.GetCounterpartyByIdAsync(contract.CounterpartyId);

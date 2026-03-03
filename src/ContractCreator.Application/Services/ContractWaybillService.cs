@@ -39,14 +39,14 @@ namespace ContractCreator.Application.Services
         public async Task<int> CreateAsync(ContractWaybillDto dto)
         {
             using var factory = _uowFactory.Create();
-            await factory.BeginTransactionAsync(); // Открываем транзакцию
+            await factory.BeginTransactionAsync();
 
             try
             {
                 var entity = dto.Adapt<ContractWaybill>();
 
                 await factory.Repository<ContractWaybill>().AddAsync(entity);
-                await factory.SaveChangesAsync(); // Сохраняем, чтобы получить Id шапки
+                await factory.SaveChangesAsync();
 
                 if (dto.Items != null && dto.Items.Any())
                 {

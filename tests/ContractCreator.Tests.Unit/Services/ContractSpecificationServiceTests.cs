@@ -1,5 +1,4 @@
-﻿using ContractCreator.Application.Interfaces;
-using ContractCreator.Application.Mapping;
+﻿using ContractCreator.Application.Mapping;
 using ContractCreator.Application.Services;
 using ContractCreator.Domain.Interfaces;
 using ContractCreator.Domain.Models;
@@ -32,16 +31,19 @@ namespace ContractCreator.Tests.Unit.Services
         [Fact]
         public async Task GetByContractIdAsync_ShouldReturnFilteredList()
         {
+            // Arrange
             var contractId = 5;
             var list = new List<ContractSpecification>
             {
                 TestDataFactory.CreateSpecification(1, contractId),
-                TestDataFactory.CreateSpecification(2, 999) // Другой контракт
+                TestDataFactory.CreateSpecification(2, 999)
             };
             _repoMock.Setup(x => x.ListAllAsync()).ReturnsAsync(list);
 
+            // Act
             var result = await _service.GetByContractIdAsync(contractId);
 
+            // Assert
             result.Should().HaveCount(1);
             result.First().ContractId.Should().Be(contractId);
         }
@@ -49,10 +51,13 @@ namespace ContractCreator.Tests.Unit.Services
         [Fact]
         public async Task CreateAsync_ShouldAddAndSave()
         {
+            // Arrange
             var dto = new ContractSpecificationDto { Id = 1, ContractId = 1, NomenclatureName = "Test" };
 
+            // Act
             await _service.CreateAsync(dto);
 
+            // Assert
             _repoMock.Verify(x => x.AddAsync(It.IsAny<ContractSpecification>()), Times.Once);
             _uowMock.Verify(x => x.SaveChangesAsync(default), Times.Once);
         }
@@ -60,12 +65,15 @@ namespace ContractCreator.Tests.Unit.Services
         [Fact]
         public async Task UpdateAsync_ShouldUpdateAndSave()
         {
+            // Arrange
             var entity = TestDataFactory.CreateSpecification(1);
             var dto = new ContractSpecificationDto { Id = 1, NomenclatureName = "NewName" };
             _repoMock.Setup(x => x.GetByIdAsync(1)).ReturnsAsync(entity);
 
+            // Act
             await _service.UpdateAsync(dto);
 
+            // Assert
             entity.NomenclatureName.Should().Be("NewName");
             _repoMock.Verify(x => x.UpdateAsync(entity), Times.Once);
             _uowMock.Verify(x => x.SaveChangesAsync(default), Times.Once);
@@ -74,11 +82,14 @@ namespace ContractCreator.Tests.Unit.Services
         [Fact]
         public async Task DeleteAsync_ShouldCallDelete_WhenExists()
         {
+            // Arrange
             var entity = TestDataFactory.CreateSpecification(1);
             _repoMock.Setup(x => x.GetByIdAsync(1)).ReturnsAsync(entity);
 
+            // Act
             await _service.DeleteAsync(1);
 
+            // Assert
             _repoMock.Verify(x => x.DeleteAsync(entity), Times.Once);
             _uowMock.Verify(x => x.SaveChangesAsync(default), Times.Once);
         }

@@ -28,29 +28,45 @@ namespace ContractCreator.Tests.Unit.Services
         [Fact]
         public async Task GetByIdAsync_ShouldReturnDto()
         {
+            // Arrange
             var entity = TestDataFactory.CreateAct(1);
-            _repoMock.Setup(x => x.GetByIdAsync(1)).ReturnsAsync(entity);
+            _repoMock.Setup(x => x.FirstOrDefaultAsync(It.IsAny<ISpecification<ContractAct>>()))
+                     .ReturnsAsync(entity);
 
+            // Act
             var result = await _service.GetByIdAsync(1);
+
+            // Assert
             result.Should().NotBeNull();
+            result!.ActNumber.Should().Be(entity.ActNumber);
         }
 
         [Fact]
         public async Task CreateAsync_ShouldAddAndSave()
         {
+            // Arrange
             var dto = new ContractActDto { Id = 1, ContractId = 1, ActNumber = "A-1" };
+
+            // Act
             await _service.CreateAsync(dto);
+
+            // Assert
             _repoMock.Verify(x => x.AddAsync(It.IsAny<ContractAct>()), Times.Once);
         }
 
         [Fact]
         public async Task UpdateAsync_ShouldUpdateAndSave()
         {
+            // Arrange
             var entity = TestDataFactory.CreateAct(1);
             var dto = new ContractActDto { Id = 1, ActNumber = "NEW-A" };
-            _repoMock.Setup(x => x.GetByIdAsync(1)).ReturnsAsync(entity);
+            _repoMock.Setup(x => x.FirstOrDefaultAsync(It.IsAny<ISpecification<ContractAct>>()))
+                     .ReturnsAsync(entity);
 
+            // Act
             await _service.UpdateAsync(dto);
+
+            // Assert
             entity.ActNumber.Should().Be("NEW-A");
             _repoMock.Verify(x => x.UpdateAsync(entity), Times.Once);
         }
@@ -58,9 +74,14 @@ namespace ContractCreator.Tests.Unit.Services
         [Fact]
         public async Task DeleteAsync_ShouldCallDelete()
         {
+            // Arrange
             var entity = TestDataFactory.CreateAct(1);
             _repoMock.Setup(x => x.GetByIdAsync(1)).ReturnsAsync(entity);
+
+            // Act
             await _service.DeleteAsync(1);
+
+            // Assert
             _repoMock.Verify(x => x.DeleteAsync(entity), Times.Once);
         }
     }

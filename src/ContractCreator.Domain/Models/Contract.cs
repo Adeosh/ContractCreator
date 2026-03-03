@@ -48,7 +48,7 @@ namespace ContractCreator.Domain.Models
         public virtual Firm Firm { get; set; } = null!;
 
         /// <summary> Подписант со стороны предприятия <see cref="Worker.ID"/></summary>
-        public int FirmSignerId { get; set; }
+        public int? FirmSignerId { get; set; }
         public virtual Worker? FirmSigner { get; set; }
 
         /// <summary> Валюта </summary>

@@ -182,6 +182,7 @@ namespace ContractCreator.Application.Services
                     }
                 }
 
+                await factory.SaveChangesAsync();
                 await factory.CommitTransactionAsync();
 
                 return entity.Id;

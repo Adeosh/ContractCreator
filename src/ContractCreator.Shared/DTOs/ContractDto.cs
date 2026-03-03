@@ -24,7 +24,7 @@ namespace ContractCreator.Shared.DTOs
         public string CounterpartyName { get; set; } = string.Empty;
         public int? CounterpartySignerId { get; set; }
         public int FirmId { get; set; }
-        public int FirmSignerId { get; set; }
+        public int? FirmSignerId { get; set; }
         public int CurrencyId { get; set; }
         public int StageTypeId { get; set; }
 
