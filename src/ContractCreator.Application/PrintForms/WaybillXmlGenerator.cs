@@ -28,26 +28,70 @@ namespace ContractCreator.Application.PrintForms
                 else lstErrors.Add(error);
             }
 
-            if (dto == null) 
+            if (dto == null)
                 throw new ArgumentNullException(nameof(dto), "Передан пустой набор данных");
 
-            if (string.IsNullOrWhiteSpace(dto.WaybillNumber)) 
+            if (dto.DocumentId == Guid.Empty)
+                HandleException("Не заполнен уникальный идентификатор документа (Guid)");
+
+            if (string.IsNullOrWhiteSpace(dto.ApplicationName))
+                HandleException("Не указано название системы-источника");
+
+            if (string.IsNullOrWhiteSpace(dto.WaybillNumber))
                 HandleException("Не заполнен номер накладной");
 
             if (string.IsNullOrWhiteSpace(dto.WaybillDate))
                 HandleException("Не заполнена дата накладной");
 
-            if (dto.AggregateAmount <= 0) 
-                HandleException("Общая сумма должна быть больше нуля");
+            if (string.IsNullOrWhiteSpace(dto.ContractInfo))
+                HandleException("Отсутствует информация об основании (договоре)");
 
-            if (string.IsNullOrWhiteSpace(dto.SupplierFullData)) 
-                HandleException("Не заполнены реквизиты поставщика");
+            if (string.IsNullOrWhiteSpace(dto.SupplierFullData))
+                HandleException("Не заполнены полные реквизиты Поставщика");
 
-            if (string.IsNullOrWhiteSpace(dto.PayerFullData)) 
-                HandleException("Не заполнены реквизиты плательщика");
+            if (string.IsNullOrWhiteSpace(dto.PayerFullData))
+                HandleException("Не заполнены полные реквизиты Плательщика");
 
-            if (dto.Items == null || !dto.Items.Any()) 
-                HandleException("Не добавлено ни одной позиции");
+            if (string.IsNullOrWhiteSpace(dto.ConsignorFullData))
+                HandleException("Не заполнены реквизиты Грузоотправителя");
+
+            if (string.IsNullOrWhiteSpace(dto.ConsigneeFullData))
+                HandleException("Не заполнены реквизиты Грузополучателя");
+
+            if (string.IsNullOrWhiteSpace(dto.DirectorName))
+                HandleException("Не указано ФИО руководителя");
+
+            if (string.IsNullOrWhiteSpace(dto.CustomerSignatoryName))
+                HandleException("Не указано ФИО представителя заказчика");
+
+            if (dto.AggregateAmount <= 0)
+                HandleException("Итоговая сумма (с НДС) должна быть больше нуля");
+
+            if (string.IsNullOrWhiteSpace(dto.AmountInWords))
+                HandleException("Не заполнена сумма прописью");
+
+            if (dto.Items == null || !dto.Items.Any())
+            {
+                HandleException("В накладной не может быть 0 позиций");
+            }
+            else
+            {
+                foreach (var item in dto.Items)
+                {
+                    var idx = dto.Items.IndexOf(item) + 1;
+                    if (string.IsNullOrWhiteSpace(item.Nomenclature))
+                        HandleException($"В позиции №{idx} не указано наименование товара");
+
+                    if (item.Quantity <= 0)
+                        HandleException($"В позиции №{idx} ({item.Nomenclature}) количество должно быть больше 0");
+
+                    if (item.UnitPrice < 0)
+                        HandleException($"В позиции №{idx} указана отрицательная цена");
+
+                    if (string.IsNullOrWhiteSpace(item.Unit))
+                        HandleException($"В позиции №{idx} не указана единица измерения");
+                }
+            }
 
             return lstErrors;
         }

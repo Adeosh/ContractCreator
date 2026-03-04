@@ -13,8 +13,6 @@ namespace ContractCreator.Domain.Specifications
     /// <typeparam name="T">Тип сущности, к которой применяется спецификация.</typeparam>
     public abstract class BaseSpecification<T> : ISpecification<T>
     {
-        public BaseSpecification() { }
-
         /// <summary>
         /// Создает спецификацию с заданным критерием фильтрации (Where).
         /// </summary>
@@ -26,8 +24,8 @@ namespace ContractCreator.Domain.Specifications
 
         public Expression<Func<T, bool>> Criteria { get; }
         public List<Expression<Func<T, object>>> Includes { get; } = new();
-        public Expression<Func<T, object>> OrderBy { get; private set; }
-        public Expression<Func<T, object>> OrderByDescending { get; private set; }
+        public Expression<Func<T, object>>? OrderBy { get; private set; }
+        public Expression<Func<T, object>>? OrderByDescending { get; private set; }
         public List<string> IncludeStrings { get; } = new();
         public int Take { get; private set; }
         public int Skip { get; private set; }

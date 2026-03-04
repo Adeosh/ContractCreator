@@ -1,5 +1,4 @@
 ﻿using ContractCreator.Domain.Models;
-using ContractCreator.Domain.Models.Dictionaries;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

@@ -96,7 +96,7 @@ namespace ContractCreator.Application.Services
                 var historyRepo = factory.Repository<ContractStageChangeHistory>();
                 var fileRepo = factory.Repository<ContractFile>();
 
-                Contract entity;
+                Contract? entity;
                 bool isNewContract = dto.Id == 0;
 
                 if (isNewContract)

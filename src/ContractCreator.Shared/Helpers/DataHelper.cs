@@ -47,7 +47,7 @@ namespace ContractCreator.Shared.Helpers
         /// </list>
         /// </remarks>
         /// <returns>ФИО в заданном формате одной строкой</returns>
-        public static string CreateFIOString(string sName, string name, string fName, string format, string additionalInfo = null)
+        public static string CreateFIOString(string sName, string name, string fName, string format, string? additionalInfo = null)
         {
             if (string.IsNullOrEmpty(format) == true)
             {

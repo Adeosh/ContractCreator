@@ -19,7 +19,7 @@ namespace ContractCreator.Application.Mapping.Entities
             config.NewConfig<FirmDto, Firm>()
                 .AddDestinationTransform((string? x) => string.IsNullOrWhiteSpace(x) ? null : x)
                 .Ignore(dest => dest.CreatedDate)
-                .Ignore(dest => dest.UpdatedDate)
+                .Ignore(dest => dest.UpdatedDate!)
                 .Ignore(dest => dest.BankAccounts)
                 .Ignore(dest => dest.Workers)
                 .Ignore(dest => dest.Contracts)

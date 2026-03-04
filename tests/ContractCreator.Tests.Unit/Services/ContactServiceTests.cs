@@ -71,7 +71,6 @@ namespace ContractCreator.Tests.Unit.Services
                 }
             };
 
-            // Настраиваем FindAsync с компиляцией выражения (чтобы Linq работал в памяти)
             _contactRepoMock
                 .Setup(x => x.FindAsync(It.IsAny<Expression<Func<Contact, bool>>>()))
                 .ReturnsAsync((Expression<Func<Contact, bool>> predicate) =>

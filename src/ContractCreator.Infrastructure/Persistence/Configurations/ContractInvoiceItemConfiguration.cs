@@ -1,9 +1,6 @@
 ﻿using ContractCreator.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ContractCreator.Infrastructure.Persistence.Configurations
 {

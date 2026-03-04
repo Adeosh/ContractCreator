@@ -63,7 +63,7 @@ namespace ContractCreator.Tests.Unit.Services
                 FullName = "Тестовая фирма",
                 ShortName = "ТФ",
                 Phone = "+7 922 344 99 00",
-                Email = new EmailAddress("test@firm.ru"),
+                Email = new EmailAddress("test@firm.ru")!,
                 LegalAddress = new AddressDto
                 {
                     FullAddress = "обл Ленинградская, г.о. Сосновоборский, г Сосновый Бор, ул Ленинградская",
@@ -138,7 +138,7 @@ namespace ContractCreator.Tests.Unit.Services
                 FullName = "Обновленная фирма",
                 ShortName = "ОФ",
                 Phone = "+7 922 344 55 00",
-                Email = new EmailAddress("update@firm.ru"),
+                Email = new EmailAddress("update@firm.ru")!,
                 LegalAddress = new AddressDto
                 {
                     FullAddress = "обл Новосибирская, г.о. город Новосибирск, г Новосибирск, ул Прогулочная",
@@ -174,7 +174,6 @@ namespace ContractCreator.Tests.Unit.Services
                 OkopfId = 321
             };
 
-            // Настраиваем мок: GetByIdAsync должен вернуть нашу фирму
             _firmRepoMock.Setup(x => x.FirstOrDefaultAsync(It.IsAny<ISpecification<Firm>>()))
                 .ReturnsAsync(existingFirm);
 
@@ -195,15 +194,12 @@ namespace ContractCreator.Tests.Unit.Services
             // Arrange
             var dto = new FirmDto { Id = 999 };
 
-            // Настраиваем мок: возвращаем null (не найдено)
             _firmRepoMock.Setup(x => x.GetByIdAsync(999)).ReturnsAsync((Firm?)null);
 
             // Act & Assert
-            // Ожидаем исключение Exception с текстом "Фирма не найдена"
             var exception = await Assert.ThrowsAsync<Exception>(() => _service.UpdateFirmAsync(dto));
             exception.Message.Should().Be("Фирма не найдена");
 
-            // Убеждаемся, что Update и SaveChanges НЕ вызывались
             _firmRepoMock.Verify(x => x.UpdateAsync(It.IsAny<Firm>()), Times.Never);
             _uowMock.Verify(x => x.SaveChangesAsync(default), Times.Never);
         }
@@ -236,7 +232,6 @@ namespace ContractCreator.Tests.Unit.Services
             await _service.DeleteFirmAsync(777);
 
             // Assert
-            // Убеждаемся, что Delete и SaveChanges НЕ вызывались
             _firmRepoMock.Verify(x => x.DeleteAsync(It.IsAny<Firm>()), Times.Never);
             _uowMock.Verify(x => x.SaveChangesAsync(default), Times.Never);
         }

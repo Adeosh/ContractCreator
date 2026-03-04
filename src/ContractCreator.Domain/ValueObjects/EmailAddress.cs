@@ -10,11 +10,16 @@ namespace ContractCreator.Domain.ValueObjects
 
         public EmailAddress(string value)
         {
-            if (string.IsNullOrWhiteSpace(value)) throw new ArgumentException("Эл. почта не заполнена!");
+            if (string.IsNullOrWhiteSpace(value)) 
+                throw new ArgumentException("Эл. почта не заполнена!");
+
             Value = value;
         }
 
-        protected EmailAddress() { }
+        protected EmailAddress()
+        {
+            Value = string.Empty;
+        }
 
         public static EmailAddress Create(string email)
         {
@@ -31,6 +36,6 @@ namespace ContractCreator.Domain.ValueObjects
 
         public override string ToString() => Value;
 
-        public static implicit operator string(EmailAddress email) => email.Value;
+        public static implicit operator string?(EmailAddress? email) => email?.Value;
     }
 }

@@ -9,7 +9,7 @@ namespace ContractCreator.Domain.Specifications.Counterparties
             AddInclude(x => x.BankAccounts);
             AddInclude(x => x.Contacts);
             AddInclude(x => x.Files);
-            AddInclude("Files.File");
+            AddInclude($"{nameof(Counterparty.Files)}.{nameof(CounterpartyFile.File)}");
         }
     }
 }

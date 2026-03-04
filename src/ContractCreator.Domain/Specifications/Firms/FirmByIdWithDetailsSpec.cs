@@ -12,7 +12,7 @@ namespace ContractCreator.Domain.Specifications.Firms
             AddInclude(f => f.Files);
             AddInclude(f => f.Okopf);
             AddInclude(f => f.EconomicActivities);
-            AddInclude("EconomicActivities.EconomicActivity");
+            AddInclude($"{nameof(Firm.EconomicActivities)}.{nameof(FirmEconomicActivity.EconomicActivity)}");
         }
     }
 }

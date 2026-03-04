@@ -17,9 +17,9 @@ namespace ContractCreator.Domain.Specifications.Contracts
             AddInclude(x => x.FirmSigner!);
             AddInclude(x => x.CounterpartySigner!);
             AddInclude(x => x.Steps);
-            AddInclude("Steps.Currency");
+            AddInclude($"{nameof(Contract.Steps)}.{nameof(ContractStep.Currency)}");
             AddInclude(x => x.Specifications);
-            AddInclude("Specifications.Currency");
+            AddInclude($"{nameof(Contract.Specifications)}.{nameof(ContractSpecification.Currency)}");
         }
     }
 }

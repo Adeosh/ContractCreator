@@ -1,5 +1,4 @@
 ﻿using ContractCreator.Domain.Models;
-using ContractCreator.Domain.Models.Dictionaries;
 using ContractCreator.Domain.ValueObjects;
 using ContractCreator.Infrastructure.Persistence.Converters;
 using Microsoft.EntityFrameworkCore;

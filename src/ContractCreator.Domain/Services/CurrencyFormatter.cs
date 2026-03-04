@@ -281,21 +281,21 @@ namespace ContractCreator.Domain.Services
         /// <summary> Массив склонений основной единицы валюты для согласования с числительными.<br/>  
         /// Пример: ["рубль", "рубля", "рублей"]
         /// </summary>
-        public string[] MainUnit { get; set; }
+        public required string[] MainUnit { get; set; }
         /// <summary> 
         /// Массив склонений дробной единицы валюты для согласования с числительными.<br/> 
         /// Пример: ["копейка", "копейки", "копеек"]
         /// </summary>
-        public string[] SubUnit { get; set; }
+        public required string[] SubUnit { get; set; }
         /// <summary>
         /// Сокращенное обозначение валюты.<br/>
         /// Пример: "руб.", "долл."
         /// </summary>
-        public string ShortName { get; set; }
+        public required string ShortName { get; set; }
         /// <summary>
         /// Символ валюты.<br/>
         /// Пример: "₽", "$", "€"
         /// </summary>
-        public string Symbol { get; set; }
+        public required string Symbol { get; set; }
     }
 }

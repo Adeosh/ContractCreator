@@ -19,7 +19,7 @@ namespace ContractCreator.Application.Mapping.Entities
             config.NewConfig<CounterpartyDto, Counterparty>()
                 .AddDestinationTransform((string? x) => string.IsNullOrWhiteSpace(x) ? null : x)
                 .Ignore(dest => dest.CreatedDate)
-                .Ignore(dest => dest.UpdatedDate)
+                .Ignore(dest => dest.UpdatedDate!)
                 .Ignore(dest => dest.BankAccounts)
                 .Ignore(dest => dest.Contacts)
                 .Ignore(dest => dest.Contracts)

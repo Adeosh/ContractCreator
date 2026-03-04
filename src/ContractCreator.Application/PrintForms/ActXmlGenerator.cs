@@ -29,46 +29,70 @@ namespace ContractCreator.Application.PrintForms
                 else lstErrors.Add(error);
             }
 
-            if (dto == null) 
+            if (dto == null)
                 throw new ArgumentNullException(nameof(dto), "Передан пустой набор данных");
 
-            if (string.IsNullOrWhiteSpace(dto.ActNumber)) 
+            if (dto.DocumentId == Guid.Empty)
+                HandleException("Не заполнен уникальный идентификатор документа (Guid)");
+
+            if (string.IsNullOrWhiteSpace(dto.ApplicationName))
+                HandleException("Не указано название системы-источника (ApplicationName)");
+
+            if (string.IsNullOrWhiteSpace(dto.ActNumber))
                 HandleException("Не заполнен номер акта");
 
-            if (string.IsNullOrWhiteSpace(dto.ActDate)) 
+            if (string.IsNullOrWhiteSpace(dto.ActDate))
                 HandleException("Не заполнена дата акта");
 
-            if (string.IsNullOrWhiteSpace(dto.ContractNumber)) 
+            if (string.IsNullOrWhiteSpace(dto.ContractNumber))
                 HandleException("Не заполнен номер договора");
 
-            if (dto.AggregateAmount <= 0) 
+            if (string.IsNullOrWhiteSpace(dto.ContractDate))
+                HandleException("Не заполнена дата договора");
+
+            if (string.IsNullOrWhiteSpace(dto.ContractorFullData))
+                HandleException("Не заполнены полные реквизиты Исполнителя");
+
+            if (string.IsNullOrWhiteSpace(dto.CustomerFullData))
+                HandleException("Не заполнены полные реквизиты Заказчика");
+
+            if (string.IsNullOrWhiteSpace(dto.ContractorDirectorName))
+                HandleException("Не указано ФИО руководителя со стороны Исполнителя");
+
+            if (string.IsNullOrWhiteSpace(dto.CustomerSignatoryName))
+                HandleException("Не указано ФИО подписанта со стороны Заказчика");
+
+            if (dto.AggregateAmount <= 0)
                 HandleException("Общая сумма по акту должна быть больше нуля");
 
             if (string.IsNullOrWhiteSpace(dto.AmountInWords))
                 HandleException("Не заполнена сумма прописью");
 
-            if (string.IsNullOrWhiteSpace(dto.ContractorFullData)) 
-                HandleException("Не заполнена полная информация об исполнителе");
-
-            if (string.IsNullOrWhiteSpace(dto.CustomerFullData)) 
-                HandleException("Не заполнена полная информация о заказчике");
-
-            if (dto.Items == null || !dto.Items.Any()) 
-                HandleException("Не добавлено ни одной позиции в акт");
-
-            if (dto.Items != null)
+            if (dto.Items == null || !dto.Items.Any())
+            {
+                HandleException("В акте должна быть хотя бы одна позиция (услуга/работа)");
+            }
+            else
             {
                 for (int i = 0; i < dto.Items.Count; i++)
                 {
                     var item = dto.Items[i];
+                    var positionLabel = $"в позиции {i + 1}";
+
                     if (string.IsNullOrWhiteSpace(item.NomenclatureName))
-                        HandleException($"Не заполнено наименование услуги в позиции {i + 1}");
+                        HandleException($"Не заполнено наименование услуги {positionLabel}");
 
                     if (item.Quantity <= 0)
-                        HandleException($"Количество должно быть больше нуля в позиции {i + 1} ({item.NomenclatureName})");
+                        HandleException($"Количество должно быть больше нуля {positionLabel} ({item.NomenclatureName})");
+
+                    if (item.UnitPrice < 0)
+                        HandleException($"Цена не может быть отрицательной {positionLabel} ({item.NomenclatureName})");
 
                     if (item.TotalAmount < 0)
-                        HandleException($"Сумма не может быть отрицательной в позиции {i + 1} ({item.NomenclatureName})");
+                        HandleException($"Сумма не может быть отрицательной {positionLabel} ({item.NomenclatureName})");
+
+                    if (string.IsNullOrWhiteSpace(item.Unit))
+                        HandleException($"Не указана единица измерения {positionLabel}");
                 }
             }
 

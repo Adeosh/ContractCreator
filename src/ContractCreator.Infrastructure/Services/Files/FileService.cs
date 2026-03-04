@@ -216,12 +216,12 @@ namespace ContractCreator.Infrastructure.Services.Files
             var databaseFiles = (await context.Files.AsNoTracking()
                 .Select(fs => fs.StorageFileGuid.ToString())
                 .ToListAsync())
-                .ToHashSet();
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
             var directoryFiles = Directory.GetFiles(basePath, "*", SearchOption.AllDirectories)
                 .Select(df => Path.GetFileNameWithoutExtension(df))
                 .Where(name => Guid.TryParse(name, out _))
-                .ToHashSet();
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
             var incomparabilityFiles = new List<string>();
 
@@ -271,13 +271,13 @@ namespace ContractCreator.Infrastructure.Services.Files
         {
             string storagePath = _settingsService.StoragePath;
             if (string.IsNullOrWhiteSpace(storagePath))
-                storagePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+                storagePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
             string finalPath = Path.Combine(storagePath, "FileStorage");
             if (!Directory.Exists(finalPath))
                 Directory.CreateDirectory(finalPath);
 
-            return storagePath;
+            return finalPath;
         }
 
         private string GetPhysicalDirectoryPath(FileType fileType)

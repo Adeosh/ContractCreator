@@ -117,7 +117,6 @@ namespace ContractCreator.Tests.Integration
             var id2 = await CreateTestCounterpartyViaServiceAsync(1, "Удаленный 1");
             var id3 = await CreateTestCounterpartyViaServiceAsync(2, "Активный 2");
 
-            // Удаляем второго контрагента
             await _counterpartyService.DeleteCounterpartyAsync(id2);
 
             // Act
