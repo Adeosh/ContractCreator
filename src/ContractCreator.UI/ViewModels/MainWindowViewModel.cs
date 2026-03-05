@@ -98,7 +98,7 @@ public class MainWindowViewModel : ViewModelBase
                                 if (currentId != null)
                                 {
                                      var param = new EditorParams { Mode = EditorMode.Edit, Id = currentId.Value };
-                                     _navigationService.NavigateTo<FirmEditorViewModel>(param);
+                                     _navigationService.NavigateTo<DashboardViewModel>(param);
                                 }
                                 else
                                     _navigationService.NavigateTo<FirmListViewModel>();
@@ -167,12 +167,54 @@ public class MainWindowViewModel : ViewModelBase
 
     public async Task InitializeAsync()
     {
+        if (string.IsNullOrWhiteSpace(_settingsService.StoragePath))
+        {
+            await _dialogService.ShowMessageAsync(
+                "Необходимо выбрать папку для хранения файлов приложения.",
+                "Первичная настройка", UserMessageType.Info);
+            await ChangeStoragePathAsync();
+        }
+
         await LoadSettingsDataAsync();
+        await RunStartupWizardAsync();
+    }
 
-        if (SelectedFirm != null)
-            await LoadWorkersForFirmAsync(SelectedFirm.Id);
+    /// <summary>
+    /// Анализирует состояние базы данных и настроек при запуске или возврате на главную. <br/>
+    /// Перенаправляет пользователя на создание необходимых сущностей (Фирма, Сотрудник),
+    /// если они отсутствуют в системе.
+    /// </summary>
+    private async Task RunStartupWizardAsync()
+    {
+        var firms = await _firmService.GetAllFirmsAsync();
+        if (firms == null || !firms.Any())
+        {
+            var param = new EditorParams { Mode = EditorMode.Create };
+            _navigationService.NavigateTo<FirmEditorViewModel>(param);
+            return;
+        }
 
-        _navigationService.NavigateTo<FirmListViewModel>();
+        if (_settingsService.CurrentFirmId == null)
+        {
+            var firstFirm = firms.First();
+            _settingsService.CurrentFirmId = firstFirm.Id;
+            _settingsService.CurrentFirmName = firstFirm.ShortName;
+            SelectedFirm = AvailableFirms.FirstOrDefault(f => f.Id == firstFirm.Id);
+        }
+
+        var workers = await _workerService.GetWorkersByFirmIdAsync(_settingsService.CurrentFirmId.Value);
+        if (workers == null || !workers.Any())
+        {
+            await _dialogService.ShowMessageAsync(
+                "Организация создана. Теперь необходимо добавить первого сотрудника (руководителя) для оформления документов.",
+                "Первичная настройка", UserMessageType.Info);
+
+            var param = new EditorParams { Mode = EditorMode.Create, ParentId = _settingsService.CurrentFirmId.Value };
+            _navigationService.NavigateTo<WorkerEditorViewModel>(param);
+            return;
+        }
+
+        _navigationService.NavigateTo<DashboardViewModel>();
     }
 
     private async Task OpenSettingsAsync()

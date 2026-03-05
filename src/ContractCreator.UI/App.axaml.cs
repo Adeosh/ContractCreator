@@ -12,10 +12,17 @@ public partial class App : Avalonia.Application
     public override void OnFrameworkInitializationCompleted()
     {
         Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Debug()
-            .WriteTo.File("Logs/log-.txt",
-                rollingInterval: RollingInterval.Day,
-                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+            .MinimumLevel.Information()
+            .WriteTo.Logger(l => l
+                .Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Information)
+                .WriteTo.File("Logs/Info/info-.txt",
+                    rollingInterval: RollingInterval.Day,
+                    outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}{Exception}"))
+            .WriteTo.Logger(l => l
+                .Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Error || e.Level == LogEventLevel.Fatal)
+                .WriteTo.File("Logs/Error/error-.txt",
+                    rollingInterval: RollingInterval.Day,
+                    outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}{Exception}"))
             .CreateLogger();
 
         var configuration = new ConfigurationBuilder()
@@ -83,6 +90,7 @@ public partial class App : Avalonia.Application
         services.AddSingleton<INavigationService, NavigationService>();
         services.AddSingleton<IUserDialogService, UserDialogService>();
         services.AddSingleton<MainWindowViewModel>();
+        services.AddSingleton<DashboardViewModel>();
 
         services.AddTransient<AddressViewModel>();
         services.AddTransient<AttachedFilesViewModel>();

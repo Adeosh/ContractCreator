@@ -2,9 +2,9 @@
 {
     public interface INavigationService
     {
-        ViewModelBase CurrentView { get; }
+        ViewModelBase? CurrentView { get; }
 
-        event Action<ViewModelBase> CurrentViewChanged;
+        event Action<ViewModelBase?> CurrentViewChanged;
         void NavigateTo<T>() where T : ViewModelBase;
         void NavigateTo<T>(object parameter) where T : ViewModelBase;
         void NavigateTo(Type viewModelType);

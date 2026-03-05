@@ -70,7 +70,7 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
+                Log.Error(ex, "Ошибка при загрузке списка товаров/услуг. Тип: {ListType}, Фирма ID: {FirmId}", CurrentListType, _settingsService.CurrentFirmId);
                 await _dialogService.ShowMessageAsync("Не удалось загрузить данные.", "Ошибка", UserMessageType.Error);
             }
             finally
@@ -88,9 +88,8 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
-                throw new UserMessageException("Ошибка при сохранении товара или услуги!",
-                    "Ошибка", UserMessageType.Error);
+                Log.Error(ex, "Ошибка при переходе на форму добавления товара/услуги.");
+                _dialogService.ShowMessageAsync("Ошибка при создании!", "Ошибка", UserMessageType.Error).SafeFireAndForget();
             }
         }
 
@@ -105,9 +104,8 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
-                throw new UserMessageException("Ошибка при обновлении товара или услуги!",
-                    "Ошибка", UserMessageType.Error);
+                Log.Error(ex, "Ошибка при переходе на форму редактирования товара/услуги ID: {ProductId}", product.Id);
+                _dialogService.ShowMessageAsync("Ошибка при обновлении!", "Ошибка", UserMessageType.Error).SafeFireAndForget();
             }
         }
 
@@ -128,8 +126,8 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
-                await _dialogService.ShowMessageAsync("Ошибка", "Не удалось удалить запись.", UserMessageType.Error);
+                Log.Error(ex, "Ошибка при удалении товара/услуги ID: {ProductId}", product.Id);
+                await _dialogService.ShowMessageAsync("Не удалось удалить запись.", "Ошибка", UserMessageType.Error);
             }
         }
     }

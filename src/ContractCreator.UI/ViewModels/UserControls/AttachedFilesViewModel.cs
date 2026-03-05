@@ -4,7 +4,7 @@
     {
         #region Props
         private readonly IFileService _fileService;
-        private readonly IUserDialogService _userDialogService;
+        private readonly IUserDialogService _dialogService;
         private readonly List<int> _filesToDelete = new();
         private readonly List<int> _newlyUploadedFileIds = new();
 
@@ -39,7 +39,7 @@
             FileType fileType = FileType.None)
         {
             _fileService = fileService;
-            _userDialogService = userDialogService;
+            _dialogService = userDialogService;
             CurrentFileType = fileType;
 
             AddFileCommand = ReactiveCommand.CreateFromTask(AddFileAsync);
@@ -59,18 +59,20 @@
                 {
                     if (Files.Any(f => f.LocalFilePath == file.LocalPath)) continue;
                     Files.Add(new AttachedFileModel { FileId = 0, FileName = file.Name, LocalFilePath = file.LocalPath, IsEncrypted = true });
+                    Log.Information("Файл добавлен в очередь на загрузку: {FileName}", file.Name);
                 }
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
-                await _userDialogService.ShowMessageAsync("Не удалось добавить файл.", "Ошибка", UserMessageType.Error);
+                Log.Error(ex, "Ошибка при добавлении файлов в список. Было выбрано: {Count} шт.", selectedFiles.Count());
+                await _dialogService.ShowMessageAsync("Не удалось добавить файл.", "Ошибка", UserMessageType.Error);
             }
         }
 
         private void RemoveFile(AttachedFileModel file)
         {
             Files.Remove(file);
+            Log.Information("Файл удален из списка: {FileName} (ID: {FileId})", file.FileName, file.FileId);
 
             if (!file.IsPendingUpload && file.FileId > 0)
                 _filesToDelete.Add(file.FileId);
@@ -89,7 +91,11 @@
                 else
                 {
                     var data = await _fileService.DownloadFileAsync(file.FileId);
-                    if (data == null) return;
+                    if (data == null)
+                    {
+                        Log.Error("Не удалось получить данные файла ID: {FileId} из хранилища.", file.FileId);
+                        return;
+                    }
 
                     targetPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}_{data.FileName}"); // Создаем временный файл в расшифрованном виде
                     await File.WriteAllBytesAsync(targetPath, data.Content);
@@ -121,8 +127,8 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message, "Ошибка при открытии файла {FileName}", file.FileName);
-                await _userDialogService.ShowMessageAsync("Не удалось открыть файл для редактирования.", "Ошибка", UserMessageType.Error);
+                Log.Error(ex, "Ошибка при открытии файла {FileName}", file.FileName);
+                await _dialogService.ShowMessageAsync("Не удалось открыть файл для редактирования.", "Ошибка", UserMessageType.Error);
             }
         }
 
@@ -155,8 +161,8 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
-                await _userDialogService.ShowMessageAsync("Не удалось загрузить файлы.", "Ошибка", UserMessageType.Error);
+                Log.Error(ex, "Ошибка при загрузке информации о существующих файлах.");
+                await _dialogService.ShowMessageAsync("Не удалось загрузить файлы.", "Ошибка", UserMessageType.Error);
             }
         }
 
@@ -171,12 +177,15 @@
 
                 var savePath = await FileHelper.SaveFileAsync(data.FileName);
                 if (savePath != null)
+                {
                     await File.WriteAllBytesAsync(savePath, data.Content);
+                    Log.Information("Файл {FileName} (ID: {FileId}) успешно скачан на диск: {SavePath}", file.FileName, file.FileId, savePath);
+                }
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
-                await _userDialogService.ShowMessageAsync("Не удалось скачать файл.", "Ошибка", UserMessageType.Error);
+                Log.Error(ex, "Ошибка при скачивании файла {FileName}", file.FileName);
+                await _dialogService.ShowMessageAsync("Не удалось скачать файл.", "Ошибка", UserMessageType.Error);
             }
         }
 
@@ -186,48 +195,57 @@
         /// </summary>
         public async Task<List<int>> CommitAsync()
         {
-            _newlyUploadedFileIds.Clear();
-
-            if (_filesToDelete.Any())
+            try
             {
-                await _fileService.DeleteFilesByIdsAsync(_filesToDelete);
-                _filesToDelete.Clear();
-            }
+                _newlyUploadedFileIds.Clear();
 
-            var finalFileIds = new List<int>();
-
-            foreach (var file in Files)
-            {
-                if (file.IsPendingUpload && !string.IsNullOrEmpty(file.LocalFilePath))
+                if (_filesToDelete.Any())
                 {
-                    using var stream = File.OpenRead(file.LocalFilePath);
-                    int newId = file.IsEncrypted
-                        ? await _fileService.UploadEncryptedFileAsync(stream, CurrentFileType, file.FileName, DateTime.Now)
-                        : await _fileService.UploadFileAsync(stream, CurrentFileType, file.FileName, DateTime.Now);
-
-                    _newlyUploadedFileIds.Add(newId);
-                    file.FileId = newId;
-                    file.LocalFilePath = null;
-                    finalFileIds.Add(newId);
+                    await _fileService.DeleteFilesByIdsAsync(_filesToDelete);
+                    _filesToDelete.Clear();
                 }
-                else if (file.IsPendingUpdate && !string.IsNullOrEmpty(file.LocalFilePath))
-                {
-                    using var stream = File.OpenRead(file.LocalFilePath);
 
-                    if (file.IsEncrypted)
-                        await _fileService.UpdateEncryptedFileAsync(file.FileId, stream, file.FileName, DateTime.Now);
+                var finalFileIds = new List<int>();
+
+                foreach (var file in Files)
+                {
+                    if (file.IsPendingUpload && !string.IsNullOrEmpty(file.LocalFilePath))
+                    {
+                        using var stream = File.OpenRead(file.LocalFilePath);
+                        int newId = file.IsEncrypted
+                            ? await _fileService.UploadEncryptedFileAsync(stream, CurrentFileType, file.FileName, DateTime.Now)
+                            : await _fileService.UploadFileAsync(stream, CurrentFileType, file.FileName, DateTime.Now);
+
+                        _newlyUploadedFileIds.Add(newId);
+                        file.FileId = newId;
+                        file.LocalFilePath = null;
+                        finalFileIds.Add(newId);
+                    }
+                    else if (file.IsPendingUpdate && !string.IsNullOrEmpty(file.LocalFilePath))
+                    {
+                        using var stream = File.OpenRead(file.LocalFilePath);
+
+                        if (file.IsEncrypted)
+                            await _fileService.UpdateEncryptedFileAsync(file.FileId, stream, file.FileName, DateTime.Now);
+                        else
+                            await _fileService.UpdateFileAsync(file.FileId, stream, file.FileName, DateTime.Now);
+
+                        file.IsPendingUpdate = false;
+                        file.LocalFilePath = null;
+                        finalFileIds.Add(file.FileId);
+                    }
                     else
-                        await _fileService.UpdateFileAsync(file.FileId, stream, file.FileName, DateTime.Now);
-
-                    file.IsPendingUpdate = false;
-                    file.LocalFilePath = null;
-                    finalFileIds.Add(file.FileId);
+                        finalFileIds.Add(file.FileId);
                 }
-                else
-                    finalFileIds.Add(file.FileId);
-            }
 
-            return finalFileIds;
+                return finalFileIds;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Непредвиденная ошибка при сохранении/обновлении файлов (Commit).");
+                await _dialogService.ShowMessageAsync("Не удалось сохранить файл.", "Ошибка", UserMessageType.Error);
+                return new List<int>();
+            }
         }
 
         public async Task<List<EntityFileDto>> GetFilesForCommitAsync(int entityId)

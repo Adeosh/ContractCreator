@@ -42,25 +42,25 @@ namespace ContractCreator.UI.Services.Dialogs
 
         private UnifiedDialogViewModel CreateViewModel(string message, string title, UserMessageType type)
         {
-            var vm = new UnifiedDialogViewModel(title, message);
+            var viewModel = new UnifiedDialogViewModel(title, message);
 
             switch (type)
             {
                 case UserMessageType.Info:
-                    vm.HeaderColor = SolidColorBrush.Parse("#62bed9");
-                    vm.Icon = "ℹ️";
+                    viewModel.HeaderColor = SolidColorBrush.Parse("#62bed9");
+                    viewModel.Icon = "ℹ️";
                     break;
                 case UserMessageType.Warning:
-                    vm.HeaderColor = SolidColorBrush.Parse("#ffe169");
-                    vm.Icon = "⚠️";
+                    viewModel.HeaderColor = SolidColorBrush.Parse("#ffe169");
+                    viewModel.Icon = "⚠️";
                     break;
                 case UserMessageType.Error:
-                    vm.HeaderColor = SolidColorBrush.Parse("#ef233c");
-                    vm.Icon = "⛔";
+                    viewModel.HeaderColor = SolidColorBrush.Parse("#ef233c");
+                    viewModel.Icon = "⛔";
                     break;
             }
 
-            return vm;
+            return viewModel;
         }
 
         private async Task ShowWindow(Window view)

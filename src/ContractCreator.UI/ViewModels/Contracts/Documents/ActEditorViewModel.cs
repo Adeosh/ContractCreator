@@ -151,7 +151,7 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Ошибка загрузки данных контракта для Акта");
+                Log.Error(ex, "Ошибка загрузки начальных данных (договор ID: {ContractId}) для Акта", ContractId);
             }
         }
 
@@ -191,7 +191,7 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Ошибка при загрузке позиций счета");
+                Log.Error(ex, "Ошибка при загрузке позиций выбранного счета ID: {InvoiceId}", invoiceId);
             }
         }
 
@@ -218,7 +218,7 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Ошибка загрузки акта");
+                Log.Error(ex, "Ошибка загрузки акта ID: {ActId}", Id);
                 await _dialogService.ShowMessageAsync("Не удалось загрузить акт.", "Ошибка", UserMessageType.Error);
             }
         }
@@ -226,34 +226,19 @@
         private void AddItemToAct()
         {
             if (SelectedInvoice == null)
-            {
-                _dialogService.ShowMessageAsync("Сначала выберите счет-основание.", "Внимание", UserMessageType.Warning);
-                return;
-            }
+                throw new UserMessageException("Сначала выберите счет-основание.", "Внимание", UserMessageType.Warning);
 
             if (SelectedItemToAdd == null)
-            {
-                _dialogService.ShowMessageAsync("Выберите позицию.", "Внимание", UserMessageType.Warning);
-                return;
-            }
+                throw new UserMessageException("Выберите позицию.", "Внимание", UserMessageType.Warning);
 
             if (QuantityToAdd <= 0)
-            {
-                _dialogService.ShowMessageAsync("Количество должно быть больше нуля.", "Внимание", UserMessageType.Warning);
-                return;
-            }
+                throw new UserMessageException("Количество должно быть больше нуля.", "Внимание", UserMessageType.Warning);
 
             if (QuantityToAdd > SelectedItemToAdd.RemainingQuantity)
-            {
-                _dialogService.ShowMessageAsync($"Нельзя добавить больше остатка по счету.\nДоступно: {SelectedItemToAdd.RemainingQuantity}", "Внимание", UserMessageType.Warning);
-                return;
-            }
+                throw new UserMessageException($"Нельзя добавить больше остатка по счету.\nДоступно: {SelectedItemToAdd.RemainingQuantity}", "Внимание", UserMessageType.Warning);
 
             if (ActItems.Any(i => i.NomenclatureName == SelectedItemToAdd.NomenclatureName))
-            {
-                _dialogService.ShowMessageAsync("Эта позиция уже добавлена.", "Внимание", UserMessageType.Warning);
-                return;
-            }
+                throw new UserMessageException("Эта позиция уже добавлена.", "Внимание", UserMessageType.Warning);
 
             var newItem = new ContractActItemDto
             {
@@ -317,18 +302,23 @@
                     Items = ActItems.ToList()
                 };
 
-                if (Id == 0) await _actService.CreateAsync(dto);
-                else await _actService.UpdateAsync(dto);
+                if (Id == 0)
+                {
+                    await _actService.CreateAsync(dto);
+                    Log.Information("Создан новый акт № {ActNumber} по договору ID: {ContractId}", ActNumber, ContractId);
+                }
+                else 
+                    await _actService.UpdateAsync(dto);
 
                 _navigation.NavigateBack();
             }
-            catch (UserMessageException ex)
+            catch (UserMessageException)
             {
-                await _dialogService.ShowMessageAsync(ex.Message, "Внимание", UserMessageType.Warning);
+                throw;
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Ошибка сохранения акта");
+                Log.Error(ex, "Ошибка сохранения акта. Редактируемый ID: {ActId}, Номер: {ActNumber}", Id, ActNumber);
                 await _dialogService.ShowMessageAsync("Не удалось сохранить акт.", "Ошибка", UserMessageType.Error);
             }
         }

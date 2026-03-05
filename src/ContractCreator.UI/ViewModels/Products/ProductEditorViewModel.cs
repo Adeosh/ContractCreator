@@ -92,8 +92,8 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
-                await _dialogService.ShowMessageAsync("Ошибка", "Не удалось загрузить справочник валют.", UserMessageType.Error);
+                Log.Error(ex, "Ошибка при загрузке справочника валют.");
+                await _dialogService.ShowMessageAsync("Не удалось загрузить справочник валют.", "Ошибка", UserMessageType.Error);
             }
         }
 
@@ -117,7 +117,7 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
+                Log.Error(ex, "Ошибка при загрузке данных товара/услуги ID: {ProductId}", id);
                 await _dialogService.ShowMessageAsync("Не удалось загрузить данные.", "Ошибка", UserMessageType.Error);
             }
         }
@@ -154,19 +154,18 @@
                 };
 
                 if (Id == 0)
+                {
                     await _productService.CreateAsync(dto);
+                    Log.Information("Создан новый товар/услуга: {ProductName} (Тип: {ProductType}, Фирма ID: {FirmId})", Name, CurrentType, FirmId);
+                }
                 else
                     await _productService.UpdateAsync(dto);
 
                 _navigation.NavigateBack();
             }
-            catch (UserMessageException ex)
-            {
-                await _dialogService.ShowMessageAsync(ex.Title, ex.Message, UserMessageType.Warning);
-            }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
+                Log.Error(ex, "Ошибка при сохранении товара/услуги. Редактируемый ID: {ProductId}, Название: {ProductName}", Id, Name);
                 await _dialogService.ShowMessageAsync("Произошла ошибка при сохранении.", "Ошибка", UserMessageType.Error);
             }
         }

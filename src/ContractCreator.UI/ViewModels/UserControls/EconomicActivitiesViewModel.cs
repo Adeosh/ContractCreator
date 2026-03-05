@@ -95,7 +95,7 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
+                Log.Error(ex, "Ошибка при загрузке справочника ОКВЭД из базы данных.");
                 throw new UserMessageException("Ошибка загрузки справочника ОКВЭД!",
                     "Ошибка", UserMessageType.Error);
             }

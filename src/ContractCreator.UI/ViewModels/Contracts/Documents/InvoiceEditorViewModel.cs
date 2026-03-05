@@ -143,7 +143,7 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Ошибка загрузки данных контракта");
+                Log.Error(ex, "Ошибка загрузки начальных данных для выставления счета. Договор ID: {ContractId}", ContractId);
             }
         }
 
@@ -170,7 +170,7 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Ошибка загрузки счета");
+                Log.Error(ex, "Ошибка загрузки данных счета ID: {InvoiceId}", Id);
                 await _dialogService.ShowMessageAsync("Не удалось загрузить счет.", "Ошибка", UserMessageType.Error);
             }
         }
@@ -178,22 +178,13 @@
         private void AddItemToInvoice()
         {
             if (SelectedSpecificationToAdd == null)
-            {
-                _dialogService.ShowMessageAsync("Выберите позицию из спецификации.", "Внимание", UserMessageType.Warning);
-                return;
-            }
+                throw new UserMessageException("Выберите позицию из спецификации.", "Внимание", UserMessageType.Warning);
 
             if (QuantityToAdd <= 0)
-            {
-                _dialogService.ShowMessageAsync("Количество должно быть больше нуля.", "Внимание", UserMessageType.Warning);
-                return;
-            }
+                throw new UserMessageException("Количество должно быть больше нуля.", "Внимание", UserMessageType.Warning);
 
             if (InvoiceItems.Any(i => i.NomenclatureName == SelectedSpecificationToAdd.NomenclatureName))
-            {
-                _dialogService.ShowMessageAsync("Эта позиция уже добавлена в счет.", "Внимание", UserMessageType.Warning);
-                return;
-            }
+                throw new UserMessageException("Эта позиция уже добавлена в счет.", "Внимание", UserMessageType.Warning);
 
             var newItem = new ContractInvoiceItemDto
             {
@@ -256,19 +247,22 @@
                 };
 
                 if (Id == 0)
+                {
                     await _invoiceService.CreateAsync(dto);
+                    Log.Information("Создан новый счет № {InvoiceNumber} по договору ID: {ContractId}", InvoiceNumber, ContractId);
+                }
                 else
                     await _invoiceService.UpdateAsync(dto);
 
                 _navigation.NavigateBack();
             }
-            catch (UserMessageException ex)
+            catch (UserMessageException)
             {
-                await _dialogService.ShowMessageAsync(ex.Message, "Внимание", UserMessageType.Warning);
+                throw;
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Ошибка сохранения");
+                Log.Error(ex, "Ошибка сохранения счета. Редактируемый ID: {InvoiceId}, Номер: {InvoiceNumber}", Id, InvoiceNumber);
                 await _dialogService.ShowMessageAsync("Не удалось сохранить счет.", "Ошибка", UserMessageType.Error);
             }
         }

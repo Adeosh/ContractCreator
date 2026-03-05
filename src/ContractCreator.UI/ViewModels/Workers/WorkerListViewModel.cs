@@ -45,9 +45,8 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
-                throw new UserMessageException("Ошибка при добавлении сотрудников!",
-                    "Ошибка", UserMessageType.Error);
+                Log.Error(ex, "Ошибка при переходе на форму добавления сотрудника.");
+                _dialogService.ShowMessageAsync("Ошибка при добавлении сотрудников!", "Ошибка", UserMessageType.Error).SafeFireAndForget();
             }
         }
 
@@ -62,9 +61,8 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
-                throw new UserMessageException("Ошибка при обновлении сотрудников!",
-                    "Ошибка", UserMessageType.Error);
+                Log.Error(ex, "Ошибка при переходе на форму редактирования сотрудника ID: {WorkerId}", worker.Id);
+                _dialogService.ShowMessageAsync("Ошибка при обновлении сотрудников!", "Ошибка", UserMessageType.Error).SafeFireAndForget();
             }
         }
 
@@ -82,22 +80,26 @@
             {
                 await _workerService.DeleteWorkerAsync(worker.Id);
                 Items.Remove(worker);
+
+                Log.Information("Сотрудник успешно удален: {LastName} {FirstName} (ID: {WorkerId})", worker.LastName, worker.FirstName, worker.Id);
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
-                throw new UserMessageException("Ошибка при удалении сотрудника!",
-                    "Ошибка", UserMessageType.Error);
+                Log.Error(ex, "Ошибка при удалении сотрудника ID: {WorkerId}", worker.Id);
+                await _dialogService.ShowMessageAsync("Ошибка при удалении сотрудника!", "Ошибка", UserMessageType.Error);
             }
         }
 
         protected override async Task RefreshListAsync()
         {
+            var currentFirmId = _settingsService.CurrentFirmId;
+            if (currentFirmId == null)
+                throw new UserMessageException("Ошибка при загрузке сотрудников! Фирма не выбрана!", "Ошибка", UserMessageType.Error);
+
             IsBusy = true;
             try
             {
-                var data = await _workerService.GetWorkersByFirmIdAsync(_settingsService.CurrentFirmId
-                    ?? throw new UserMessageException("Ошибка при загрузке сотрудников! Фирма не выбрана!", "Ошибка", UserMessageType.Error));
+                var data = await _workerService.GetWorkersByFirmIdAsync(currentFirmId.Value);
 
                 if (data != null)
                 {
@@ -108,13 +110,12 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
-                throw new UserMessageException("Ошибка при загрузке сотрудников!",
-                    "Ошибка", UserMessageType.Error);
+                Log.Error(ex, "Ошибка при загрузке списка сотрудников для фирмы ID: {FirmId}", currentFirmId.Value);
+                await _dialogService.ShowMessageAsync("Ошибка при загрузке сотрудников!", "Ошибка", UserMessageType.Error);
             }
-            finally 
-            { 
-                IsBusy = false; 
+            finally
+            {
+                IsBusy = false;
             }
         }
     }

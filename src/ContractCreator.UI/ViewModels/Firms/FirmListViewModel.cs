@@ -50,9 +50,8 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
-                throw new UserMessageException("Ошибка при создании фирм!",
-                    "Ошибка", UserMessageType.Error);
+                Log.Error(ex, "Ошибка при переходе на форму добавления фирмы.");
+                _dialogService.ShowMessageAsync("Ошибка при создании фирмы!", "Ошибка", UserMessageType.Error).SafeFireAndForget();
             }
         }
 
@@ -71,9 +70,8 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
-                throw new UserMessageException("Ошибка при добавлении фирм!",
-                    "Ошибка", UserMessageType.Error);
+                Log.Error(ex, "Ошибка при переходе на форму редактирования фирмы ID: {FirmId}", firm.Id);
+                _dialogService.ShowMessageAsync("Ошибка при переходе к редактированию фирмы!", "Ошибка", UserMessageType.Error).SafeFireAndForget();
             }
         }
 
@@ -92,9 +90,8 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
-                throw new UserMessageException("Ошибка при загрузке фирм!",
-                    "Ошибка", UserMessageType.Error);
+                Log.Error(ex, "Ошибка при загрузке списка фирм.");
+                await _dialogService.ShowMessageAsync("Ошибка при загрузке списка фирм!", "Ошибка", UserMessageType.Error);
             }
             finally 
             { 
@@ -123,11 +120,13 @@
             {
                 await _firmService.DeleteFirmAsync(firm.Id);
                 Items.Remove(firm);
+
+                Log.Information("Фирма успешно удалена: {ShortName} (ID: {FirmId})", firm.ShortName, firm.Id);
                 await _dialogService.ShowMessageAsync($"Фирма \"{firm.ShortName}\" успешно удалена.", "Успех", UserMessageType.Info);
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
+                Log.Error(ex, "Ошибка при удалении фирмы ID: {FirmId}", firm.Id);
                 await _dialogService.ShowMessageAsync("Не удалось удалить фирму.", "Ошибка", UserMessageType.Error);
             }
         }

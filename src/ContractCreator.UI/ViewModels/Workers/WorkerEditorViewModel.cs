@@ -5,6 +5,7 @@
         #region Props
         private readonly IWorkerService _workerService;
         private readonly INavigationService _navigation;
+        private readonly IUserDialogService _dialogService;
 
         [Reactive] public int Id { get; set; }
         [Reactive] public string FirstName { get; set; } = string.Empty;
@@ -24,10 +25,14 @@
         public ReactiveCommand<Unit, Unit> CancelCommand { get; }
         #endregion
 
-        public WorkerEditorViewModel(IWorkerService workerService, INavigationService navigation)
+        public WorkerEditorViewModel(
+            IWorkerService workerService, 
+            INavigationService navigation,
+            IUserDialogService dialogService)
         {
             _workerService = workerService;
             _navigation = navigation;
+            _dialogService = dialogService;
 
             SaveCommand = ReactiveCommand.CreateFromTask(SaveWorkerAsync);
             CancelCommand = ReactiveCommand.Create(() => _navigation.NavigateBack());
@@ -69,9 +74,8 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
-                throw new UserMessageException("Ошибка при загрузке сотрудника!",
-                    "Ошибка", UserMessageType.Error);
+                Log.Error(ex, "Ошибка при загрузке данных сотрудника ID: {WorkerId}", id);
+                await _dialogService.ShowMessageAsync("Ошибка при загрузке сотрудника!", "Ошибка", UserMessageType.Error);
             }
         }
 
@@ -99,7 +103,6 @@
                 throw new UserMessageException("Укажите корректный адрес электронной почты.");
         }
 
-
         private async Task SaveWorkerAsync()
         {
             try
@@ -124,7 +127,10 @@
                 };
 
                 if (Id == 0)
+                {
                     await _workerService.CreateWorkerAsync(dto);
+                    Log.Information("Создан новый сотрудник: {LastName} {FirstName} (ИНН: {INN}) для фирмы ID: {FirmId}", LastName, FirstName, Inn, FirmId);
+                }
                 else
                     await _workerService.UpdateWorkerAsync(dto);
 
@@ -133,9 +139,8 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
-                throw new UserMessageException("Ошибка при сохранении сотрудника!",
-                    "Ошибка", UserMessageType.Error);
+                Log.Error(ex, "Ошибка при сохранении сотрудника. Редактируемый ID: {WorkerId}, ИНН: {INN}", Id, Inn);
+                await _dialogService.ShowMessageAsync("Ошибка при сохранении сотрудника!", "Ошибка", UserMessageType.Error);
             }
         }
     }

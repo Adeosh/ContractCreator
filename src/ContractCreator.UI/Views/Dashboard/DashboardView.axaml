@@ -1,0 +1,134 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:vm="using:ContractCreator.UI.ViewModels.Dashboard"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
+			 x:Class="ContractCreator.UI.Views.Dashboard.DashboardView"
+			 x:DataType="vm:DashboardViewModel">
+
+	<UserControl.Styles>
+		<Style Selector="Border.Card">
+			<Setter Property="Background" Value="{DynamicResource SystemRegionBrush}"/>
+			<Setter Property="CornerRadius" Value="8"/>
+			<Setter Property="Padding" Value="20"/>
+			<Setter Property="BoxShadow" Value="0 4 10 0 #1A000000"/>
+			<Setter Property="Margin" Value="5"/>
+		</Style>
+		<Style Selector="TextBlock.CardTitle">
+			<Setter Property="FontSize" Value="14"/>
+			<Setter Property="FontWeight" Value="SemiBold"/>
+			<Setter Property="Opacity" Value="0.7"/>
+			<Setter Property="Margin" Value="0,0,0,10"/>
+		</Style>
+	</UserControl.Styles>
+
+	<ScrollViewer VerticalScrollBarVisibility="Auto">
+		<StackPanel Spacing="25" Margin="30">
+
+			<Grid ColumnDefinitions="*, Auto">
+				<StackPanel Spacing="5">
+					<TextBlock Text="{Binding FirmName}"
+							   FontSize="28"
+							   FontWeight="Bold"
+							   Foreground="{DynamicResource SystemAccentColor}"/>
+					<TextBlock Text="{Binding FirmInnKpp}"
+							   FontSize="14"
+							   Opacity="0.6"/>
+				</StackPanel>
+
+				<Button Grid.Column="1"
+						Command="{Binding ChangeFirmCommand}"
+						Content="Сменить организацию"
+						Classes="accent"
+						VerticalAlignment="Center"/>
+			</Grid>
+
+			<UniformGrid Columns="4">
+				<Border Classes="Card">
+					<StackPanel>
+						<TextBlock Text="Договоров в работе" Classes="CardTitle"/>
+						<TextBlock Text="{Binding TotalActiveContracts}" FontSize="32" FontWeight="Bold"/>
+					</StackPanel>
+				</Border>
+
+				<Border Classes="Card">
+					<StackPanel>
+						<TextBlock Text="Общая сумма (активные)" Classes="CardTitle"/>
+						<TextBlock Text="{Binding TotalActiveContractsValue, StringFormat={}{0:N2} ₽}"
+								   FontSize="24" FontWeight="Bold" Foreground="MediumSeaGreen"/>
+					</StackPanel>
+				</Border>
+
+				<Border Classes="Card">
+					<StackPanel>
+						<TextBlock Text="Истекают (30 дней)" Classes="CardTitle"/>
+						<TextBlock Text="{Binding ExpiringContractsCount}"
+								   FontSize="32" FontWeight="Bold"
+								   Foreground="OrangeRed"/>
+					</StackPanel>
+				</Border>
+
+				<Border Classes="Card">
+					<StackPanel>
+						<TextBlock Text="Счета за тек. год" Classes="CardTitle"/>
+						<TextBlock Text="{Binding TotalPendingInvoicesValue, StringFormat={}{0:N2} ₽}"
+								   FontSize="24" FontWeight="Bold"/>
+					</StackPanel>
+				</Border>
+			</UniformGrid>
+
+			<Grid ColumnDefinitions="*, 1.5*" Height="450">
+
+				<Border Grid.Column="0" Classes="Card">
+					<DockPanel>
+						<TextBlock DockPanel.Dock="Top" Text="Статусы документов" Classes="CardTitle"/>
+
+						<Panel>
+							<TextBlock Text="Нет данных для отображения"
+									   VerticalAlignment="Center"
+									   HorizontalAlignment="Center"
+									   Opacity="0.3"
+									   IsVisible="{Binding !ContractsByStageChart.Count}"/>
+
+							<ItemsControl ItemsSource="{Binding ContractsByStageChart}"
+										  IsVisible="{Binding !!ContractsByStageChart.Count}"
+										  VerticalAlignment="Top">
+								<ItemsControl.ItemTemplate>
+									<DataTemplate>
+										<Grid ColumnDefinitions="*, Auto" Margin="0,5">
+											<TextBlock Text="{Binding Label}"/>
+											<TextBlock Grid.Column="1" Text="{Binding Value}" FontWeight="Bold" Margin="20,0,0,0"/>
+										</Grid>
+									</DataTemplate>
+								</ItemsControl.ItemTemplate>
+							</ItemsControl>
+						</Panel>
+					</DockPanel>
+				</Border>
+
+				<Border Grid.Column="1" Classes="Card">
+					<DockPanel>
+						<Grid DockPanel.Dock="Top" ColumnDefinitions="*, Auto" Margin="0,0,0,15">
+							<TextBlock Text="Последние договоры" Classes="CardTitle" VerticalAlignment="Center" Margin="0"/>
+							<Button Grid.Column="1" Command="{Binding GoToContractsCommand}"
+									Content="Показать все" Classes="link"/>
+						</Grid>
+
+						<DataGrid ItemsSource="{Binding RecentContracts}"
+								  IsReadOnly="True"
+								  CanUserResizeColumns="True"
+								  GridLinesVisibility="None"
+								  Background="Transparent">
+							<DataGrid.Columns>
+								<DataGridTextColumn Header="Номер" Binding="{Binding ContractNumber}" Width="Auto"/>
+								<DataGridTextColumn Header="Предмет" Binding="{Binding ContractSubject}" Width="*"/>
+								<DataGridTextColumn Header="Сумма" Binding="{Binding ContractPrice, StringFormat={}{0:N2}}" Width="Auto"/>
+							</DataGrid.Columns>
+						</DataGrid>
+					</DockPanel>
+				</Border>
+			</Grid>
+		</StackPanel>
+	</ScrollViewer>
+</UserControl>

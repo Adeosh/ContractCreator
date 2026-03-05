@@ -48,9 +48,8 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
-                throw new UserMessageException("Ошибка при добавлении контрагентов!",
-                    "Ошибка", UserMessageType.Error);
+                Log.Error(ex, "Ошибка при переходе на форму добавления контрагента.");
+                _dialogService.ShowMessageAsync("Ошибка при добавлении контрагентов!", "Ошибка", UserMessageType.Error).SafeFireAndForget();
             }
         }
 
@@ -65,14 +64,15 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
-                throw new UserMessageException("Ошибка при обновлении контрагентов!",
-                    "Ошибка", UserMessageType.Error);
+                Log.Error(ex, "Ошибка при переходе на форму редактирования контрагента ID: {CounterpartyId}", counterparty.Id);
+                _dialogService.ShowMessageAsync("Ошибка при обновлении контрагентов!", "Ошибка", UserMessageType.Error).SafeFireAndForget();
             }
         }
 
         private async Task DeleteCounterpartyAsync(CounterpartyDto counterparty)
         {
+            if (counterparty == null) return;
+
             bool isConfirmed = await _dialogService.ShowConfirmationAsync(
                 $"Вы действительно хотите удалить контрагента \"{counterparty.ShortName}\"?\nЭто действие нельзя отменить.",
                 "Подтверждение удаления");
@@ -83,11 +83,13 @@
             {
                 await _counterpartyService.DeleteCounterpartyAsync(counterparty.Id);
                 Items.Remove(counterparty);
+
+                Log.Information("Контрагент успешно удален: {ShortName} (ID: {CounterpartyId})", counterparty.ShortName, counterparty.Id);
                 await _dialogService.ShowMessageAsync($"Контрагент \"{counterparty.ShortName}\" успешно удален.", "Успех", UserMessageType.Info);
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
+                Log.Error(ex, "Ошибка при удалении контрагента ID: {CounterpartyId}", counterparty.Id);
                 await _dialogService.ShowMessageAsync("Не удалось удалить контрагента.", "Ошибка", UserMessageType.Error);
             }
         }
@@ -113,9 +115,8 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
-                throw new UserMessageException("Ошибка при загрузке контрагентов!", 
-                    "Ошибка", UserMessageType.Error);
+                Log.Error(ex, "Ошибка при загрузке списка контрагентов для фирмы ID: {FirmId}", firmId.Value);
+                await _dialogService.ShowMessageAsync("Ошибка при загрузке контрагентов!", "Ошибка", UserMessageType.Error);
             }
             finally
             {

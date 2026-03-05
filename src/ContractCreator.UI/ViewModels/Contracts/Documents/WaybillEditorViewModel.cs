@@ -145,7 +145,7 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Ошибка загрузки данных контракта для Накладной");
+                Log.Error(ex, "Ошибка загрузки начальных данных (договор ID: {ContractId}) для Накладной", ContractId);
             }
         }
 
@@ -186,7 +186,7 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Ошибка при загрузке позиций счета");
+                Log.Error(ex, "Ошибка при загрузке позиций счета ID: {InvoiceId} для Накладной", invoiceId);
             }
         }
 
@@ -213,7 +213,7 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Ошибка загрузки накладной");
+                Log.Error(ex, "Ошибка загрузки накладной ID: {WaybillId}", Id);
                 await _dialogService.ShowMessageAsync("Не удалось загрузить накладную.", "Ошибка", UserMessageType.Error);
             }
         }
@@ -221,36 +221,19 @@
         private void AddItemToWaybill()
         {
             if (SelectedInvoice == null)
-            {
-                _dialogService.ShowMessageAsync("Сначала выберите счет-основание.", "Внимание", UserMessageType.Warning);
-                return;
-            }
+                throw new UserMessageException("Сначала выберите счет-основание.", "Внимание", UserMessageType.Warning);
 
             if (SelectedItemToAdd == null)
-            {
-                _dialogService.ShowMessageAsync("Выберите позицию из выбранного счета.", "Внимание", UserMessageType.Warning);
-                return;
-            }
+                throw new UserMessageException("Выберите позицию из выбранного счета.", "Внимание", UserMessageType.Warning);
 
             if (QuantityToAdd <= 0)
-            {
-                _dialogService.ShowMessageAsync("Количество должно быть больше нуля.", "Внимание", UserMessageType.Warning);
-                return;
-            }
+                throw new UserMessageException("Количество должно быть больше нуля.", "Внимание", UserMessageType.Warning);
 
             if (QuantityToAdd > SelectedItemToAdd.RemainingQuantity)
-            {
-                _dialogService.ShowMessageAsync(
-                    $"Нельзя отгрузить больше доступного остатка по счету.\nДоступно: {SelectedItemToAdd.RemainingQuantity}",
-                    "Внимание", UserMessageType.Warning);
-                return;
-            }
+                throw new UserMessageException($"Нельзя отгрузить больше доступного остатка по счету.\nДоступно: {SelectedItemToAdd.RemainingQuantity}", "Внимание", UserMessageType.Warning);
 
             if (WaybillItems.Any(i => i.NomenclatureName == SelectedItemToAdd.NomenclatureName))
-            {
-                _dialogService.ShowMessageAsync("Эта позиция уже добавлена в накладную.", "Внимание", UserMessageType.Warning);
-                return;
-            }
+                throw new UserMessageException("Эта позиция уже добавлена в накладную.", "Внимание", UserMessageType.Warning);
 
             var newItem = new ContractWaybillItemDto
             {
@@ -314,19 +297,22 @@
                 };
 
                 if (Id == 0)
+                {
                     await _waybillService.CreateAsync(dto);
+                    Log.Information("Создана новая накладная № {WaybillNumber} по договору ID: {ContractId}", WaybillNumber, ContractId);
+                }
                 else
                     await _waybillService.UpdateAsync(dto);
 
                 _navigation.NavigateBack();
             }
-            catch (UserMessageException ex)
+            catch (UserMessageException)
             {
-                await _dialogService.ShowMessageAsync(ex.Message, "Внимание", UserMessageType.Warning);
+                throw;
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Ошибка сохранения накладной");
+                Log.Error(ex, "Ошибка сохранения накладной. Редактируемый ID: {WaybillId}, Номер: {WaybillNumber}", Id, WaybillNumber);
                 await _dialogService.ShowMessageAsync("Не удалось сохранить накладную.", "Ошибка", UserMessageType.Error);
             }
         }

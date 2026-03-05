@@ -79,9 +79,8 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
-                throw new UserMessageException("Ошибка при добавлении контактов!",
-                    "Ошибка", UserMessageType.Error);
+                Log.Error(ex, "Ошибка при переходе на форму добавления контакта.");
+                _dialogService.ShowMessageAsync("Ошибка при добавлении контактов!", "Ошибка", UserMessageType.Error).SafeFireAndForget();
             }
         }
 
@@ -96,9 +95,8 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
-                throw new UserMessageException("Ошибка при обновлении контактов!",
-                    "Ошибка", UserMessageType.Error);
+                Log.Error(ex, "Ошибка при переходе на форму редактирования контакта ID: {ContactId}", contact.Id);
+                _dialogService.ShowMessageAsync("Ошибка при обновлении контактов!", "Ошибка", UserMessageType.Error).SafeFireAndForget();
             }
         }
 
@@ -116,12 +114,13 @@
             {
                 await _contactService.DeleteContactAsync(contact.Id);
                 Items.Remove(contact);
+
+                Log.Information("Контакт успешно удален: {LastName} {FirstName} (ID: {ContactId})", contact.LastName, contact.FirstName, contact.Id);
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
-                throw new UserMessageException("Ошибка при удалении контактов!",
-                    "Ошибка", UserMessageType.Error);
+                Log.Error(ex, "Ошибка при удалении контакта ID: {ContactId}", contact.Id);
+                await _dialogService.ShowMessageAsync("Ошибка при удалении контактов!", "Ошибка", UserMessageType.Error);
             }
         }
 
@@ -146,9 +145,8 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
-                throw new UserMessageException("Ошибка при загрузке контактов!",
-                    "Ошибка", UserMessageType.Error);
+                Log.Error(ex, "Ошибка при загрузке списка контактов. Фильтр контрагента ID: {FilterId}", SelectedFilterCounterparty?.Id);
+                await _dialogService.ShowMessageAsync("Ошибка при загрузке контактов!", "Ошибка", UserMessageType.Error);
             }
             finally
             {

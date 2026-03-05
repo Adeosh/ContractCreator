@@ -3,10 +3,10 @@
     public class NavigationService : INavigationService
     {
         private readonly IServiceProvider _serviceProvider;
-        private ViewModelBase _currentView;
         private readonly Stack<ViewModelBase> _history = new();
 
-        public ViewModelBase CurrentView
+        private ViewModelBase? _currentView;
+        public ViewModelBase? CurrentView
         {
             get => _currentView;
             private set
@@ -16,7 +16,7 @@
             }
         }
 
-        public event Action<ViewModelBase>? CurrentViewChanged;
+        public event Action<ViewModelBase?>? CurrentViewChanged;
 
         public NavigationService(IServiceProvider serviceProvider)
         {

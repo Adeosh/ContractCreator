@@ -136,9 +136,8 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
-                throw new UserMessageException("Ошибка при загрузке контакта!",
-                    "Ошибка", UserMessageType.Error);
+                Log.Error(ex, "Ошибка при загрузке контакта ID: {ContactId}", id);
+                await _dialogService.ShowMessageAsync("Ошибка при загрузке контакта!", "Ошибка", UserMessageType.Error);
             }
         }
 
@@ -210,7 +209,10 @@
                 }
 
                 if (Id == 0)
+                {
                     await _contactService.CreateContactAsync(dto);
+                    Log.Information("Успешно создан новый контакт: {LastName} {FirstName} (ID Контрагента: {CounterpartyId})", LastName, FirstName, CounterpartyId);
+                }
                 else
                     await _contactService.UpdateContactAsync(dto);
 
@@ -218,9 +220,8 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
-                throw new UserMessageException("Ошибка при сохранении контакта!",
-                    "Ошибка", UserMessageType.Error);
+                Log.Error(ex, "Ошибка при сохранении контакта. Редактируемый ID: {ContactId}, Имя: {LastName} {FirstName}", Id, LastName, FirstName);
+                await _dialogService.ShowMessageAsync("Ошибка при сохранении контакта!", "Ошибка", UserMessageType.Error);
             }
         }
     }

@@ -126,8 +126,8 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
-                throw new UserMessageException("Ошибка при загрузке контрагента!", "Ошибка", UserMessageType.Error);
+                Log.Error(ex, "Ошибка при загрузке данных контрагента ID: {CounterpartyId}", counterpartyId);
+                await _dialogService.ShowMessageAsync("Ошибка при загрузке контрагента!", "Ошибка", UserMessageType.Error);
             }
         }
 
@@ -165,33 +165,64 @@
                 if (contact.Id > 0)
                     await _contactService.DeleteContactAsync(contact.Id);
 
-                Contacts.Remove(contact);
+                Log.Information("Контакт {LastName} удален из карточки контрагента", contact.LastName);
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Ошибка при удалении контакта");
+                Log.Error(ex, "Ошибка при удалении контакта ID: {ContactId} из карточки контрагента", contact.Id);
                 await _dialogService.ShowMessageAsync("Ошибка", "Не удалось удалить контакт.", UserMessageType.Error);
             }
         }
 
         private void Validate()
         {
-            if (FirmId == 0) 
+            if (FirmId == 0)
                 throw new UserMessageException("Не выбрана текущая фирма для привязки контрагента.");
 
-            if (string.IsNullOrWhiteSpace(FullName)) 
+            if (string.IsNullOrWhiteSpace(FullName))
                 throw new UserMessageException("Не заполнено полное наименование.");
 
-            if (string.IsNullOrWhiteSpace(ShortName)) 
+            if (string.IsNullOrWhiteSpace(ShortName))
                 throw new UserMessageException("Не заполнено краткое наименование.");
 
-            if (string.IsNullOrWhiteSpace(Inn) || (Inn.Length != 10 && Inn.Length != 12))
-                throw new UserMessageException("ИНН должен содержать 10 или 12 цифр.");
-
-            if (SelectedLegalForm == 0) 
+            if (SelectedLegalForm == 0)
                 throw new UserMessageException("Не выбрана организационно-правовая форма.");
 
-            if (string.IsNullOrWhiteSpace(LegalAddressVM.SearchText)) 
+            bool isPhysicalPerson = SelectedLegalForm == LegalFormType.IndividualPerson ||
+                                    SelectedLegalForm == LegalFormType.SelfEmployed;
+
+            if (string.IsNullOrWhiteSpace(Inn) || !Inn.All(char.IsDigit))
+                throw new UserMessageException("ИНН должен состоять только из цифр.");
+
+            if (isPhysicalPerson && Inn.Length != 12)
+                throw new UserMessageException("Для ИП и Самозанятых ИНН должен состоять ровно из 12 цифр.");
+            else if (!isPhysicalPerson && Inn.Length != 10)
+                throw new UserMessageException("Для юридических лиц ИНН должен состоять ровно из 10 цифр.");
+
+            if (isPhysicalPerson && !string.IsNullOrWhiteSpace(Kpp))
+                throw new UserMessageException("У ИП и Самозанятых не бывает КПП. Пожалуйста, очистите это поле.");
+
+            if (!isPhysicalPerson && (string.IsNullOrWhiteSpace(Kpp) || Kpp.Length != 9 || !Kpp.All(char.IsDigit)))
+                throw new UserMessageException("Для юридических лиц КПП обязателен и должен состоять ровно из 9 цифр.");
+
+            if (!string.IsNullOrWhiteSpace(Ogrn))
+            {
+                if (!Ogrn.All(char.IsDigit))
+                    throw new UserMessageException("ОГРН/ОГРНИП должен состоять только из цифр.");
+
+                if (isPhysicalPerson && Ogrn.Length != 15)
+                    throw new UserMessageException("ОГРНИП (для ИП) должен состоять ровно из 15 цифр.");
+                else if (!isPhysicalPerson && Ogrn.Length != 13)
+                    throw new UserMessageException("ОГРН (для юр. лиц) должен состоять ровно из 13 цифр.");
+            }
+
+            if (!string.IsNullOrWhiteSpace(Oktmo) && (Oktmo.Length != 8 && Oktmo.Length != 11 || !Oktmo.All(char.IsDigit)))
+                throw new UserMessageException("ОКТМО должен состоять из 8 или 11 цифр.");
+
+            if (!string.IsNullOrWhiteSpace(Okpo) && (Okpo.Length != 8 && Okpo.Length != 10 || !Okpo.All(char.IsDigit)))
+                throw new UserMessageException("ОКПО должен состоять из 8 или 10 цифр.");
+
+            if (string.IsNullOrWhiteSpace(LegalAddressVM.SearchText))
                 throw new UserMessageException("Юридический адрес не заполнен.");
 
             if (!string.IsNullOrWhiteSpace(Email) && !Email.Contains("@"))
@@ -239,6 +270,7 @@
                         contact.CounterpartyId = newId;
                         await _contactService.CreateContactAsync(contact);
                     }
+                    Log.Information("Создан новый контрагент: {ShortName} (ИНН: {INN}) с ID: {CounterpartyId}", ShortName, Inn, newId);
                 }
                 else
                 {
@@ -253,19 +285,22 @@
                         else
                             await _contactService.UpdateContactAsync(contact);
                     }
+                    Log.Information("Обновлен контрагент ID: {CounterpartyId} ({ShortName})", Id, ShortName);
                 }
 
                 _navigation.NavigateBack();
             }
-            catch (UserMessageException ex)
+            catch (UserMessageException)
             {
                 await AttachedFilesVM.RollbackCommitAsync();
-                await _dialogService.ShowMessageAsync(ex.Title, ex.Message, UserMessageType.Warning);
+                throw;
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
-                throw new UserMessageException("Ошибка при сохранении контрагента!", "Ошибка", UserMessageType.Error);
+                await AttachedFilesVM.RollbackCommitAsync();
+
+                Log.Error(ex, "Ошибка при сохранении контрагента. Редактируемый ID: {CounterpartyId}, ИНН: {INN}", Id, Inn);
+                await _dialogService.ShowMessageAsync("Ошибка при сохранении контрагента!", "Ошибка", UserMessageType.Error);
             }
         }
     }

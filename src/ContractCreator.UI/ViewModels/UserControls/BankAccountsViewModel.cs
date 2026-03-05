@@ -103,9 +103,8 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
-                throw new UserMessageException("Ошибка загрузки счетов!",
-                    "Ошибка", UserMessageType.Error);
+                Log.Error(ex, "Ошибка при загрузке банковских счетов для владельца ID: {OwnerId}, Тип: {OwnerType}", _ownerId, _ownerType);
+                await _dialogService.ShowMessageAsync("Ошибка загрузки счетов!", "Ошибка", UserMessageType.Error);
             }
             finally
             {
@@ -127,9 +126,8 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
-                throw new UserMessageException("Ошибка поиска банка!",
-                    "Ошибка", UserMessageType.Error);
+                Log.Error(ex, "Ошибка при поиске банка в классификаторе по запросу: {Query}", query);
+                await _dialogService.ShowMessageAsync("Ошибка поиска банка!", "Ошибка", UserMessageType.Error);
             }
         }
 
@@ -199,7 +197,7 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
+                Log.Error(ex, "Ошибка при сохранении новых счетов для созданного владельца ID: {NewOwnerId}", newOwnerId);
                 await _dialogService.ShowErrorAsync("Не удалось сохранить банковские счета новой фирмы.");
             }
             finally
@@ -272,9 +270,8 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
-                throw new UserMessageException("Ошибка сохранения счета!",
-                    "Ошибка", UserMessageType.Error);
+                Log.Error(ex, "Ошибка при сохранении банковского счета. Редактируемый ID: {EditingId}, БИК: {Bic}", EditingId, Bic);
+                await _dialogService.ShowMessageAsync("Ошибка сохранения счета!", "Ошибка", UserMessageType.Error);
             }
             finally
             {
@@ -305,9 +302,8 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
-                throw new UserMessageException("Ошибка удаления!",
-                    "Ошибка", UserMessageType.Error);
+                Log.Error(ex, "Ошибка при удалении банковского счета ID: {AccountId}", SelectedAccount!.Id);
+                await _dialogService.ShowMessageAsync("Ошибка удаления!", "Ошибка", UserMessageType.Error);
             }
         }
     }

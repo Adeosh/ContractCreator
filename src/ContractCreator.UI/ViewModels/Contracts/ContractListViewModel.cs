@@ -104,7 +104,7 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Ошибка при загрузке контрактов");
+                Log.Error(ex, "Ошибка при загрузке контрактов. Режим: {Mode}, Фирма ID: {FirmId}", CurrentMode, _settingsService.CurrentFirmId);
                 await _dialogService.ShowMessageAsync("Не удалось загрузить список контрактов.", "Ошибка", UserMessageType.Error);
             }
             finally
@@ -146,10 +146,11 @@
             {
                 await _contractService.DeleteContractAsync(contract.Id);
                 Items.Remove(contract);
+                Log.Information("Договор успешно удален: № {ContractNumber} (ID: {ContractId})", contract.ContractNumber, contract.Id);
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Ошибка удаления контракта");
+                Log.Error(ex, "Ошибка при удалении договора ID: {ContractId}", contract.Id);
                 await _dialogService.ShowMessageAsync("Не удалось удалить документ.", "Ошибка", UserMessageType.Error);
             }
         }

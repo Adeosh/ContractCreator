@@ -112,9 +112,8 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
-                throw new UserMessageException("Ошибка загрузки справочников!",
-                    "Ошибка", UserMessageType.Error);
+                Log.Error(ex, "Ошибка при загрузке справочника ОКОПФ.");
+                await _dialogService.ShowMessageAsync("Ошибка загрузки справочников!", "Ошибка", UserMessageType.Error);
             }
         }
 
@@ -135,9 +134,8 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
-                throw new UserMessageException("Ошибка при загрузки факсимиле!",
-                    "Ошибка", UserMessageType.Error);
+                Log.Error(ex, "Ошибка при загрузке файла факсимиле (печати).");
+                await _dialogService.ShowMessageAsync("Ошибка при загрузке факсимиле!", "Ошибка", UserMessageType.Error);
             }
         }
 
@@ -193,9 +191,8 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
-                throw new UserMessageException("Ошибка при загрузке фирмы!",
-                    "Ошибка", UserMessageType.Error);
+                Log.Error(ex, "Ошибка при загрузке данных фирмы ID: {FirmId}", firmId);
+                await _dialogService.ShowMessageAsync("Ошибка при загрузке фирмы!", "Ошибка", UserMessageType.Error);
             }
         }
 
@@ -207,9 +204,44 @@
             if (string.IsNullOrWhiteSpace(ShortName))
                 throw new UserMessageException("Не заполнено краткое наименование фирмы.");
 
-            if (string.IsNullOrWhiteSpace(Inn) || (Inn.Length != 10 && Inn.Length != 12))
-                throw new UserMessageException("ИНН должен содержать 10 цифр (для ООО) или 12 цифр (для ИП).");
+            if (SelectedLegalForm == 0)
+                throw new UserMessageException("Не выбрана организационно-правовая форма.");
 
+            bool isPhysicalPerson = SelectedLegalForm == LegalFormType.IndividualPerson ||
+                                    SelectedLegalForm == LegalFormType.SelfEmployed;
+
+            if (string.IsNullOrWhiteSpace(Inn) || !Inn.All(char.IsDigit))
+                throw new UserMessageException("ИНН должен состоять только из цифр.");
+
+            if (isPhysicalPerson && Inn.Length != 12)
+                throw new UserMessageException("Для ИП и Самозанятых ИНН должен состоять ровно из 12 цифр.");
+            else if (!isPhysicalPerson && Inn.Length != 10)
+                throw new UserMessageException("Для юридических лиц ИНН должен состоять ровно из 10 цифр.");
+
+            if (isPhysicalPerson && !string.IsNullOrWhiteSpace(Kpp))
+                throw new UserMessageException("У ИП и Самозанятых не бывает КПП. Пожалуйста, очистите это поле.");
+
+            if (!isPhysicalPerson && (string.IsNullOrWhiteSpace(Kpp) || Kpp.Length != 9 || !Kpp.All(char.IsDigit)))
+                throw new UserMessageException("Для юридических лиц КПП обязателен и должен состоять ровно из 9 цифр.");
+
+            if (!string.IsNullOrWhiteSpace(Ogrn))
+            {
+                if (!Ogrn.All(char.IsDigit))
+                    throw new UserMessageException("ОГРН/ОГРНИП должен состоять только из цифр.");
+
+                if (isPhysicalPerson && Ogrn.Length != 15)
+                    throw new UserMessageException("ОГРНИП (для ИП) должен состоять ровно из 15 цифр.");
+                else if (!isPhysicalPerson && Ogrn.Length != 13)
+                    throw new UserMessageException("ОГРН (для юр. лиц) должен состоять ровно из 13 цифр.");
+            }
+
+            if (!string.IsNullOrWhiteSpace(Oktmo) && (Oktmo.Length != 8 && Oktmo.Length != 11 || !Oktmo.All(char.IsDigit)))
+                throw new UserMessageException("ОКТМО должен состоять из 8 или 11 цифр.");
+
+            if (!string.IsNullOrWhiteSpace(Okpo) && (Okpo.Length != 8 && Okpo.Length != 10 || !Okpo.All(char.IsDigit)))
+                throw new UserMessageException("ОКПО должен состоять из 8 или 10 цифр.");
+
+            // 5. Контакты и связи
             if (string.IsNullOrWhiteSpace(Phone))
                 throw new UserMessageException("Укажите номер телефона для связи.");
 
@@ -218,9 +250,6 @@
 
             if (SelectedOkopf == null)
                 throw new UserMessageException("Необходимо выбрать ОКОПФ из справочника.");
-
-            if (SelectedLegalForm == 0)
-                throw new UserMessageException("Не выбрана организационно-правовая форма.");
 
             if (BankAccountVM.Accounts.Count == 0)
                 throw new UserMessageException("Добавьте хотя бы один расчетный счет.");
@@ -282,22 +311,24 @@
                     }
 
                     await BankAccountVM.CommitPendingAccountsAsync(newId);
+                    Log.Information("Успешно создана новая фирма: {ShortName} (ИНН: {INN}) с ID: {FirmId}", ShortName, Inn, newId);
                 }
                 else
                     await _firmService.UpdateFirmAsync(dto);
 
                 _navigation.NavigateBack();
             }
-            catch (UserMessageException ex)
+            catch (UserMessageException)
             {
                 await AttachedFilesVM.RollbackCommitAsync();
-                await _dialogService.ShowMessageAsync(ex.Title, ex.Message, UserMessageType.Warning);
+                throw;
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
-                throw new UserMessageException("Ошибка при сохранении фирмы!",
-                    "Ошибка", UserMessageType.Error);
+                await AttachedFilesVM.RollbackCommitAsync();
+
+                Log.Error(ex, "Ошибка при сохранении фирмы. Редактируемый ID: {FirmId}, ИНН: {INN}", Id, Inn);
+                await _dialogService.ShowMessageAsync("Ошибка при сохранении фирмы!", "Ошибка", UserMessageType.Error);
             }
         }
     }

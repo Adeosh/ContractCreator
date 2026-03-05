@@ -1,7 +1,4 @@
-﻿using Avalonia.Styling;
-using System.Reactive.Subjects;
-using System.Text.Json;
-using AvaloniaApp = Avalonia.Application;
+﻿using AvaloniaApp = Avalonia.Application;
 
 namespace ContractCreator.UI.Services.Settings
 {
