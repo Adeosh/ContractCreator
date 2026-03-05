@@ -196,4 +196,37 @@
         <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
 
+
+    <Style Selector="CalendarDatePicker">
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+        <Setter Property="CornerRadius" Value="4"/>
+        <Setter Property="MinHeight" Value="32"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Padding" Value="10,0"/>
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}"/>
+    </Style>
+
+    <Style Selector="CalendarDatePicker:pointerover /template/ Border#BorderElement">
+        <Setter Property="BorderBrush" Value="{DynamicResource ActionBrush}"/>
+    </Style>
+
+    <Style Selector="CalendarDatePicker /template/ Button#PART_Button">
+        <Setter Property="Foreground" Value="{DynamicResource SecondaryTextBrush}"/>
+        <Setter Property="Padding" Value="5,0"/>
+        <Setter Property="Margin" Value="0,0,5,0"/>
+    </Style>
+    
+    <Style Selector="CalendarDatePicker:pointerover /template/ Button#PART_Button">
+        <Setter Property="Foreground" Value="{DynamicResource ActionBrush}"/>
+    </Style>
+
+    <Style Selector="CalendarItem">
+        <Setter Property="HeaderBackground" Value="{DynamicResource RegionBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}"/>
+    </Style>
+
+    <Style Selector="CalendarDayButton:selected /template/ Border#SelectedBackground">
+        <Setter Property="Background" Value="{DynamicResource ActionBrush}"/>
+    </Style>
+
 </Styles>

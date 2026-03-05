@@ -18,6 +18,10 @@ global using System.Windows.Input;
 // Библиотеки
 global using ReactiveUI;
 global using ReactiveUI.Fody.Helpers;
+global using Avalonia;
+global using Avalonia.Input;
+global using Avalonia.Input.Platform;
+global using Avalonia.Interactivity;
 global using Avalonia.Media.Imaging;
 global using Avalonia.Controls;
 global using Avalonia.Controls.ApplicationLifetimes;

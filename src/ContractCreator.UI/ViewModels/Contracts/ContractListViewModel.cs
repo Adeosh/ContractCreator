@@ -97,6 +97,12 @@
                         c.StageTypeId == (int)ContractStageType.Executed ||
                         c.StageTypeId == (int)ContractStageType.Terminated);
                 }
+                else
+                {
+                    filteredData = data.Where(c =>
+                        c.StageTypeId != (int)ContractStageType.Paid &&
+                        c.StageTypeId != (int)ContractStageType.Terminated);
+                }
 
                 Items.Clear();
                 foreach (var item in filteredData)

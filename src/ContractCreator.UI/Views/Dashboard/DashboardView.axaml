@@ -5,36 +5,39 @@
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
 			 x:Class="ContractCreator.UI.Views.Dashboard.DashboardView"
-			 x:DataType="vm:DashboardViewModel">
+			 x:DataType="vm:DashboardViewModel"
+			 Background="{DynamicResource RegionBrush}">
 
 	<UserControl.Styles>
 		<Style Selector="Border.Card">
-			<Setter Property="Background" Value="{DynamicResource SystemRegionBrush}"/>
+			<Setter Property="Background" Value="{DynamicResource CardBrush}"/>
+			<Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+			<Setter Property="BorderThickness" Value="1"/>
 			<Setter Property="CornerRadius" Value="8"/>
-			<Setter Property="Padding" Value="20"/>
-			<Setter Property="BoxShadow" Value="0 4 10 0 #1A000000"/>
-			<Setter Property="Margin" Value="5"/>
+			<Setter Property="Padding" Value="25"/>
+			<Setter Property="BoxShadow" Value="0 4 15 0 #0A000000"/> <Setter Property="Margin" Value="10"/>
 		</Style>
+
 		<Style Selector="TextBlock.CardTitle">
-			<Setter Property="FontSize" Value="14"/>
-			<Setter Property="FontWeight" Value="SemiBold"/>
-			<Setter Property="Opacity" Value="0.7"/>
-			<Setter Property="Margin" Value="0,0,0,10"/>
+			<Setter Property="FontSize" Value="12"/>
+			<Setter Property="FontWeight" Value="Bold"/>
+			<Setter Property="Foreground" Value="{DynamicResource SecondaryTextBrush}"/>
+			<Setter Property="LetterSpacing" Value="1"/> <Setter Property="Margin" Value="0,0,0,15"/>
 		</Style>
 	</UserControl.Styles>
 
 	<ScrollViewer VerticalScrollBarVisibility="Auto">
-		<StackPanel Spacing="25" Margin="30">
+		<StackPanel Spacing="15" Margin="20,30,20,40" MaxWidth="2500" HorizontalAlignment="Center">
 
-			<Grid ColumnDefinitions="*, Auto">
+			<Grid ColumnDefinitions="*, Auto" Margin="10,0,10,20">
 				<StackPanel Spacing="5">
 					<TextBlock Text="{Binding FirmName}"
 							   FontSize="28"
 							   FontWeight="Bold"
-							   Foreground="{DynamicResource SystemAccentColor}"/>
+							   Foreground="{DynamicResource PrimaryTextBrush}"/>
 					<TextBlock Text="{Binding FirmInnKpp}"
 							   FontSize="14"
-							   Opacity="0.6"/>
+							   Foreground="{DynamicResource SecondaryTextBrush}"/>
 				</StackPanel>
 
 				<Button Grid.Column="1"
@@ -47,48 +50,52 @@
 			<UniformGrid Columns="4">
 				<Border Classes="Card">
 					<StackPanel>
-						<TextBlock Text="Договоров в работе" Classes="CardTitle"/>
-						<TextBlock Text="{Binding TotalActiveContracts}" FontSize="32" FontWeight="Bold"/>
+						<TextBlock Text="ДОГОВОРОВ В РАБОТЕ" Classes="CardTitle"/>
+						<TextBlock Text="{Binding TotalActiveContracts}"
+								   FontSize="32" FontWeight="Bold"
+								   Foreground="{DynamicResource PrimaryTextBrush}"/>
 					</StackPanel>
 				</Border>
 
 				<Border Classes="Card">
 					<StackPanel>
-						<TextBlock Text="Общая сумма (активные)" Classes="CardTitle"/>
+						<TextBlock Text="ОБЩАЯ СУММА (АКТИВНЫЕ)" Classes="CardTitle"/>
 						<TextBlock Text="{Binding TotalActiveContractsValue, StringFormat={}{0:N2} ₽}"
-								   FontSize="24" FontWeight="Bold" Foreground="MediumSeaGreen"/>
+								   FontSize="24" FontWeight="Bold"
+								   Foreground="{DynamicResource ActionBrush}"/>
 					</StackPanel>
 				</Border>
 
 				<Border Classes="Card">
 					<StackPanel>
-						<TextBlock Text="Истекают (30 дней)" Classes="CardTitle"/>
+						<TextBlock Text="ИСТЕКАЮТ (30 ДНЕЙ)" Classes="CardTitle"/>
 						<TextBlock Text="{Binding ExpiringContractsCount}"
 								   FontSize="32" FontWeight="Bold"
-								   Foreground="OrangeRed"/>
+								   Foreground="{DynamicResource ErrorBrush}"/>
 					</StackPanel>
 				</Border>
 
 				<Border Classes="Card">
 					<StackPanel>
-						<TextBlock Text="Счета за тек. год" Classes="CardTitle"/>
+						<TextBlock Text="СЧЕТА ЗА ТЕК. ГОД" Classes="CardTitle"/>
 						<TextBlock Text="{Binding TotalPendingInvoicesValue, StringFormat={}{0:N2} ₽}"
-								   FontSize="24" FontWeight="Bold"/>
+								   FontSize="24" FontWeight="Bold"
+								   Foreground="{DynamicResource PrimaryTextBrush}"/>
 					</StackPanel>
 				</Border>
 			</UniformGrid>
 
-			<Grid ColumnDefinitions="*, 1.5*" Height="450">
+			<Grid ColumnDefinitions="*, 1.5*" Height="400">
 
 				<Border Grid.Column="0" Classes="Card">
 					<DockPanel>
-						<TextBlock DockPanel.Dock="Top" Text="Статусы документов" Classes="CardTitle"/>
+						<TextBlock DockPanel.Dock="Top" Text="СТАТУСЫ ДОКУМЕНТОВ" Classes="CardTitle"/>
 
 						<Panel>
 							<TextBlock Text="Нет данных для отображения"
 									   VerticalAlignment="Center"
 									   HorizontalAlignment="Center"
-									   Opacity="0.3"
+									   Foreground="{DynamicResource SecondaryTextBrush}"
 									   IsVisible="{Binding !ContractsByStageChart.Count}"/>
 
 							<ItemsControl ItemsSource="{Binding ContractsByStageChart}"
@@ -96,9 +103,9 @@
 										  VerticalAlignment="Top">
 								<ItemsControl.ItemTemplate>
 									<DataTemplate>
-										<Grid ColumnDefinitions="*, Auto" Margin="0,5">
-											<TextBlock Text="{Binding Label}"/>
-											<TextBlock Grid.Column="1" Text="{Binding Value}" FontWeight="Bold" Margin="20,0,0,0"/>
+										<Grid ColumnDefinitions="*, Auto" Margin="0,8">
+											<TextBlock Text="{Binding Label}" Foreground="{DynamicResource SecondaryTextBrush}" VerticalAlignment="Center"/>
+											<TextBlock Grid.Column="1" Text="{Binding Value}" FontWeight="Bold" FontSize="16" Margin="20,0,0,0" Foreground="{DynamicResource PrimaryTextBrush}"/>
 										</Grid>
 									</DataTemplate>
 								</ItemsControl.ItemTemplate>
@@ -110,20 +117,28 @@
 				<Border Grid.Column="1" Classes="Card">
 					<DockPanel>
 						<Grid DockPanel.Dock="Top" ColumnDefinitions="*, Auto" Margin="0,0,0,15">
-							<TextBlock Text="Последние договоры" Classes="CardTitle" VerticalAlignment="Center" Margin="0"/>
-							<Button Grid.Column="1" Command="{Binding GoToContractsCommand}"
-									Content="Показать все" Classes="link"/>
+							<TextBlock Text="ПОСЛЕДНИЕ ДОГОВОРЫ" Classes="CardTitle" VerticalAlignment="Center" Margin="0"/>
+							<Button Grid.Column="1"
+									Command="{Binding GoToContractsCommand}"
+									Content="Показать все"
+									Background="Transparent"
+									Foreground="{DynamicResource ActionBrush}"
+									BorderThickness="0"
+									FontWeight="SemiBold"
+									Cursor="Hand"/>
 						</Grid>
 
 						<DataGrid ItemsSource="{Binding RecentContracts}"
 								  IsReadOnly="True"
 								  CanUserResizeColumns="True"
-								  GridLinesVisibility="None"
+								  GridLinesVisibility="Horizontal"
+								  BorderThickness="1"
+								  BorderBrush="{DynamicResource BorderBrush}"
 								  Background="Transparent">
 							<DataGrid.Columns>
 								<DataGridTextColumn Header="Номер" Binding="{Binding ContractNumber}" Width="Auto"/>
 								<DataGridTextColumn Header="Предмет" Binding="{Binding ContractSubject}" Width="*"/>
-								<DataGridTextColumn Header="Сумма" Binding="{Binding ContractPrice, StringFormat={}{0:N2}}" Width="Auto"/>
+								<DataGridTextColumn Header="Сумма" Binding="{Binding ContractPrice, StringFormat={}{0:N2}}" Width="140"/>
 							</DataGrid.Columns>
 						</DataGrid>
 					</DockPanel>

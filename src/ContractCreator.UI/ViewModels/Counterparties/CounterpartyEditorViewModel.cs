@@ -22,6 +22,11 @@
         [Reactive] public string? Okpo { get; set; }
         [Reactive] public string? ExtraInformation { get; set; }
 
+        [Reactive] public int InnMaxLength { get; set; } = 12;
+        [Reactive] public int OgrnMaxLength { get; set; } = 15;
+        public bool IsPhysicalPerson => SelectedLegalForm == LegalFormType.IndividualPerson || SelectedLegalForm == LegalFormType.SelfEmployed;
+
+
         public AddressViewModel LegalAddressVM { get; }
         public AddressViewModel ActualAddressVM { get; }
         public BankAccountsViewModel BankAccountVM { get; }
@@ -70,6 +75,29 @@
             AddContactCommand = ReactiveCommand.Create(AddContact);
             EditContactCommand = ReactiveCommand.Create<ContactDto>(EditContact);
             DeleteContactCommand = ReactiveCommand.CreateFromTask<ContactDto>(DeleteContactAsync);
+
+            SetupRegistrationData();
+        }
+
+        private void SetupRegistrationData()
+        {
+            this.WhenAnyValue(x => x.SelectedLegalForm)
+                .Subscribe(_ => UpdateLimitsBasedOnLegalForm());
+        }
+
+        private void UpdateLimitsBasedOnLegalForm()
+        {
+            InnMaxLength = IsPhysicalPerson ? 12 : 10;
+            OgrnMaxLength = IsPhysicalPerson ? 15 : 13;
+
+            if (!IsPhysicalPerson && Inn?.Length > 10)
+                Inn = Inn.Substring(0, 10);
+            if (!IsPhysicalPerson && Ogrn?.Length > 13)
+                Ogrn = Ogrn.Substring(0, 13);
+            if (IsPhysicalPerson)
+                Kpp = string.Empty;
+
+            this.RaisePropertyChanged(nameof(IsPhysicalPerson));
         }
 
         public async Task OnNavigatedToAsync(object? parameter = null)

@@ -3,6 +3,7 @@
 			 xmlns:vm="using:ContractCreator.UI.ViewModels.Counterparties"
 			 xmlns:controls="using:ContractCreator.UI.Views.UserControls"
 			 xmlns:dto="using:ContractCreator.Shared.DTOs"
+			 xmlns:behaviors="using:ContractCreator.UI.Behaviors"
 			 x:Class="ContractCreator.UI.Views.Counterparties.CounterpartyEditorView"
 			 x:DataType="vm:CounterpartyEditorViewModel"
 			 x:Name="Root">
@@ -56,31 +57,71 @@
 				<StackPanel Spacing="15">
 					<TextBlock Text="Регистрационные данные" FontWeight="Bold" FontSize="16" Foreground="{DynamicResource PrimaryTextColor}"/>
 
-					<Grid ColumnDefinitions="*, 10, *, 10, *">
+										<Grid ColumnDefinitions="*, 20, *, 20, *">
 						<StackPanel Grid.Column="0" Spacing="5">
 							<TextBlock Text="ИНН" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
-							<TextBox Text="{Binding Inn}" Classes="outline"/>
+							<TextBox Text="{Binding Inn}"
+									 MaxLength="{Binding InnMaxLength}"
+									 behaviors:TextBoxBehaviors.IsNumericOnly="True"
+									 Classes="outline"
+									 Watermark="Только цифры">
+								<TextBox.InnerRightContent>
+									<StackPanel Orientation="Horizontal" Margin="0,0,10,0" Opacity="0.5">
+										<TextBlock Text="{Binding Inn.Length, FallbackValue=0}" FontSize="12" VerticalAlignment="Center"/>
+										<TextBlock Text=" / " FontSize="12" VerticalAlignment="Center"/>
+										<TextBlock Text="{Binding InnMaxLength}" FontSize="12" VerticalAlignment="Center"/>
+									</StackPanel>
+								</TextBox.InnerRightContent>
+							</TextBox>
 						</StackPanel>
+
 						<StackPanel Grid.Column="2" Spacing="5">
 							<TextBlock Text="КПП" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
-							<TextBox Text="{Binding Kpp}" Classes="outline"/>
+							<TextBox Text="{Binding Kpp}"
+									 MaxLength="9"
+									 behaviors:TextBoxBehaviors.IsNumericOnly="True"
+									 IsEnabled="{Binding !IsPhysicalPerson}"
+									 Classes="outline"
+									 Watermark="9 цифр (кроме ИП)">
+								<TextBox.InnerRightContent>
+									<StackPanel Orientation="Horizontal" Margin="0,0,10,0" Opacity="0.5" IsVisible="{Binding !IsPhysicalPerson}">
+										<TextBlock Text="{Binding Kpp.Length, FallbackValue=0}" FontSize="12" VerticalAlignment="Center"/>
+										<TextBlock Text=" / 9" FontSize="12" VerticalAlignment="Center"/>
+									</StackPanel>
+								</TextBox.InnerRightContent>
+							</TextBox>
 						</StackPanel>
+
 						<StackPanel Grid.Column="4" Spacing="5">
-							<TextBlock Text="ОГРН" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
-							<TextBox Text="{Binding Ogrn}" Classes="outline"/>
+							<TextBlock Text="ОГРН / ОГРНИП" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
+							<TextBox Text="{Binding Ogrn}"
+									 MaxLength="{Binding OgrnMaxLength}"
+									 behaviors:TextBoxBehaviors.IsNumericOnly="True"
+									 Classes="outline"
+									 Watermark="Номер регистрации">
+								<TextBox.InnerRightContent>
+									<StackPanel Orientation="Horizontal" Margin="0,0,10,0" Opacity="0.5">
+										<TextBlock Text="{Binding Ogrn.Length, FallbackValue=0}" FontSize="12" VerticalAlignment="Center"/>
+										<TextBlock Text=" / " FontSize="12" VerticalAlignment="Center"/>
+										<TextBlock Text="{Binding OgrnMaxLength}" FontSize="12" VerticalAlignment="Center"/>
+									</StackPanel>
+								</TextBox.InnerRightContent>
+							</TextBox>
 						</StackPanel>
 					</Grid>
 
-					<Grid ColumnDefinitions="*, 10, *, 10, *">
+					<Grid ColumnDefinitions="*, 20, *, 20, *" Margin="0,15,0,0">
 						<StackPanel Grid.Column="0" Spacing="5">
 							<TextBlock Text="ОКТМО" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
-							<TextBox Text="{Binding Oktmo}" Classes="outline"/>
+							<TextBox Text="{Binding Oktmo}" behaviors:TextBoxBehaviors.IsNumericOnly="True" Classes="outline" MaxLength="11" Watermark="8 или 11 цифр"/>
 						</StackPanel>
+
 						<StackPanel Grid.Column="2" Spacing="5">
 							<TextBlock Text="ОКПО" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
-							<TextBox Text="{Binding Okpo}" Classes="outline"/>
+							<TextBox Text="{Binding Okpo}" behaviors:TextBoxBehaviors.IsNumericOnly="True" Classes="outline" MaxLength="10" Watermark="8 или 10 цифр"/>
 						</StackPanel>
-						<StackPanel Grid.Column="4"/> </Grid>
+					</Grid>
+
 				</StackPanel>
 			</Border>
 

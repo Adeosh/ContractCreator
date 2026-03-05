@@ -25,30 +25,39 @@
 			<TabControl Grid.Row="1" Margin="10">
 				<TabItem Header="Основное">
 					<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-						<StackPanel Margin="10,0,10,20" Spacing="25" MaxWidth="1000" HorizontalAlignment="Left">
+						<StackPanel Margin="30,10,30,30"
+									Spacing="25"
+									MaxWidth="1250"
+									HorizontalAlignment="Stretch">
 
-							<Border Background="{DynamicResource CardBrush}" CornerRadius="8" Padding="15">
-								<Grid ColumnDefinitions="*, 20, *, 20, *">
-									<StackPanel Grid.Column="0" Spacing="5">
-										<TextBlock Text="Вид соглашения *" FontWeight="Bold"/>
+							<Border Background="{DynamicResource CardBrush}"
+									CornerRadius="8"
+									Padding="25"
+									BoxShadow="0 2 10 0 #1A000000">
+								<Grid ColumnDefinitions="*, 50, *">
+									<StackPanel Grid.Column="0" Spacing="8">
+										<TextBlock Text="Вид соглашения *" FontWeight="Bold" FontSize="13"/>
 										<ComboBox ItemsSource="{Binding ContractTypes}"
 												  SelectedItem="{Binding SelectedType}"
-												  HorizontalAlignment="Stretch">
+												  HorizontalAlignment="Stretch"
+												  Height="40">
 											<ComboBox.ItemTemplate>
 												<DataTemplate>
-													<TextBlock Text="{Binding Converter={StaticResource EnumDescConverter}}"/>
+													<TextBlock Text="{Binding Converter={StaticResource EnumDescConverter}}" VerticalAlignment="Center"/>
 												</DataTemplate>
 											</ComboBox.ItemTemplate>
 										</ComboBox>
 									</StackPanel>
 
-									<StackPanel Grid.Column="4" Spacing="5">
-										<TextBlock Text="Текущая стадия *" FontWeight="Bold" Foreground="DarkOrange"/>
+									<StackPanel Grid.Column="2" Spacing="8">
+										<TextBlock Text="Текущая стадия договора *" FontWeight="Bold" Foreground="DarkOrange" FontSize="13" Opacity="0.6"/>
 										<ComboBox ItemsSource="{Binding AvailableStages}"
-												  SelectedItem="{Binding SelectedStage}" HorizontalAlignment="Stretch">
+												  SelectedItem="{Binding SelectedStage}"
+												  HorizontalAlignment="Stretch"
+												  Height="40">
 											<ComboBox.ItemTemplate>
 												<DataTemplate>
-													<TextBlock Text="{Binding Name}"/>
+													<TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
 												</DataTemplate>
 											</ComboBox.ItemTemplate>
 										</ComboBox>
@@ -56,139 +65,167 @@
 								</Grid>
 							</Border>
 
-							<Grid ColumnDefinitions="*, 40, *">
-								<StackPanel Grid.Column="0" Spacing="15">
-									<TextBlock Text="Реквизиты Нашей Фирмы" FontSize="16" FontWeight="SemiBold"/>
-									<StackPanel Spacing="5">
-										<TextBlock Text="Подписант со стороны предприятия *"/>
-										<ComboBox ItemsSource="{Binding Workers}" SelectedItem="{Binding SelectedFirmSigner}" HorizontalAlignment="Stretch">
-											<ComboBox.ItemTemplate>
-												<DataTemplate>
-													<TextBlock Text="{Binding LastName}"/>
-												</DataTemplate>
-											</ComboBox.ItemTemplate>
-										</ComboBox>
+							<Grid ColumnDefinitions="*, 30, *">
+								<Border Grid.Column="0" Background="{DynamicResource CardBrush}" CornerRadius="8" Padding="20">
+									<StackPanel Spacing="15">
+										<StackPanel Orientation="Horizontal" Spacing="12">
+											<Path Data="{StaticResource UserBoardIcon}" Fill="{DynamicResource SystemAccentColor}" Width="18" Height="18" VerticalAlignment="Center"/>
+											<TextBlock Text="Наша организация" FontSize="18" FontWeight="Bold"/>
+										</StackPanel>
+										<Separator Height="1" Opacity="0.1" Margin="0,0,0,5"/>
+										<StackPanel Spacing="8">
+											<TextBlock Text="Подписант (ответственное лицо) *" FontSize="13" Opacity="0.6"/>
+											<ComboBox ItemsSource="{Binding Workers}"
+													  SelectedItem="{Binding SelectedFirmSigner}"
+													  HorizontalAlignment="Stretch"
+													  PlaceholderText="Выберите сотрудника...">
+												<ComboBox.ItemTemplate>
+													<DataTemplate>
+														<TextBlock Text="{Binding LastName}"/>
+													</DataTemplate>
+												</ComboBox.ItemTemplate>
+											</ComboBox>
+										</StackPanel>
 									</StackPanel>
-								</StackPanel>
+								</Border>
 
-								<StackPanel Grid.Column="2" Spacing="15">
-									<TextBlock Text="Реквизиты Контрагента" FontSize="16" FontWeight="SemiBold"/>
-									<StackPanel Spacing="5">
-										<TextBlock Text="Заказчик/Контрагент *"/>
-										<ComboBox ItemsSource="{Binding Counterparties}" SelectedItem="{Binding SelectedCounterparty}" HorizontalAlignment="Stretch">
-											<ComboBox.ItemTemplate>
-												<DataTemplate>
-													<TextBlock Text="{Binding ShortName}"/>
-												</DataTemplate>
-											</ComboBox.ItemTemplate>
-										</ComboBox>
+								<Border Grid.Column="2" Background="{DynamicResource CardBrush}" CornerRadius="8" Padding="20">
+									<StackPanel Spacing="15">
+										<StackPanel Orientation="Horizontal" Spacing="12">
+											<Path Data="{StaticResource HandshakeIcon}" Fill="Gray" Width="18" Height="18" VerticalAlignment="Center"/>
+											<TextBlock Text="Контрагент / Заказчик" FontSize="18" FontWeight="Bold"/>
+										</StackPanel>
+										<Separator Height="1" Opacity="0.1" Margin="0,0,0,5"/>
+										<Grid ColumnDefinitions="*, 20, *">
+											<StackPanel Grid.Column="0" Spacing="8">
+												<TextBlock Text="Организация *" FontSize="13" Opacity="0.6"/>
+												<ComboBox ItemsSource="{Binding Counterparties}"
+														  SelectedItem="{Binding SelectedCounterparty}"
+														  HorizontalAlignment="Stretch"
+														  PlaceholderText="Выберите организацию...">
+													<ComboBox.ItemTemplate>
+														<DataTemplate>
+															<TextBlock Text="{Binding ShortName}"/>
+														</DataTemplate>
+													</ComboBox.ItemTemplate>
+												</ComboBox>
+											</StackPanel>
+											<StackPanel Grid.Column="2" Spacing="8">
+												<TextBlock Text="Подписант *" FontSize="13" Opacity="0.6"/>
+												<ComboBox ItemsSource="{Binding CounterpartyContacts}"
+														  SelectedItem="{Binding SelectedCounterpartySigner}"
+														  HorizontalAlignment="Stretch"
+														  PlaceholderText="ФИО...">
+													<ComboBox.ItemTemplate>
+														<DataTemplate>
+															<TextBlock Text="{Binding LastName}"/>
+														</DataTemplate>
+													</ComboBox.ItemTemplate>
+												</ComboBox>
+											</StackPanel>
+										</Grid>
 									</StackPanel>
-									<StackPanel Spacing="5">
-										<TextBlock Text="Подписант со стороны контрагента *"/>
-										<ComboBox ItemsSource="{Binding CounterpartyContacts}" SelectedItem="{Binding SelectedCounterpartySigner}" HorizontalAlignment="Stretch">
-											<ComboBox.ItemTemplate>
-												<DataTemplate>
-													<TextBlock Text="{Binding LastName}"/>
-												</DataTemplate>
-											</ComboBox.ItemTemplate>
-										</ComboBox>
-									</StackPanel>
-								</StackPanel>
+								</Border>
 							</Grid>
 
-							<Separator Background="LightGray"/>
+							<Border Background="{DynamicResource CardBrush}" CornerRadius="8" Padding="25">
+								<StackPanel Spacing="25">
+									<TextBlock Text="Параметры и сроки документа" FontSize="18" FontWeight="Bold" Margin="0,0,0,5"/>
 
-							<StackPanel Spacing="15">
-								<TextBlock Text="Детали документа" FontSize="16" FontWeight="SemiBold"/>
-
-								<Grid ColumnDefinitions="*, 20, *, 20, *">
-									<StackPanel Grid.Column="0" Spacing="5">
-										<TextBlock Text="Номер *" />
-										<TextBox Text="{Binding ContractNumber}" />
-									</StackPanel>
-									<StackPanel Grid.Column="2" Spacing="5">
-										<TextBlock Text="Валюта *" />
-										<ComboBox ItemsSource="{Binding Currencies}" SelectedItem="{Binding SelectedCurrency}" HorizontalAlignment="Stretch">
-											<ComboBox.ItemTemplate>
-												<DataTemplate>
-													<TextBlock Text="{Binding Code}"/>
-												</DataTemplate>
-											</ComboBox.ItemTemplate>
-										</ComboBox>
-									</StackPanel>
-									<StackPanel Grid.Column="4" Spacing="5">
-										<TextBlock Text="Сумма" />
-										<TextBox Text="{Binding ContractPrice}" IsReadOnly="{Binding !IsCustomerRole}" />
-									</StackPanel>
-								</Grid>
-
-								<Grid ColumnDefinitions="*, 20, *, 20, *" IsVisible="{Binding IsConclusionStage}">
-									<StackPanel Grid.Column="0" Spacing="5">
-										<TextBlock Text="Дата подписания" />
-										<DatePicker SelectedDate="{Binding IssueDate, Converter={StaticResource DateConverter}}" HorizontalAlignment="Stretch" />
-									</StackPanel>
-									<StackPanel Grid.Column="2" Spacing="5">
-										<TextBlock Text="Дата начала" />
-										<DatePicker SelectedDate="{Binding StartDate, Converter={StaticResource DateConverter}}" HorizontalAlignment="Stretch" />
-									</StackPanel>
-									<StackPanel Grid.Column="4" Spacing="5">
-										<TextBlock Text="Дата окончания" />
-										<DatePicker SelectedDate="{Binding EndDate, Converter={StaticResource DateConverter}}" HorizontalAlignment="Stretch" />
-									</StackPanel>
-								</Grid>
-
-								<StackPanel Spacing="5">
-									<TextBlock Text="Предмет" />
-									<TextBox Text="{Binding ContractSubject}" AcceptsReturn="True" Height="60" TextWrapping="Wrap"/>
-								</StackPanel>
-							</StackPanel>
-
-							<Border Background="#FFF3E0" Padding="15" CornerRadius="8" IsVisible="{Binding IsTenderStage}">
-								<StackPanel Spacing="15">
-									<TextBlock Text="Торги" FontWeight="Bold" Foreground="#E65100"/>
-									<StackPanel Spacing="5" Width="300" HorizontalAlignment="Left">
-										<TextBlock Text="Дата и время начала торгов *" />
-										<DatePicker SelectedDate="{Binding TenderDate, Converter={StaticResource DateConverter}}" HorizontalAlignment="Stretch"/>
-									</StackPanel>
-								</StackPanel>
-							</Border>
-
-							<Border Background="#E3F2FD" Padding="15" CornerRadius="8" IsVisible="{Binding IsSubmission}">
-								<StackPanel Spacing="15">
-									<TextBlock Text="Данные подачи заявок" FontWeight="Bold" Foreground="#1565C0"/>
-									<Grid ColumnDefinitions="*, 20, *">
-										<StackPanel Grid.Column="0" Spacing="5">
-											<TextBlock Text="Дата и время окончания *" />
-											<DatePicker SelectedDate="{Binding SubmissionDate, Converter={StaticResource DateConverter}}" HorizontalAlignment="Stretch" />
+									<Grid ColumnDefinitions="*, 30, *, 30, *">
+										<StackPanel Grid.Column="0" Spacing="8">
+											<TextBlock Text="Номер документа *" FontSize="13" Opacity="0.6"/>
+											<TextBox Text="{Binding ContractNumber}" Watermark="№ договора" Height="35"/>
 										</StackPanel>
-										<StackPanel Grid.Column="2" Spacing="5">
-											<TextBlock Text="Идентификационный код закупки *" />
-											<TextBox Text="{Binding SubmissionCode}" />
+										<StackPanel Grid.Column="2" Spacing="8">
+											<TextBlock Text="Валюта *" FontSize="13" Opacity="0.6"/>
+											<ComboBox ItemsSource="{Binding Currencies}" SelectedItem="{Binding SelectedCurrency}" HorizontalAlignment="Stretch" Height="35">
+												<ComboBox.ItemTemplate>
+													<DataTemplate>
+														<TextBlock Text="{Binding Code}"/>
+													</DataTemplate>
+												</ComboBox.ItemTemplate>
+											</ComboBox>
+										</StackPanel>
+										<StackPanel Grid.Column="4" Spacing="8">
+											<TextBlock Text="Общая сумма (авто)" FontSize="13" Opacity="0.6" />
+											<TextBox Text="{Binding ContractPrice, StringFormat={}{0:N2}}"
+													 IsReadOnly="{Binding !IsCustomerRole}"
+													 FontWeight="Bold"
+													 FontSize="16"
+													 Foreground="#2E7D32"
+													 Height="35"/>
 										</StackPanel>
 									</Grid>
-									<StackPanel Spacing="5">
-										<TextBlock Text="Адрес электронной площадки" />
-										<TextBox Text="{Binding SubmissionLink}" />
+
+									<Grid ColumnDefinitions="*, 30, *, 30, *" IsVisible="{Binding IsConclusionStage}">
+										<StackPanel Grid.Column="0" Spacing="8">
+											<TextBlock Text="Дата подписания" FontSize="13" Opacity="0.6"/>
+											<DatePicker SelectedDate="{Binding IssueDate, Converter={StaticResource DateConverter}}" HorizontalAlignment="Stretch" />
+										</StackPanel>
+										<StackPanel Grid.Column="2" Spacing="8">
+											<TextBlock Text="Дата начала работ" FontSize="13" Opacity="0.6"/>
+											<DatePicker SelectedDate="{Binding StartDate, Converter={StaticResource DateConverter}}" HorizontalAlignment="Stretch" />
+										</StackPanel>
+										<StackPanel Grid.Column="4" Spacing="8">
+											<TextBlock Text="Дата окончания" FontSize="13" Opacity="0.6"/>
+											<DatePicker SelectedDate="{Binding EndDate, Converter={StaticResource DateConverter}}" HorizontalAlignment="Stretch" />
+										</StackPanel>
+									</Grid>
+
+									<StackPanel Spacing="8">
+										<TextBlock Text="Предмет договора (краткое содержание)" FontSize="13" Opacity="0.6"/>
+										<TextBox Text="{Binding ContractSubject}"
+												 AcceptsReturn="True"
+												 MinHeight="100"
+												 TextWrapping="Wrap"
+												 Watermark="Опишите суть соглашения, поставляемые товары или оказываемые услуги..."/>
 									</StackPanel>
 								</StackPanel>
 							</Border>
 
-							<Border Background="#FFEBEE" Padding="15" CornerRadius="8" IsVisible="{Binding IsTermination}">
+							<Border Background="#F0F7FF" BorderBrush="#CCE5FF" BorderThickness="1" Padding="20" CornerRadius="8" IsVisible="{Binding IsSubmission}">
 								<StackPanel Spacing="15">
-									<TextBlock Text="Расторжение контракта" FontWeight="Bold" Foreground="#C62828"/>
-									<Grid ColumnDefinitions="*, 20, *">
-										<StackPanel Grid.Column="0" Spacing="5">
-											<TextBlock Text="Инициатор *" />
+									<StackPanel Orientation="Horizontal" Spacing="10">
+										<TextBlock Text="🔵" VerticalAlignment="Center"/>
+										<TextBlock Text="ТЕНДЕРНАЯ ПРОЦЕДУРА" FontWeight="Heavy" Foreground="#1565C0" LetterSpacing="1"/>
+									</StackPanel>
+									<Grid ColumnDefinitions="*, 30, 2*, 30, 2*">
+										<StackPanel Grid.Column="0" Spacing="8">
+											<TextBlock Text="Окончание подачи *" FontSize="12" Opacity="0.7"/>
+											<DatePicker SelectedDate="{Binding SubmissionDate, Converter={StaticResource DateConverter}}" HorizontalAlignment="Stretch" />
+										</StackPanel>
+										<StackPanel Grid.Column="2" Spacing="8">
+											<TextBlock Text="Идентификационный код закупки (ИКЗ) *" FontSize="12" Opacity="0.7" />
+											<TextBox Text="{Binding SubmissionCode}" Watermark="26-ти значный код"/>
+										</StackPanel>
+										<StackPanel Grid.Column="4" Spacing="8">
+											<TextBlock Text="Электронная площадка" FontSize="12" Opacity="0.7" />
+											<TextBox Text="{Binding SubmissionLink}" Watermark="https://..."/>
+										</StackPanel>
+									</Grid>
+								</StackPanel>
+							</Border>
+
+							<Border Background="#FFF5F5" BorderBrush="#FFE3E3" BorderThickness="1" Padding="20" CornerRadius="8" IsVisible="{Binding IsTermination}">
+								<StackPanel Spacing="15">
+									<StackPanel Orientation="Horizontal" Spacing="10">
+										<TextBlock Text="🔴" VerticalAlignment="Center"/>
+										<TextBlock Text="ПРОЦЕСС РАСТОРЖЕНИЯ" FontWeight="Heavy" Foreground="#C62828" LetterSpacing="1"/>
+									</StackPanel>
+									<Grid ColumnDefinitions="*, 30, *">
+										<StackPanel Grid.Column="0" Spacing="8">
+											<TextBlock Text="Кем инициировано? *" FontSize="12" Opacity="0.7"/>
 											<ComboBox ItemsSource="{Binding Initiators}" SelectedItem="{Binding SelectedInitiator}" HorizontalAlignment="Stretch"/>
 										</StackPanel>
-										<StackPanel Grid.Column="2" Spacing="5">
-											<TextBlock Text="Дата завершения/расторжения" />
+										<StackPanel Grid.Column="2" Spacing="8">
+											<TextBlock Text="Дата прекращения обязательств" FontSize="12" Opacity="0.7"/>
 											<DatePicker SelectedDate="{Binding ExecutionDate, Converter={StaticResource DateConverter}}" HorizontalAlignment="Stretch"/>
 										</StackPanel>
 									</Grid>
-									<StackPanel Spacing="5">
-										<TextBlock Text="Причина расторжения *" />
-										<TextBox Text="{Binding TerminationReason}" AcceptsReturn="True" Height="60" TextWrapping="Wrap"/>
+									<StackPanel Spacing="8">
+										<TextBlock Text="Основание / Причина расторжения *" FontSize="12" Opacity="0.7" />
+										<TextBox Text="{Binding TerminationReason}" AcceptsReturn="True" Height="70" TextWrapping="Wrap" Watermark="Укажите номер соглашения о расторжении или причину..."/>
 									</StackPanel>
 								</StackPanel>
 							</Border>

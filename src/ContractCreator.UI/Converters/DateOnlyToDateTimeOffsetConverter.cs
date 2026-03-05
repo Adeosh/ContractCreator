@@ -6,19 +6,17 @@
 
         public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
-            if (value is DateOnly date)
-            {
-                return new DateTimeOffset(date.ToDateTime(TimeOnly.MinValue));
-            }
+            if (value is DateOnly dateOnly)
+                return dateOnly.ToDateTime(TimeOnly.MinValue);
+
             return null;
         }
 
         public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
-            if (value is DateTimeOffset dateTimeOffset)
-            {
-                return DateOnly.FromDateTime(dateTimeOffset.DateTime);
-            }
+            if (value is DateTime dateTime)
+                return DateOnly.FromDateTime(dateTime);
+
             return null;
         }
     }
