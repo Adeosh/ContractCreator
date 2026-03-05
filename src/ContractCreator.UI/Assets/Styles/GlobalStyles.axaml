@@ -229,4 +229,30 @@
         <Setter Property="Background" Value="{DynamicResource ActionBrush}"/>
     </Style>
 
+    <Style Selector="TabItem:selected /template/ Border#PART_SelectedPipe">
+        <Setter Property="Background" Value="{DynamicResource ActionBrush}"/>
+    </Style>
+
+    <Style Selector="TabItem:selected">
+        <Setter Property="Foreground" Value="{DynamicResource ActionBrush}"/>
+    </Style>
+
+    <Style Selector="TabItem">
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}"/>
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+    
+    <Style Selector="TabItem:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Foreground" Value="{DynamicResource ActionHoverBrush}"/>
+    </Style>
+
+    <Style Selector="TabControl.centeredTabs">
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <WrapPanel HorizontalAlignment="Center"/>
+            </ItemsPanelTemplate>
+        </Setter>
+    </Style>
+
 </Styles>

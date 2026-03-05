@@ -1,457 +1,450 @@
 <UserControl xmlns="https://github.com/avaloniaui"
-			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-			 xmlns:vm="using:ContractCreator.UI.ViewModels.Contracts"
-			 xmlns:controls="using:ContractCreator.UI.Views.UserControls"
-			 xmlns:dto="using:ContractCreator.Shared.DTOs"
-			 x:Class="ContractCreator.UI.Views.Contracts.ContractEditorView"
-			 x:DataType="vm:ContractEditorViewModel"
-			 x:Name="Root">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ContractCreator.UI.ViewModels.Contracts"
+             xmlns:controls="using:ContractCreator.UI.Views.UserControls"
+             xmlns:dto="using:ContractCreator.Shared.DTOs"
+             x:Class="ContractCreator.UI.Views.Contracts.ContractEditorView"
+             x:DataType="vm:ContractEditorViewModel"
+             x:Name="Root"
+             Background="{DynamicResource RegionBrush}">
 
-	<Grid>
-		<Grid RowDefinitions="Auto, *">
-			<Border Grid.Row="0" Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}" Padding="15">
-				<Grid ColumnDefinitions="Auto, *, Auto">
-					<StackPanel Orientation="Horizontal" Spacing="15">
-						<Button Command="{Binding CancelCommand}" Content="🠔" Classes="windowBtn"/>
-						<TextBlock Text="{Binding PageTitle}" FontSize="20" FontWeight="Bold" VerticalAlignment="Center"/>
-					</StackPanel>
-					<StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10">
-						<Button Content="Отмена" Command="{Binding CancelCommand}"/>
-						<Button Content="Сохранить" Command="{Binding SaveCommand}" Classes="accent"/>
-					</StackPanel>
-				</Grid>
-			</Border>
+    <Grid>
+        <Grid RowDefinitions="Auto, *">
+            <Border Grid.Row="0" Background="{DynamicResource CardBrush}" Padding="20,15" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BorderBrush}">
+                <Grid ColumnDefinitions="Auto, *, Auto">
+                    <StackPanel Orientation="Horizontal" Spacing="15">
+                        <Button Command="{Binding CancelCommand}" Content="🠔" Classes="windowBtn" VerticalAlignment="Center" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                        <TextBlock Text="{Binding PageTitle}" FontSize="22" FontWeight="Bold" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10">
+                        <Button Content="Отмена" Command="{Binding CancelCommand}" Foreground="{DynamicResource PrimaryTextBrush}" Background="Transparent" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="20,8"/>
+                        <Button Content="Сохранить" Command="{Binding SaveCommand}" Classes="accent" FontWeight="Bold" Padding="20,8"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
 
-			<TabControl Grid.Row="1" Margin="10">
-				<TabItem Header="Основное">
-					<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-						<StackPanel Margin="30,10,30,30"
-									Spacing="25"
-									MaxWidth="1250"
-									HorizontalAlignment="Stretch">
+            <TabControl Grid.Row="1" Margin="10" Classes="centeredTabs">
+                
+                <TabItem Header="Основное">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                        <StackPanel Margin="30,20,30,30"
+                                    Spacing="25"
+                                    MaxWidth="1400"
+                                    HorizontalAlignment="Stretch">
 
-							<Border Background="{DynamicResource CardBrush}"
-									CornerRadius="8"
-									Padding="25"
-									BoxShadow="0 2 10 0 #1A000000">
-								<Grid ColumnDefinitions="*, 50, *">
-									<StackPanel Grid.Column="0" Spacing="8">
-										<TextBlock Text="Вид соглашения *" FontWeight="Bold" FontSize="13"/>
-										<ComboBox ItemsSource="{Binding ContractTypes}"
-												  SelectedItem="{Binding SelectedType}"
-												  HorizontalAlignment="Stretch"
-												  Height="40">
-											<ComboBox.ItemTemplate>
-												<DataTemplate>
-													<TextBlock Text="{Binding Converter={StaticResource EnumDescConverter}}" VerticalAlignment="Center"/>
-												</DataTemplate>
-											</ComboBox.ItemTemplate>
-										</ComboBox>
-									</StackPanel>
+                            <Border Background="{DynamicResource CardBrush}"
+                                    CornerRadius="5"
+                                    Padding="25"
+                                    BorderThickness="1"
+                                    BorderBrush="{DynamicResource BorderBrush}">
+                                <Grid ColumnDefinitions="*, 50, *">
+                                    <StackPanel Grid.Column="0" Spacing="8">
+                                        <TextBlock Text="Вид соглашения *" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}" LetterSpacing="1"/>
+                                        <ComboBox ItemsSource="{Binding ContractTypes}"
+                                                  SelectedItem="{Binding SelectedType}"
+                                                  HorizontalAlignment="Stretch"
+                                                  Height="40">
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Converter={StaticResource EnumDescConverter}}" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
+                                    </StackPanel>
 
-									<StackPanel Grid.Column="2" Spacing="8">
-										<TextBlock Text="Текущая стадия договора *" FontWeight="Bold" Foreground="DarkOrange" FontSize="13" Opacity="0.6"/>
-										<ComboBox ItemsSource="{Binding AvailableStages}"
-												  SelectedItem="{Binding SelectedStage}"
-												  HorizontalAlignment="Stretch"
-												  Height="40">
-											<ComboBox.ItemTemplate>
-												<DataTemplate>
-													<TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
-												</DataTemplate>
-											</ComboBox.ItemTemplate>
-										</ComboBox>
-									</StackPanel>
-								</Grid>
-							</Border>
+                                    <StackPanel Grid.Column="2" Spacing="8">
+                                        <TextBlock Text="Текущая стадия договора *" FontWeight="Bold" Foreground="{DynamicResource InfoBrush}" FontSize="12" LetterSpacing="1"/>
+                                        <ComboBox ItemsSource="{Binding AvailableStages}"
+                                                  SelectedItem="{Binding SelectedStage}"
+                                                  HorizontalAlignment="Stretch"
+                                                  Height="40">
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Name}" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
 
-							<Grid ColumnDefinitions="*, 30, *">
-								<Border Grid.Column="0" Background="{DynamicResource CardBrush}" CornerRadius="8" Padding="20">
-									<StackPanel Spacing="15">
-										<StackPanel Orientation="Horizontal" Spacing="12">
-											<Path Data="{StaticResource UserBoardIcon}" Fill="{DynamicResource SystemAccentColor}" Width="18" Height="18" VerticalAlignment="Center"/>
-											<TextBlock Text="Наша организация" FontSize="18" FontWeight="Bold"/>
-										</StackPanel>
-										<Separator Height="1" Opacity="0.1" Margin="0,0,0,5"/>
-										<StackPanel Spacing="8">
-											<TextBlock Text="Подписант (ответственное лицо) *" FontSize="13" Opacity="0.6"/>
-											<ComboBox ItemsSource="{Binding Workers}"
-													  SelectedItem="{Binding SelectedFirmSigner}"
-													  HorizontalAlignment="Stretch"
-													  PlaceholderText="Выберите сотрудника...">
-												<ComboBox.ItemTemplate>
-													<DataTemplate>
-														<TextBlock Text="{Binding LastName}"/>
-													</DataTemplate>
-												</ComboBox.ItemTemplate>
-											</ComboBox>
-										</StackPanel>
-									</StackPanel>
-								</Border>
+                            <Grid ColumnDefinitions="*, 30, *">
+                                <Border Grid.Column="0" Background="{DynamicResource CardBrush}" CornerRadius="5" Padding="25" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}">
+                                    <StackPanel Spacing="15">
+                                        <StackPanel Orientation="Horizontal" Spacing="12">
+                                            <TextBlock Text="НАША ОРГАНИЗАЦИЯ" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource ActionBrush}" LetterSpacing="1"/>
+                                        </StackPanel>
+                                        <Separator Height="1" Background="{DynamicResource BorderBrush}" Opacity="0.5" Margin="0,0,0,5"/>
+                                        <StackPanel Spacing="8">
+                                            <TextBlock Text="Подписант (ответственное лицо) *" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                            <ComboBox ItemsSource="{Binding Workers}"
+                                                      SelectedItem="{Binding SelectedFirmSigner}"
+                                                      HorizontalAlignment="Stretch"
+                                                      PlaceholderText="Выберите сотрудника...">
+                                                <ComboBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding LastName}" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                                    </DataTemplate>
+                                                </ComboBox.ItemTemplate>
+                                            </ComboBox>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
 
-								<Border Grid.Column="2" Background="{DynamicResource CardBrush}" CornerRadius="8" Padding="20">
-									<StackPanel Spacing="15">
-										<StackPanel Orientation="Horizontal" Spacing="12">
-											<Path Data="{StaticResource HandshakeIcon}" Fill="Gray" Width="18" Height="18" VerticalAlignment="Center"/>
-											<TextBlock Text="Контрагент / Заказчик" FontSize="18" FontWeight="Bold"/>
-										</StackPanel>
-										<Separator Height="1" Opacity="0.1" Margin="0,0,0,5"/>
-										<Grid ColumnDefinitions="*, 20, *">
-											<StackPanel Grid.Column="0" Spacing="8">
-												<TextBlock Text="Организация *" FontSize="13" Opacity="0.6"/>
-												<ComboBox ItemsSource="{Binding Counterparties}"
-														  SelectedItem="{Binding SelectedCounterparty}"
-														  HorizontalAlignment="Stretch"
-														  PlaceholderText="Выберите организацию...">
-													<ComboBox.ItemTemplate>
-														<DataTemplate>
-															<TextBlock Text="{Binding ShortName}"/>
-														</DataTemplate>
-													</ComboBox.ItemTemplate>
-												</ComboBox>
-											</StackPanel>
-											<StackPanel Grid.Column="2" Spacing="8">
-												<TextBlock Text="Подписант *" FontSize="13" Opacity="0.6"/>
-												<ComboBox ItemsSource="{Binding CounterpartyContacts}"
-														  SelectedItem="{Binding SelectedCounterpartySigner}"
-														  HorizontalAlignment="Stretch"
-														  PlaceholderText="ФИО...">
-													<ComboBox.ItemTemplate>
-														<DataTemplate>
-															<TextBlock Text="{Binding LastName}"/>
-														</DataTemplate>
-													</ComboBox.ItemTemplate>
-												</ComboBox>
-											</StackPanel>
-										</Grid>
-									</StackPanel>
-								</Border>
-							</Grid>
+                                <Border Grid.Column="2" Background="{DynamicResource CardBrush}" CornerRadius="5" Padding="25" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}">
+                                    <StackPanel Spacing="15">
+                                        <StackPanel Orientation="Horizontal" Spacing="12">
+                                            <TextBlock Text="КОНТРАГЕНТ / ЗАКАЗЧИК" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}" LetterSpacing="1"/>
+                                        </StackPanel>
+                                        <Separator Height="1" Background="{DynamicResource BorderBrush}" Opacity="0.5" Margin="0,0,0,5"/>
+                                        <Grid ColumnDefinitions="*, 20, *">
+                                            <StackPanel Grid.Column="0" Spacing="8">
+                                                <TextBlock Text="Организация *" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                                <ComboBox ItemsSource="{Binding Counterparties}"
+                                                          SelectedItem="{Binding SelectedCounterparty}"
+                                                          HorizontalAlignment="Stretch"
+                                                          PlaceholderText="Выберите организацию...">
+                                                    <ComboBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding ShortName}" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                                        </DataTemplate>
+                                                    </ComboBox.ItemTemplate>
+                                                </ComboBox>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="2" Spacing="8">
+                                                <TextBlock Text="Подписант *" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                                <ComboBox ItemsSource="{Binding CounterpartyContacts}"
+                                                          SelectedItem="{Binding SelectedCounterpartySigner}"
+                                                          HorizontalAlignment="Stretch"
+                                                          PlaceholderText="ФИО...">
+                                                    <ComboBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding LastName}" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                                        </DataTemplate>
+                                                    </ComboBox.ItemTemplate>
+                                                </ComboBox>
+                                            </StackPanel>
+                                        </Grid>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
 
-							<Border Background="{DynamicResource CardBrush}" CornerRadius="8" Padding="25">
-								<StackPanel Spacing="25">
-									<TextBlock Text="Параметры и сроки документа" FontSize="18" FontWeight="Bold" Margin="0,0,0,5"/>
+                            <Border Background="{DynamicResource CardBrush}" CornerRadius="5" Padding="25" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}">
+                                <StackPanel Spacing="25">
+                                    <TextBlock Text="ПАРАМЕТРЫ И СРОКИ ДОКУМЕНТА" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}" LetterSpacing="1" Margin="0,0,0,5"/>
 
-									<Grid ColumnDefinitions="*, 30, *, 30, *">
-										<StackPanel Grid.Column="0" Spacing="8">
-											<TextBlock Text="Номер документа *" FontSize="13" Opacity="0.6"/>
-											<TextBox Text="{Binding ContractNumber}" Watermark="№ договора" Height="35"/>
-										</StackPanel>
-										<StackPanel Grid.Column="2" Spacing="8">
-											<TextBlock Text="Валюта *" FontSize="13" Opacity="0.6"/>
-											<ComboBox ItemsSource="{Binding Currencies}" SelectedItem="{Binding SelectedCurrency}" HorizontalAlignment="Stretch" Height="35">
-												<ComboBox.ItemTemplate>
-													<DataTemplate>
-														<TextBlock Text="{Binding Code}"/>
-													</DataTemplate>
-												</ComboBox.ItemTemplate>
-											</ComboBox>
-										</StackPanel>
-										<StackPanel Grid.Column="4" Spacing="8">
-											<TextBlock Text="Общая сумма (авто)" FontSize="13" Opacity="0.6" />
-											<TextBox Text="{Binding ContractPrice, StringFormat={}{0:N2}}"
-													 IsReadOnly="{Binding !IsCustomerRole}"
-													 FontWeight="Bold"
-													 FontSize="16"
-													 Foreground="#2E7D32"
-													 Height="35"/>
-										</StackPanel>
-									</Grid>
+                                    <Grid ColumnDefinitions="*, 30, *, 30, *">
+                                        <StackPanel Grid.Column="0" Spacing="8">
+                                            <TextBlock Text="Номер документа *" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                            <TextBox Text="{Binding ContractNumber}" Watermark="№ договора" Height="35" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="2" Spacing="8">
+                                            <TextBlock Text="Валюта *" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                            <ComboBox ItemsSource="{Binding Currencies}" SelectedItem="{Binding SelectedCurrency}" HorizontalAlignment="Stretch" Height="35">
+                                                <ComboBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding Code}" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                                    </DataTemplate>
+                                                </ComboBox.ItemTemplate>
+                                            </ComboBox>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="4" Spacing="8">
+                                            <TextBlock Text="Общая сумма (авто)" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}" />
+                                            <NumericUpDown Value="{Binding ContractPrice}"
+                                                           FormatString="N2"
+                                                           ShowButtonSpinner="False"
+                                                           IsReadOnly="{Binding !IsCustomerRole}"
+                                                           FontWeight="Bold"
+                                                           FontSize="16"
+                                                           Foreground="{DynamicResource ActionBrush}"
+                                                           Height="35"/>
+                                        </StackPanel>
+                                    </Grid>
 
-									<Grid ColumnDefinitions="*, 30, *, 30, *" IsVisible="{Binding IsConclusionStage}">
-										<StackPanel Grid.Column="0" Spacing="8">
-											<TextBlock Text="Дата подписания" FontSize="13" Opacity="0.6"/>
-											<DatePicker SelectedDate="{Binding IssueDate, Converter={StaticResource DateConverter}}" HorizontalAlignment="Stretch" />
-										</StackPanel>
-										<StackPanel Grid.Column="2" Spacing="8">
-											<TextBlock Text="Дата начала работ" FontSize="13" Opacity="0.6"/>
-											<DatePicker SelectedDate="{Binding StartDate, Converter={StaticResource DateConverter}}" HorizontalAlignment="Stretch" />
-										</StackPanel>
-										<StackPanel Grid.Column="4" Spacing="8">
-											<TextBlock Text="Дата окончания" FontSize="13" Opacity="0.6"/>
-											<DatePicker SelectedDate="{Binding EndDate, Converter={StaticResource DateConverter}}" HorizontalAlignment="Stretch" />
-										</StackPanel>
-									</Grid>
+                                    <Grid ColumnDefinitions="*, 30, *, 30, *" IsVisible="{Binding IsConclusionStage}">
+                                        <StackPanel Grid.Column="0" Spacing="8">
+                                            <TextBlock Text="Дата подписания" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                            <CalendarDatePicker SelectedDate="{Binding IssueDate, Converter={StaticResource DateConverter}}" HorizontalAlignment="Stretch" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="2" Spacing="8">
+                                            <TextBlock Text="Дата начала работ" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                            <CalendarDatePicker SelectedDate="{Binding StartDate, Converter={StaticResource DateConverter}}" HorizontalAlignment="Stretch" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="4" Spacing="8">
+                                            <TextBlock Text="Дата окончания" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                            <CalendarDatePicker SelectedDate="{Binding EndDate, Converter={StaticResource DateConverter}}" HorizontalAlignment="Stretch" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                        </StackPanel>
+                                    </Grid>
 
-									<StackPanel Spacing="8">
-										<TextBlock Text="Предмет договора (краткое содержание)" FontSize="13" Opacity="0.6"/>
-										<TextBox Text="{Binding ContractSubject}"
-												 AcceptsReturn="True"
-												 MinHeight="100"
-												 TextWrapping="Wrap"
-												 Watermark="Опишите суть соглашения, поставляемые товары или оказываемые услуги..."/>
-									</StackPanel>
-								</StackPanel>
-							</Border>
+                                    <StackPanel Spacing="8">
+                                        <TextBlock Text="Предмет договора (краткое содержание)" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                        <TextBox Text="{Binding ContractSubject}"
+                                                 AcceptsReturn="True"
+                                                 MinHeight="100"
+                                                 TextWrapping="Wrap"
+                                                 Foreground="{DynamicResource PrimaryTextBrush}"
+                                                 Watermark="Опишите суть соглашения, поставляемые товары или оказываемые услуги..."/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
 
-							<Border Background="#F0F7FF" BorderBrush="#CCE5FF" BorderThickness="1" Padding="20" CornerRadius="8" IsVisible="{Binding IsSubmission}">
-								<StackPanel Spacing="15">
-									<StackPanel Orientation="Horizontal" Spacing="10">
-										<TextBlock Text="🔵" VerticalAlignment="Center"/>
-										<TextBlock Text="ТЕНДЕРНАЯ ПРОЦЕДУРА" FontWeight="Heavy" Foreground="#1565C0" LetterSpacing="1"/>
-									</StackPanel>
-									<Grid ColumnDefinitions="*, 30, 2*, 30, 2*">
-										<StackPanel Grid.Column="0" Spacing="8">
-											<TextBlock Text="Окончание подачи *" FontSize="12" Opacity="0.7"/>
-											<DatePicker SelectedDate="{Binding SubmissionDate, Converter={StaticResource DateConverter}}" HorizontalAlignment="Stretch" />
-										</StackPanel>
-										<StackPanel Grid.Column="2" Spacing="8">
-											<TextBlock Text="Идентификационный код закупки (ИКЗ) *" FontSize="12" Opacity="0.7" />
-											<TextBox Text="{Binding SubmissionCode}" Watermark="26-ти значный код"/>
-										</StackPanel>
-										<StackPanel Grid.Column="4" Spacing="8">
-											<TextBlock Text="Электронная площадка" FontSize="12" Opacity="0.7" />
-											<TextBox Text="{Binding SubmissionLink}" Watermark="https://..."/>
-										</StackPanel>
-									</Grid>
-								</StackPanel>
-							</Border>
+                            <Border Background="{DynamicResource RegionBrush}" BorderBrush="{DynamicResource ActionBrush}" BorderThickness="1" Padding="20" CornerRadius="5" IsVisible="{Binding IsSubmission}">
+                                <StackPanel Spacing="15">
+                                    <TextBlock Text="ТЕНДЕРНАЯ ПРОЦЕДУРА" FontWeight="Heavy" Foreground="{DynamicResource ActionBrush}" LetterSpacing="1"/>
+                                    <Grid ColumnDefinitions="*, 30, 2*, 30, 2*">
+                                        <StackPanel Grid.Column="0" Spacing="8">
+                                            <TextBlock Text="Окончание подачи *" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                            <CalendarDatePicker SelectedDate="{Binding SubmissionDate, Converter={StaticResource DateConverter}}" HorizontalAlignment="Stretch" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="2" Spacing="8">
+                                            <TextBlock Text="Идентификационный код закупки (ИКЗ) *" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}" />
+                                            <TextBox Text="{Binding SubmissionCode}" Watermark="26-ти значный код" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="4" Spacing="8">
+                                            <TextBlock Text="Электронная площадка" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}" />
+                                            <TextBox Text="{Binding SubmissionLink}" Watermark="https://..." Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
 
-							<Border Background="#FFF5F5" BorderBrush="#FFE3E3" BorderThickness="1" Padding="20" CornerRadius="8" IsVisible="{Binding IsTermination}">
-								<StackPanel Spacing="15">
-									<StackPanel Orientation="Horizontal" Spacing="10">
-										<TextBlock Text="🔴" VerticalAlignment="Center"/>
-										<TextBlock Text="ПРОЦЕСС РАСТОРЖЕНИЯ" FontWeight="Heavy" Foreground="#C62828" LetterSpacing="1"/>
-									</StackPanel>
-									<Grid ColumnDefinitions="*, 30, *">
-										<StackPanel Grid.Column="0" Spacing="8">
-											<TextBlock Text="Кем инициировано? *" FontSize="12" Opacity="0.7"/>
-											<ComboBox ItemsSource="{Binding Initiators}" SelectedItem="{Binding SelectedInitiator}" HorizontalAlignment="Stretch"/>
-										</StackPanel>
-										<StackPanel Grid.Column="2" Spacing="8">
-											<TextBlock Text="Дата прекращения обязательств" FontSize="12" Opacity="0.7"/>
-											<DatePicker SelectedDate="{Binding ExecutionDate, Converter={StaticResource DateConverter}}" HorizontalAlignment="Stretch"/>
-										</StackPanel>
-									</Grid>
-									<StackPanel Spacing="8">
-										<TextBlock Text="Основание / Причина расторжения *" FontSize="12" Opacity="0.7" />
-										<TextBox Text="{Binding TerminationReason}" AcceptsReturn="True" Height="70" TextWrapping="Wrap" Watermark="Укажите номер соглашения о расторжении или причину..."/>
-									</StackPanel>
-								</StackPanel>
-							</Border>
+                            <Border Background="{DynamicResource RegionBrush}" BorderBrush="{DynamicResource ErrorBrush}" BorderThickness="1" Padding="20" CornerRadius="5" IsVisible="{Binding IsTermination}">
+                                <StackPanel Spacing="15">
+                                    <TextBlock Text="ПРОЦЕСС РАСТОРЖЕНИЯ" FontWeight="Heavy" Foreground="{DynamicResource ErrorBrush}" LetterSpacing="1"/>
+                                    <Grid ColumnDefinitions="*, 30, *">
+                                        <StackPanel Grid.Column="0" Spacing="8">
+                                            <TextBlock Text="Кем инициировано? *" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                            <ComboBox ItemsSource="{Binding Initiators}" SelectedItem="{Binding SelectedInitiator}" HorizontalAlignment="Stretch" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="2" Spacing="8">
+                                            <TextBlock Text="Дата прекращения обязательств" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                            <CalendarDatePicker SelectedDate="{Binding ExecutionDate, Converter={StaticResource DateConverter}}" HorizontalAlignment="Stretch" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <StackPanel Spacing="8">
+                                        <TextBlock Text="Основание / Причина расторжения *" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}" />
+                                        <TextBox Text="{Binding TerminationReason}" AcceptsReturn="True" Height="70" TextWrapping="Wrap" Foreground="{DynamicResource PrimaryTextBrush}" Watermark="Укажите номер соглашения о расторжении или причину..."/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
 
-						</StackPanel>
-					</ScrollViewer>
-				</TabItem>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
 
-				<TabItem Header="Спецификация">
-					<Grid RowDefinitions="Auto, *, Auto" Margin="10">
-						<Button Grid.Row="0" Command="{Binding OpenSelectorCommand}"
-								Classes="accent" Margin="0,0,0,10" Padding="15,8" HorizontalAlignment="Left">
-							<StackPanel Orientation="Horizontal" Spacing="8">
-								<TextBlock Text="+" FontWeight="Bold"/>
-								<TextBlock Text="Добавить позицию"/>
-							</StackPanel>
-						</Button>
+                <TabItem Header="Спецификация">
+                    <Grid RowDefinitions="Auto, *, Auto" Margin="20">
+                        <Button Grid.Row="0" Command="{Binding OpenSelectorCommand}"
+                                Classes="accent" Margin="0,0,0,15" Padding="20,10" HorizontalAlignment="Left">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <TextBlock Text="+" FontWeight="Bold"/>
+                                <TextBlock Text="Добавить позицию"/>
+                            </StackPanel>
+                        </Button>
 
-						<DataGrid Grid.Row="1" ItemsSource="{Binding Specifications}" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="All">
-							<DataGrid.Columns>
-								<DataGridTextColumn Header="Номенклатура" Binding="{Binding NomenclatureName}" Width="*"/>
-								<DataGridTextColumn Header="Кол-во" Binding="{Binding Quantity}" Width="80"/>
-								<DataGridTextColumn Header="Ед. изм." Binding="{Binding UnitOfMeasure}" Width="80"/>
-								<DataGridTextColumn Header="Цена" Binding="{Binding UnitPrice, StringFormat='{}{0:N2}'}" Width="120"/>
-								<DataGridTextColumn Header="Итого" Binding="{Binding TotalAmount, StringFormat='{}{0:N2}'}" Width="120"/>
-								<DataGridTextColumn Header="НДС (%)" Binding="{Binding VATRate}" Width="80"/>
-								<DataGridTextColumn Header="Всего с НДС" Binding="{Binding TotalVATAmount, StringFormat='{}{0:N2}'}" Width="140"/>
-								<DataGridTemplateColumn Header="Действия" Width="80">
-									<DataGridTemplateColumn.CellTemplate>
-										<DataTemplate DataType="dto:ContractSpecificationDto">
-											<Button Command="{ReflectionBinding #Root.DataContext.DeleteSpecificationCommand}"
-													CommandParameter="{Binding}" Foreground="Red" Content="❌" Background="Transparent" HorizontalAlignment="Center"/>
-										</DataTemplate>
-									</DataGridTemplateColumn.CellTemplate>
-								</DataGridTemplateColumn>
-							</DataGrid.Columns>
-						</DataGrid>
+                        <DataGrid Grid.Row="1" ItemsSource="{Binding Specifications}" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="Horizontal" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}" Background="Transparent">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Номенклатура" Binding="{Binding NomenclatureName}" Width="*"/>
+                                <DataGridTextColumn Header="Кол-во" Binding="{Binding Quantity}" Width="100"/>
+                                <DataGridTextColumn Header="Ед. изм." Binding="{Binding UnitOfMeasure}" Width="100"/>
+                                <DataGridTextColumn Header="Цена" Binding="{Binding UnitPrice, StringFormat='{}{0:N2}'}" Width="150"/>
+                                <DataGridTextColumn Header="Итого" Binding="{Binding TotalAmount, StringFormat='{}{0:N2}'}" Width="150"/>
+                                <DataGridTextColumn Header="НДС (%)" Binding="{Binding VATRate}" Width="100"/>
+                                <DataGridTextColumn Header="Всего с НДС" Binding="{Binding TotalVATAmount, StringFormat='{}{0:N2}'}" Width="180" FontWeight="Bold"/>
+                                <DataGridTemplateColumn Header="Действия" Width="80">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate DataType="dto:ContractSpecificationDto">
+                                            <Button Command="{ReflectionBinding #Root.DataContext.DeleteSpecificationCommand}"
+                                                    CommandParameter="{Binding}" Foreground="{DynamicResource ErrorBrush}" Content="✕" Background="Transparent" HorizontalAlignment="Center"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
 
-						<StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0" Spacing="10">
-							<TextBlock Text="Общая сумма:" FontWeight="Bold" VerticalAlignment="Center"/>
-							<TextBlock Text="{Binding ContractPrice, StringFormat='{}{0:N2} руб.'}" FontWeight="Bold" FontSize="16" Foreground="#2E7D32"/>
-						</StackPanel>
-					</Grid>
-				</TabItem>
+                        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0" Spacing="10">
+                            <TextBlock Text="Общая сумма:" FontWeight="Bold" VerticalAlignment="Center" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                            <TextBlock Text="{Binding ContractPrice, StringFormat='{}{0:N2} ₽'}" FontWeight="Heavy" FontSize="20" Foreground="{DynamicResource ActionBrush}"/>
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
 
-				<TabItem Header="Этапы и График">
-					<Grid RowDefinitions="Auto, *">
-						<Button Grid.Row="0" Command="{Binding OpenNewStepCommand}"
-								Classes="accent" Margin="0,0,0,10" Padding="15,8" HorizontalAlignment="Left">
-							<StackPanel Orientation="Horizontal" Spacing="8">
-								<TextBlock Text="+" FontWeight="Bold"/>
-								<TextBlock Text="Добавить этап"/>
-							</StackPanel>
-						</Button>
+                <TabItem Header="Этапы и График">
+                    <Grid RowDefinitions="Auto, *" Margin="20">
+                        <Button Grid.Row="0" Command="{Binding OpenNewStepCommand}"
+                                Classes="accent" Margin="0,0,0,15" Padding="20,10" HorizontalAlignment="Left">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <TextBlock Text="+" FontWeight="Bold"/>
+                                <TextBlock Text="Добавить этап"/>
+                            </StackPanel>
+                        </Button>
 
-						<DataGrid Grid.Row="1" ItemsSource="{Binding Steps}" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="All">
-							<DataGrid.Columns>
-								<DataGridTextColumn Header="Наименование этапа" Binding="{Binding StepName}" Width="*"/>
-								<DataGridTextColumn Header="Начало" Binding="{Binding StartStepDate, Converter={StaticResource DateConverter}}" Width="120"/>
-								<DataGridTextColumn Header="Окончание" Binding="{Binding EndStepDate, Converter={StaticResource DateConverter}}" Width="120"/>
-								<DataGridTextColumn Header="Сумма этапа" Binding="{Binding TotalAmount, StringFormat='{}{0:N2}'}" Width="150" FontWeight="Bold"/>
-								<DataGridTemplateColumn Header="Действия" Width="100">
-									<DataGridTemplateColumn.CellTemplate>
-										<DataTemplate DataType="dto:ContractStepDto">
-											<StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
-												<Button Command="{ReflectionBinding #Root.DataContext.EditStepCommand}"
-														CommandParameter="{Binding}" Foreground="Orange" Content="✏️" Background="Transparent" Padding="5"/>
-												<Button Command="{ReflectionBinding #Root.DataContext.DeleteStepCommand}"
-														CommandParameter="{Binding}" Foreground="Red" Content="❌" Background="Transparent" Padding="5"/>
-											</StackPanel>
-										</DataTemplate>
-									</DataGridTemplateColumn.CellTemplate>
-								</DataGridTemplateColumn>
-							</DataGrid.Columns>
-						</DataGrid>
-					</Grid>
-				</TabItem>
+                        <DataGrid Grid.Row="1" ItemsSource="{Binding Steps}" AutoGenerateColumns="False" IsReadOnly="True" GridLinesVisibility="Horizontal" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}" Background="Transparent">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Наименование этапа" Binding="{Binding StepName}" Width="*"/>
+                                <DataGridTextColumn Header="Начало" Binding="{Binding StartStepDate, Converter={StaticResource DateConverter}}" Width="150"/>
+                                <DataGridTextColumn Header="Окончание" Binding="{Binding EndStepDate, Converter={StaticResource DateConverter}}" Width="150"/>
+                                <DataGridTextColumn Header="Сумма этапа" Binding="{Binding TotalAmount, StringFormat='{}{0:N2}'}" Width="180" FontWeight="Bold"/>
+                                <DataGridTemplateColumn Header="Действия" Width="100">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate DataType="dto:ContractStepDto">
+                                            <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
+                                                <Button Command="{ReflectionBinding #Root.DataContext.EditStepCommand}"
+                                                        CommandParameter="{Binding}" Foreground="{DynamicResource WarningBrush}" Content="✎" Background="Transparent" Padding="5"/>
+                                                <Button Command="{ReflectionBinding #Root.DataContext.DeleteStepCommand}"
+                                                        CommandParameter="{Binding}" Foreground="{DynamicResource ErrorBrush}" Content="✕" Background="Transparent" Padding="5"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </TabItem>
 
-				<TabItem Header="Файлы">
-					<Grid Margin="10">
-						<controls:AttachedFilesControl DataContext="{Binding AttachedFilesVM}" />
-					</Grid>
-				</TabItem>
-			</TabControl>
-		</Grid>
+                <TabItem Header="Файлы">
+                    <Grid Margin="20">
+                        <controls:AttachedFilesControl DataContext="{Binding AttachedFilesVM}" />
+                    </Grid>
+                </TabItem>
+            </TabControl>
+        </Grid>
 
-		<Border Background="Black"
-				Opacity="0.4"
-				IsVisible="{Binding IsProductSelectorOpen}"
-				ZIndex="100"/>
+        <Border Background="Black" Opacity="0.5" IsVisible="{Binding IsProductSelectorOpen}" ZIndex="100"/>
+        <Border Background="Black" Opacity="0.5" IsVisible="{Binding IsStepEditorOpen}" ZIndex="102"/>
 
-		<Border Width="450"
-				HorizontalAlignment="Right"
-				Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
-				BoxShadow="-5 0 15 0 #40000000"
-				IsVisible="{Binding IsProductSelectorOpen}"
-				ZIndex="101">
+        <Border Width="500"
+                HorizontalAlignment="Right"
+                Background="{DynamicResource CardBrush}"
+                BorderThickness="1,0,0,0"
+                BorderBrush="{DynamicResource BorderBrush}"
+                BoxShadow="-5 0 15 0 #40000000"
+                IsVisible="{Binding IsProductSelectorOpen}"
+                ZIndex="101"
+                Padding="25">
+            <Grid RowDefinitions="Auto, *, Auto">
+                <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,25">
+                    <TextBlock Text="Выбор номенклатуры" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}" VerticalAlignment="Center"/>
+                    <Button Grid.Column="1" Command="{Binding CloseSelectorCommand}" Content="✕" Background="Transparent" Foreground="{DynamicResource SecondaryTextBrush}" FontSize="18"/>
+                </Grid>
 
-			<Grid RowDefinitions="Auto, *, Auto" Margin="20">
+                <Grid Grid.Row="1" RowDefinitions="Auto, *">
+                    <TextBox Grid.Row="0" Text="{Binding ProductSearchText}" Watermark="Поиск..." Classes="outline" Margin="0,0,0,15" Foreground="{DynamicResource PrimaryTextBrush}"/>
 
-				<Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,20">
-					<TextBlock Text="Выбор номенклатуры" FontSize="20" FontWeight="Bold" VerticalAlignment="Center"/>
-					<Button Grid.Column="1" Command="{Binding CloseSelectorCommand}" Content="✕" Background="Transparent" FontSize="16"/>
-				</Grid>
+                    <ListBox Grid.Row="1"
+                             ItemsSource="{Binding FilteredProducts}"
+                             SelectedItem="{Binding SelectedProductToAdd}"
+                             Background="Transparent"
+                             BorderThickness="1"
+                             BorderBrush="{DynamicResource BorderBrush}"
+                             CornerRadius="4">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="dto:GoodsAndServiceDto">
+                                <StackPanel Margin="5">
+                                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" TextWrapping="Wrap" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                    <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,5,0,0">
+                                        <TextBlock Text="{Binding Price, StringFormat='Цена: {0:N2} ₽'}" Foreground="{DynamicResource ActionBrush}" FontSize="12" FontWeight="Bold"/>
+                                        <TextBlock Text="{Binding UnitOfMeasure}" Foreground="{DynamicResource SecondaryTextBrush}" FontSize="12"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
 
-				<Grid Grid.Row="1" RowDefinitions="Auto, *">
-					<TextBox Grid.Row="0" Text="{Binding ProductSearchText}" Watermark="Поиск..." Classes="clearButton" Margin="0,0,0,15"/>
+                <StackPanel Grid.Row="2" Spacing="15" Margin="0,25,0,0">
+                    <Grid ColumnDefinitions="*, 20, *">
+                        <StackPanel Grid.Column="0" Spacing="5">
+                            <TextBlock Text="Количество" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                            <NumericUpDown Value="{Binding QuantityToAdd}" FormatString="0" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Spacing="5">
+                            <TextBlock Text="Ставка НДС (%)" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                            <NumericUpDown Value="{Binding VatRateToAdd}" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                        </StackPanel>
+                    </Grid>
 
-					<ListBox Grid.Row="1"
-							 ItemsSource="{Binding FilteredProducts}"
-							 SelectedItem="{Binding SelectedProductToAdd}"
-							 Background="Transparent"
-							 BorderThickness="1"
-							 BorderBrush="LightGray"
-							 CornerRadius="4">
-						<ListBox.ItemTemplate>
-							<DataTemplate DataType="dto:GoodsAndServiceDto">
-								<StackPanel Margin="5">
-									<TextBlock Text="{Binding Name}" FontWeight="SemiBold" TextWrapping="Wrap"/>
-									<StackPanel Orientation="Horizontal" Spacing="10">
-										<TextBlock Text="{Binding Price, StringFormat='Цена: {0:N2} руб.'}" Foreground="Gray" FontSize="12"/>
-										<TextBlock Text="{Binding UnitOfMeasure}" Foreground="Gray" FontSize="12"/>
-									</StackPanel>
-								</StackPanel>
-							</DataTemplate>
-						</ListBox.ItemTemplate>
-					</ListBox>
-				</Grid>
+                    <Button Command="{Binding AddSpecificationCommand}"
+                            Content="Добавить в документ"
+                            Classes="accent"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
+                            Padding="10,15"
+                            FontWeight="Bold"/>
+                </StackPanel>
+            </Grid>
+        </Border>
 
-				<StackPanel Grid.Row="2" Spacing="15" Margin="0,20,0,0">
-					<Grid ColumnDefinitions="*, 20, *">
-						<StackPanel Grid.Column="0" Spacing="5">
-							<TextBlock Text="Количество" FontWeight="SemiBold"/>
-							<TextBox Text="{Binding QuantityToAdd}"/>
-						</StackPanel>
+        <Border Width="650"
+                HorizontalAlignment="Right"
+                Background="{DynamicResource CardBrush}"
+                BorderThickness="1,0,0,0"
+                BorderBrush="{DynamicResource BorderBrush}"
+                BoxShadow="-5 0 15 0 #40000000"
+                IsVisible="{Binding IsStepEditorOpen}"
+                ZIndex="103"
+                Padding="25">
+            <Grid RowDefinitions="Auto, Auto, *, Auto">
+                <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,25">
+                    <TextBlock Text="Настройка этапа" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}" VerticalAlignment="Center"/>
+                    <Button Grid.Column="1" Command="{Binding CloseStepCommand}" Content="✕" Background="Transparent" Foreground="{DynamicResource SecondaryTextBrush}" FontSize="18"/>
+                </Grid>
 
-						<StackPanel Grid.Column="2" Spacing="5">
-							<TextBlock Text="Ставка НДС (%)" FontWeight="SemiBold"/>
-							<TextBox Text="{Binding VatRateToAdd}"/>
-						</StackPanel>
-					</Grid>
+                <StackPanel Grid.Row="1" Spacing="15" Margin="0,0,0,25">
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="Наименование этапа *" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                        <TextBox Text="{Binding CurrentEditingStep.StepName}" Watermark="Например: Предоплата / Отгрузка 1 партии" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                    </StackPanel>
 
-					<Button Command="{Binding AddSpecificationCommand}"
-							Content="Добавить в документ"
-							Classes="accent"
-							HorizontalAlignment="Stretch"
-							HorizontalContentAlignment="Center"
-							Padding="10,12"
-							FontWeight="Bold"/>
-				</StackPanel>
+                    <Grid ColumnDefinitions="*, 20, *">
+                        <StackPanel Grid.Column="0" Spacing="5">
+                            <TextBlock Text="Начало этапа" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                            <CalendarDatePicker SelectedDate="{Binding CurrentEditingStep.StartStepDate, Converter={StaticResource DateConverter}}" HorizontalAlignment="Stretch" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Spacing="5">
+                            <TextBlock Text="Окончание этапа" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                            <CalendarDatePicker SelectedDate="{Binding CurrentEditingStep.EndStepDate, Converter={StaticResource DateConverter}}" HorizontalAlignment="Stretch" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
 
-			</Grid>
-		</Border>
+                <DockPanel Grid.Row="2">
+                    <TextBlock DockPanel.Dock="Top" Text="РАСПРЕДЕЛЕНИЕ НОМЕНКЛАТУРЫ" FontSize="12" FontWeight="Bold" Foreground="{DynamicResource SecondaryTextBrush}" LetterSpacing="1" Margin="0,0,0,10"/>
 
-		<Border Background="Black" Opacity="0.4" IsVisible="{Binding IsStepEditorOpen}" ZIndex="102"/>
+                    <DataGrid ItemsSource="{Binding StepEditorItems}" AutoGenerateColumns="False" GridLinesVisibility="Horizontal" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}" Background="Transparent">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Наименование" Binding="{Binding Name}" Width="*" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Доступно" Binding="{Binding AvailableQuantity}" Width="80" IsReadOnly="True"/>
 
-		<Border Width="600"
-				HorizontalAlignment="Right"
-				Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
-				BoxShadow="-5 0 15 0 #40000000"
-				IsVisible="{Binding IsStepEditorOpen}"
-				ZIndex="103">
+                            <DataGridTemplateColumn Header="В этап (шт)" Width="100">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate DataType="vm:StepItemWrapper">
+                                        <NumericUpDown Value="{Binding QuantityToTake}" FormatString="0" ShowButtonSpinner="False" Foreground="{DynamicResource PrimaryTextBrush}" Margin="2"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
 
-			<Grid RowDefinitions="Auto, Auto, *, Auto" Margin="20">
+                            <DataGridTextColumn Header="Сумма" Binding="{Binding StepTotalAmount, StringFormat='{}{0:N2}'}" Width="120" IsReadOnly="True" FontWeight="Bold"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
 
-				<Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,20">
-					<TextBlock Text="Настройка этапа" FontSize="20" FontWeight="Bold" VerticalAlignment="Center"/>
-					<Button Grid.Column="1" Command="{Binding CloseStepCommand}" Content="✕" Background="Transparent" FontSize="16"/>
-				</Grid>
+                <StackPanel Grid.Row="3" Spacing="20" Margin="0,25,0,0">
+                    <Grid ColumnDefinitions="*, Auto">
+                        <TextBlock Grid.Column="0" Text="Итого по этапу:" VerticalAlignment="Center" FontWeight="Bold" FontSize="16" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                        <TextBlock Grid.Column="1" Text="{Binding CurrentStepTotalAmount, StringFormat='{}{0:N2} ₽'}"
+                                   VerticalAlignment="Center" FontWeight="Heavy" FontSize="22" Foreground="{DynamicResource ActionBrush}"/>
+                    </Grid>
 
-				<StackPanel Grid.Row="1" Spacing="15" Margin="0,0,0,20">
-					<StackPanel Spacing="5">
-						<TextBlock Text="Наименование этапа *" FontWeight="SemiBold"/>
-						<TextBox Text="{Binding CurrentEditingStep.StepName}" Watermark="Например: Предоплата / Отгрузка 1 партии"/>
-					</StackPanel>
-
-					<Grid ColumnDefinitions="*, 20, *">
-						<StackPanel Grid.Column="0" Spacing="5">
-							<TextBlock Text="Начало этапа" FontWeight="SemiBold"/>
-							<DatePicker SelectedDate="{Binding CurrentEditingStep.StartStepDate, Converter={StaticResource DateConverter}}" HorizontalAlignment="Stretch"/>
-						</StackPanel>
-						<StackPanel Grid.Column="2" Spacing="5">
-							<TextBlock Text="Окончание этапа" FontWeight="SemiBold"/>
-							<DatePicker SelectedDate="{Binding CurrentEditingStep.EndStepDate, Converter={StaticResource DateConverter}}" HorizontalAlignment="Stretch"/>
-						</StackPanel>
-					</Grid>
-				</StackPanel>
-
-				<DockPanel Grid.Row="2">
-					<TextBlock DockPanel.Dock="Top" Text="Распределение номенклатуры" FontWeight="Bold" Margin="0,0,0,10"/>
-
-					<DataGrid ItemsSource="{Binding StepEditorItems}" AutoGenerateColumns="False" GridLinesVisibility="Horizontal">
-						<DataGrid.Columns>
-							<DataGridTextColumn Header="Наименование" Binding="{Binding Name}" Width="*" IsReadOnly="True"/>
-							<DataGridTextColumn Header="Доступно" Binding="{Binding AvailableQuantity}" Width="80" IsReadOnly="True" Foreground="Gray"/>
-
-							<DataGridTemplateColumn Header="В этап (шт)" Width="100">
-								<DataGridTemplateColumn.CellTemplate>
-									<DataTemplate DataType="vm:StepItemWrapper">
-										<TextBox Text="{Binding QuantityToTake}" TextAlignment="Center" Margin="2"/>
-									</DataTemplate>
-								</DataGridTemplateColumn.CellTemplate>
-							</DataGridTemplateColumn>
-
-							<DataGridTextColumn Header="Сумма" Binding="{Binding StepTotalAmount, StringFormat='{}{0:N2}'}" Width="100" IsReadOnly="True"/>
-						</DataGrid.Columns>
-					</DataGrid>
-				</DockPanel>
-
-				<StackPanel Grid.Row="3" Spacing="15" Margin="0,20,0,0">
-					<Grid ColumnDefinitions="*, Auto">
-						<TextBlock Grid.Column="0" Text="Итого по этапу:" VerticalAlignment="Center" FontWeight="Bold" FontSize="16"/>
-						<TextBlock Grid.Column="1" Text="{Binding CurrentStepTotalAmount, StringFormat='{}{0:N2} руб.'}"
-								   VerticalAlignment="Center" FontWeight="Bold" FontSize="18" Foreground="#1976D2"/>
-					</Grid>
-
-					<Button Command="{Binding SaveStepCommand}"
-							Content="Сохранить этап"
-							Classes="accent"
-							HorizontalAlignment="Stretch"
-							HorizontalContentAlignment="Center"
-							Padding="10,12"
-							FontWeight="Bold"/>
-				</StackPanel>
-
-			</Grid>
-		</Border>
-	</Grid>
+                    <Button Command="{Binding SaveStepCommand}"
+                            Content="Сохранить этап"
+                            Classes="accent"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
+                            Padding="10,15"
+                            FontWeight="Bold"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
 </UserControl>
