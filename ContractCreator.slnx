@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/docs/">
+    <File Path="ARCHITECTURE.md" />
+  </Folder>
   <Folder Name="/src/">
     <Project Path="src/ContractCreator.Application/ContractCreator.Application.csproj" />
     <Project Path="src/ContractCreator.Domain/ContractCreator.Domain.csproj" />
