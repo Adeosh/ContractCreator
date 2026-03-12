@@ -6,9 +6,7 @@
              xmlns:dto="using:ContractCreator.Shared.DTOs"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
              x:Class="ContractCreator.UI.Views.Counterparties.CounterpartyListView"
-             x:DataType="vm:CounterpartyListViewModel"
-             x:CompileBindings="False"
-             x:Name="Root">
+             x:DataType="vm:CounterpartyListViewModel">
 
     <Grid RowDefinitions="Auto, *">
         <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,20">
@@ -41,14 +39,14 @@
                         <DataTemplate DataType="dto:CounterpartyDto">
                             <StackPanel Orientation="Horizontal" Spacing="10">
 
-                                <Button Command="{Binding #Root.DataContext.DeleteCommand}"
+                                <Button Command="{Binding $parent[UserControl].((vm:CounterpartyListViewModel)DataContext).DeleteCommand}"
                                         CommandParameter="{Binding}"
                                         Background="Transparent"
                                         ToolTip.Tip="Удалить контрагента">
                                     <TextBlock Text="🗑️" Foreground="Red"/>
                                 </Button>
 
-                                <Button Command="{Binding #Root.DataContext.EditCommand}"
+                                <Button Command="{Binding $parent[UserControl].((vm:CounterpartyListViewModel)DataContext).EditCommand}"
                                         CommandParameter="{Binding}"
                                         Background="Transparent"
                                         ToolTip.Tip="Редактировать">

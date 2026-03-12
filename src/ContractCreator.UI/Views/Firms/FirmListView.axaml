@@ -7,8 +7,7 @@
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
 			 x:Class="ContractCreator.UI.Views.Firms.FirmListView"
 			 x:DataType="vm:FirmListViewModel"
-			 x:CompileBindings="False"
-			 x:Name="Root">
+			 x:CompileBindings="True">
 
 	<Grid RowDefinitions="Auto, *">
 		<Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,20">
@@ -40,7 +39,7 @@
 						<DataTemplate DataType="dto:FirmDto">
 							<StackPanel Orientation="Horizontal" Spacing="10">
 
-								<Button Command="{Binding #Root.DataContext.DeleteCommand}"
+								<Button Command="{Binding $parent[UserControl].((vm:FirmListViewModel)DataContext).DeleteCommand}"
 										CommandParameter="{Binding}"
 										Background="Transparent"
 										ToolTip.ShowOnDisabled="True">
@@ -50,7 +49,7 @@
 									<Button.IsEnabled>
 										<MultiBinding Converter="{StaticResource NotEqualConverter}">
 											<Binding Path="Id" />
-											<Binding Path="#Root.DataContext.CurrentActiveFirmId" />
+											<Binding Path="$parent[UserControl].((vm:FirmListViewModel)DataContext).CurrentActiveFirmId" />
 										</MultiBinding>
 									</Button.IsEnabled>
 
@@ -58,12 +57,12 @@
 										<MultiBinding Converter="{StaticResource ActiveEntityTooltipConverter}"
 													  ConverterParameter="Текущую фирму удалять нельзя">
 											<Binding Path="Id" />
-											<Binding Path="#Root.DataContext.CurrentActiveFirmId" />
+											<Binding Path="$parent[UserControl].((vm:FirmListViewModel)DataContext).CurrentActiveFirmId" />
 										</MultiBinding>
 									</ToolTip.Tip>
 								</Button>
 
-								<Button Command="{Binding #Root.DataContext.EditCommand}"
+								<Button Command="{Binding $parent[UserControl].((vm:FirmListViewModel)DataContext).EditCommand}"
 										CommandParameter="{Binding}"
 										Background="Transparent">
 									<TextBlock Text="✏️" Foreground="Orange"/>

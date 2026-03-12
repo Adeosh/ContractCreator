@@ -6,8 +6,7 @@
 			 xmlns:dto="using:ContractCreator.Shared.DTOs"
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 x:Class="ContractCreator.UI.Views.Workers.WorkerListView"
-			 x:DataType="vm:WorkerListViewModel"
-			 x:Name="Root">
+			 x:DataType="vm:WorkerListViewModel">
 
 	<Grid RowDefinitions="Auto, *">
 

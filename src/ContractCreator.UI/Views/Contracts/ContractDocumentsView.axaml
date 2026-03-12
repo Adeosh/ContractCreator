@@ -2,8 +2,7 @@
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:vm="using:ContractCreator.UI.ViewModels.Contracts"
 			 x:Class="ContractCreator.UI.Views.Contracts.ContractDocumentsView"
-			 x:DataType="vm:ContractDocumentsViewModel"
-			 x:Name="Root">
+			 x:DataType="vm:ContractDocumentsViewModel">
 
 	<Grid RowDefinitions="Auto, Auto, *">
 
@@ -67,19 +66,17 @@
 								<DataGridTemplateColumn.CellTemplate>
 									<DataTemplate>
 										<StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
-
 											<Button Content="🖨️" Background="Transparent" Padding="5" ToolTip.Tip="Печать (HTML)"
-													Command="{ReflectionBinding #Root.DataContext.PrintInvoiceCommand}"
-													CommandParameter="{Binding .}"/>
+													Command="{Binding $parent[UserControl].((vm:ContractDocumentsViewModel)DataContext).PrintInvoiceCommand}"
+													CommandParameter="{Binding}"/>
 
 											<Button Content="✏️" Background="Transparent" Padding="5" ToolTip.Tip="Редактировать"
-													Command="{ReflectionBinding #Root.DataContext.EditInvoiceCommand}"
-													CommandParameter="{Binding .}"/>
+													Command="{Binding $parent[UserControl].((vm:ContractDocumentsViewModel)DataContext).EditInvoiceCommand}"
+													CommandParameter="{Binding}"/>
 
-											<Button Content="❌" Foreground="Red" Background="Transparent" Padding="5" ToolTip.Tip="Удалить"
-													Command="{ReflectionBinding #Root.DataContext.DeleteInvoiceCommand}"
-													CommandParameter="{Binding .}"/>
-
+											<Button Content="❌" Foreground="{DynamicResource ErrorBrush}" Background="Transparent" Padding="5" ToolTip.Tip="Удалить"
+													Command="{Binding $parent[UserControl].((vm:ContractDocumentsViewModel)DataContext).DeleteInvoiceCommand}"
+													CommandParameter="{Binding}"/>
 										</StackPanel>
 									</DataTemplate>
 								</DataGridTemplateColumn.CellTemplate>
@@ -108,19 +105,17 @@
 								<DataGridTemplateColumn.CellTemplate>
 									<DataTemplate>
 										<StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
-
 											<Button Content="🖨️" Background="Transparent" Padding="5" ToolTip.Tip="Печать (HTML)"
-													Command="{ReflectionBinding #Root.DataContext.PrintActCommand}"
-													CommandParameter="{Binding .}"/>
+													Command="{Binding $parent[UserControl].((vm:ContractDocumentsViewModel)DataContext).PrintActCommand}"
+													CommandParameter="{Binding}"/>
 
 											<Button Content="✏️" Background="Transparent" Padding="5"
-													Command="{ReflectionBinding #Root.DataContext.EditActCommand}"
-													CommandParameter="{Binding .}"/>
+													Command="{Binding $parent[UserControl].((vm:ContractDocumentsViewModel)DataContext).EditActCommand}"
+													CommandParameter="{Binding}"/>
 
-											<Button Content="❌" Foreground="Red" Background="Transparent" Padding="5"
-													Command="{ReflectionBinding #Root.DataContext.DeleteActCommand}"
-													CommandParameter="{Binding .}"/>
-
+											<Button Content="❌" Foreground="{DynamicResource ErrorBrush}" Background="Transparent" Padding="5"
+													Command="{Binding $parent[UserControl].((vm:ContractDocumentsViewModel)DataContext).DeleteActCommand}"
+													CommandParameter="{Binding}"/>
 										</StackPanel>
 									</DataTemplate>
 								</DataGridTemplateColumn.CellTemplate>
@@ -149,19 +144,17 @@
 								<DataGridTemplateColumn.CellTemplate>
 									<DataTemplate>
 										<StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
-
 											<Button Content="🖨️" Background="Transparent" Padding="5" ToolTip.Tip="Печать (HTML)"
-													Command="{ReflectionBinding #Root.DataContext.PrintWaybillCommand}"
-													CommandParameter="{Binding .}"/>
+													Command="{Binding $parent[UserControl].((vm:ContractDocumentsViewModel)DataContext).PrintWaybillCommand}"
+													CommandParameter="{Binding}"/>
 
 											<Button Content="✏️" Background="Transparent" Padding="5"
-													Command="{ReflectionBinding #Root.DataContext.EditWaybillCommand}"
-													CommandParameter="{Binding .}"/>
+													Command="{Binding $parent[UserControl].((vm:ContractDocumentsViewModel)DataContext).EditWaybillCommand}"
+													CommandParameter="{Binding}"/>
 
-											<Button Content="❌" Foreground="Red" Background="Transparent" Padding="5"
-													Command="{ReflectionBinding #Root.DataContext.DeleteWaybillCommand}"
-													CommandParameter="{Binding .}"/>
-
+											<Button Content="❌" Foreground="{DynamicResource ErrorBrush}" Background="Transparent" Padding="5"
+													Command="{Binding $parent[UserControl].((vm:ContractDocumentsViewModel)DataContext).DeleteWaybillCommand}"
+													CommandParameter="{Binding}"/>
 										</StackPanel>
 									</DataTemplate>
 								</DataGridTemplateColumn.CellTemplate>

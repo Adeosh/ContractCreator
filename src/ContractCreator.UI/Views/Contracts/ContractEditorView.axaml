@@ -5,7 +5,6 @@
              xmlns:dto="using:ContractCreator.Shared.DTOs"
              x:Class="ContractCreator.UI.Views.Contracts.ContractEditorView"
              x:DataType="vm:ContractEditorViewModel"
-             x:Name="Root"
              Background="{DynamicResource RegionBrush}">
 
     <Grid>
@@ -254,7 +253,7 @@
                                 <DataGridTemplateColumn Header="Действия" Width="80">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate DataType="dto:ContractSpecificationDto">
-                                            <Button Command="{ReflectionBinding #Root.DataContext.DeleteSpecificationCommand}"
+                                            <Button Command="{Binding $parent[UserControl].((vm:ContractEditorViewModel)DataContext).DeleteSpecificationCommand}"
                                                     CommandParameter="{Binding}" Foreground="{DynamicResource ErrorBrush}" Content="✕" Background="Transparent" HorizontalAlignment="Center"/>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
@@ -289,9 +288,9 @@
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate DataType="dto:ContractStepDto">
                                             <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
-                                                <Button Command="{ReflectionBinding #Root.DataContext.EditStepCommand}"
+                                                <Button Command="{Binding $parent[UserControl].((vm:ContractEditorViewModel)DataContext).EditStepCommand}"
                                                         CommandParameter="{Binding}" Foreground="{DynamicResource WarningBrush}" Content="✎" Background="Transparent" Padding="5"/>
-                                                <Button Command="{ReflectionBinding #Root.DataContext.DeleteStepCommand}"
+                                                <Button Command="{Binding $parent[UserControl].((vm:ContractEditorViewModel)DataContext).DeleteStepCommand}"
                                                         CommandParameter="{Binding}" Foreground="{DynamicResource ErrorBrush}" Content="✕" Background="Transparent" Padding="5"/>
                                             </StackPanel>
                                         </DataTemplate>

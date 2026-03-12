@@ -4,7 +4,6 @@
 			 xmlns:conv="using:ContractCreator.UI.Converters"
 			 x:DataType="vm:WaybillEditorViewModel"
 			 x:Class="ContractCreator.UI.Views.Contracts.Documents.WaybillEditorView"
-			 x:Name="Root"
 			 Background="{DynamicResource RegionBrush}">
 
 	<Grid RowDefinitions="Auto, *">
@@ -132,7 +131,7 @@
 									<DataGridTemplateColumn Header="" Width="50">
 										<DataGridTemplateColumn.CellTemplate>
 											<DataTemplate>
-												<Button Command="{ReflectionBinding #Root.DataContext.RemoveItemCommand}"
+												<Button Command="{Binding $parent[UserControl].((vm:WaybillEditorViewModel)DataContext).RemoveItemCommand}"
 														CommandParameter="{Binding}"
 														Content="✕" Foreground="{DynamicResource ErrorBrush}" Background="Transparent" Padding="5"
 														HorizontalAlignment="Center" VerticalAlignment="Center"/>

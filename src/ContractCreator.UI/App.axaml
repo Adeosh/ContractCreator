@@ -3,6 +3,7 @@
 			 x:Class="ContractCreator.UI.App"
 			 xmlns:local="using:ContractCreator.UI"
 			 xmlns:converters="using:ContractCreator.UI.Converters"
+			 x:CompileBindings="True"
 			 RequestedThemeVariant="Light">
 
 	<Application.Resources>

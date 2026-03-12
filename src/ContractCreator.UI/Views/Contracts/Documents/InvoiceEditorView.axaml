@@ -4,7 +4,6 @@
 			 xmlns:dto="using:ContractCreator.Shared.DTOs"
 			 x:DataType="vm:InvoiceEditorViewModel"
 			 x:Class="ContractCreator.UI.Views.Contracts.Documents.InvoiceEditorView"
-			 x:Name="Root"
 			 Background="{DynamicResource RegionBrush}">
 
 	<Grid RowDefinitions="Auto, *">
@@ -139,7 +138,7 @@
 									<DataGridTemplateColumn Header="" Width="50">
 										<DataGridTemplateColumn.CellTemplate>
 											<DataTemplate>
-												<Button Command="{ReflectionBinding #Root.DataContext.RemoveItemCommand}"
+												<Button Command="{Binding $parent[UserControl].((vm:InvoiceEditorViewModel)DataContext).RemoveItemCommand}"
 														CommandParameter="{Binding}"
 														Content="✕" Foreground="{DynamicResource ErrorBrush}" Background="Transparent" Padding="5"
 														HorizontalAlignment="Center" VerticalAlignment="Center"/>

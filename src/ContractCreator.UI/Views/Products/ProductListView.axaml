@@ -3,8 +3,7 @@
 			 xmlns:vm="using:ContractCreator.UI.ViewModels.Products"
 			 xmlns:dto="using:ContractCreator.Shared.DTOs"
 			 x:Class="ContractCreator.UI.Views.Products.ProductListView"
-			 x:DataType="vm:ProductListViewModel"
-			 x:Name="Root">
+			 x:DataType="vm:ProductListViewModel">
 
 	<Grid RowDefinitions="Auto, *">
 
@@ -42,7 +41,7 @@
 						<DataTemplate DataType="dto:GoodsAndServiceDto">
 							<StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
 
-								<Button Command="{ReflectionBinding #Root.DataContext.EditCommand}"
+								<Button Command="{Binding $parent[UserControl].((vm:ProductListViewModel)DataContext).EditCommand}"
 										CommandParameter="{Binding}"
 										ToolTip.Tip="Редактировать"
 										Background="Transparent"
@@ -50,7 +49,7 @@
 									<TextBlock Text="✏️" Foreground="Orange"/>
 								</Button>
 
-								<Button Command="{ReflectionBinding #Root.DataContext.DeleteCommand}"
+								<Button Command="{Binding $parent[UserControl].((vm:ProductListViewModel)DataContext).DeleteCommand}"
 										CommandParameter="{Binding}"
 										ToolTip.Tip="Удалить"
 										Background="Transparent"

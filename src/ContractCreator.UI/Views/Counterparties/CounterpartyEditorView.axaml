@@ -5,8 +5,7 @@
 			 xmlns:dto="using:ContractCreator.Shared.DTOs"
 			 xmlns:behaviors="using:ContractCreator.UI.Behaviors"
 			 x:Class="ContractCreator.UI.Views.Counterparties.CounterpartyEditorView"
-			 x:DataType="vm:CounterpartyEditorViewModel"
-			 x:Name="Root">
+			 x:DataType="vm:CounterpartyEditorViewModel">
 
 	<ScrollViewer>
 		<StackPanel Margin="20" Spacing="15" MaxWidth="850">
@@ -185,14 +184,14 @@
 									<DataTemplate DataType="dto:ContactDto">
 										<StackPanel Orientation="Horizontal" Spacing="10">
 
-											<Button Command="{ReflectionBinding #Root.DataContext.EditContactCommand}"
+											<Button Command="{Binding $parent[UserControl].((vm:CounterpartyEditorViewModel)DataContext).EditContactCommand}"
 													CommandParameter="{Binding}"
 													Background="Transparent"
 													ToolTip.Tip="Редактировать">
 												<TextBlock Text="✏️" Foreground="Orange"/>
 											</Button>
 
-											<Button Command="{ReflectionBinding #Root.DataContext.DeleteContactCommand}"
+											<Button Command="{Binding $parent[UserControl].((vm:CounterpartyEditorViewModel)DataContext).DeleteContactCommand}"
 													CommandParameter="{Binding}"
 													Background="Transparent"
 													ToolTip.Tip="Удалить">
