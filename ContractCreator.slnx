@@ -1,6 +1,6 @@
 <Solution>
   <Folder Name="/docs/">
-    <File Path="ARCHITECTURE.md" />
+    <File Path="docs/ARCHITECTURE.md" />
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/ContractCreator.Application/ContractCreator.Application.csproj" />
