@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/docs/">
     <File Path="docs/ARCHITECTURE.md" />
+	<File Path="docs/images/db-schema.png" />
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/ContractCreator.Application/ContractCreator.Application.csproj" />
